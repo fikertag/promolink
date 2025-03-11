@@ -8,10 +8,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User, ChevronDown } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 
 export default function ProfileDropdown() {
-  const userEmail = "Fikiryilkal tages g/mariam";
+  const userEmail = "Fikiryilkal tages g/mariammm";
   const userTitle = "Developer";
 
   return (
@@ -47,8 +47,18 @@ export default function ProfileDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 mt-2 rounded-none">
         {/* Email shown only on small screens */}
-        <DropdownMenuItem className="lg:hidden cursor-default">
-          <span className="text-sm">{userEmail}</span>
+        <DropdownMenuItem className="lg:hidden cursor-default pr-1 overflow-hidden">
+          <Avatar className="h-6 w-6 ">
+            <AvatarImage
+              src="/placeholder.svg?height=40&width=40"
+              alt="Profile"
+            />
+            <AvatarFallback className="text-xs">F</AvatarFallback>
+          </Avatar>
+          <div className="lg:hidden flex flex-col gap-0.5  ">
+            <span className=" truncate ">{userEmail}</span>
+            <span className="text-sm  ">{userTitle}</span>
+          </div>
         </DropdownMenuItem>
         {/* Separator only shown on small screens */}
         <DropdownMenuSeparator className="md:hidden" />
