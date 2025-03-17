@@ -1,53 +1,40 @@
-import Nav from "@/layouts/Nav";
-import JobPreview from "@/components/JobPreview";
-export default function Home() {
-  return (
-    <div className="bg-white">
-      <Nav />
+"use client";
 
-      <div className="grid grid-cols-[8fr_3fr] h-screen mx-10">
-        <div className=" bg-white p-10">
-          <div className="text-3xl font-bold mb-8">Dashboard</div>
-          <div className="flex justify-between gap-5 flex-wrap mb-10">
-            <div className="border h-30 w-45 p-4 rounded-lg shadow-sm">
-              <div className="text-lg font-bold mb-2 ">Total earning</div>
-              <div className="text-2xl font-bold">1290 Br</div>
-              <div className="text-xs text-[#676767]">
-                {" "}
-                490 Br in this month
-              </div>
-            </div>
-            <div className="border h-30 w-45 p-4 rounded-lg shadow-sm">
-              <div className="text-lg font-bold mb-2 ">Total Followers</div>
-              <div className="text-2xl font-bold">1.7M</div>
-              <div className="text-xs text-[#676767]">+5k this month</div>
-            </div>
-            <div className="border h-30 w-45 p-4 rounded-lg shadow-sm">
-              <div className="text-lg font-bold mb-2 ">Total earning</div>
-              <div className="text-2xl font-bold">1290 Br</div>
-              <div className="text-xs text-[#676767]">
-                {" "}
-                490 Br in this month
-              </div>
-            </div>
-            <div className="border h-30 w-45 p-4 rounded-lg shadow-sm">
-              <div className="text-lg font-bold mb-2 ">Total earning</div>
-              <div className="text-2xl font-bold">1290 Br</div>
-              <div className="text-xs text-[#676767]">
-                {" "}
-                490 Br in this month
-              </div>
-            </div>
-          </div>
-          <h1 className="text-xl mb-5">Jobs you might like</h1>
-          <JobPreview />
-          <JobPreview />
-          <JobPreview />
-          <JobPreview />
-        </div>
-        <div className="bg-white border mt-10 flex justify-center">
-          <div className="border h-10">Edit profile</div>
-        </div>
+import JobLists from "@/components/JobLists";
+import SideBar from "@/components/SideBar";
+import { authClient } from "@/lib/auth-client"; //import the auth client
+
+export default function Home() {
+  const signUp = async () => {
+    const { data, error } = await authClient.signUp.email(
+      {
+        email: "fikeryilkaltages@gmail.com", // user email address
+        password: "12345678", // user password -> min 8 characters by default
+        name: "fikir", // user display name
+        callbackURL: "/dashboard", // a url to redirect to after the user verifies their email (optional)
+      },
+      {
+        onRequest: (ctx) => {
+          console.log("request"); //show loading
+        },
+        onSuccess: (ctx) => {
+          //redirect to the dashboard or sign in page
+          alert("heloo");
+        },
+        onError: (ctx) => {
+          // display the error message
+          alert(ctx.error.message);
+        },
+      }
+    );
+  };
+
+  return (
+    <div className="h-screen overflow-hidden ">
+      <button onClick={signUp}>signup</button>
+      <div className="grid lg:grid-cols-[8fr_3fr] grid-cols-1 gap-10 mx-3 lg:ml-20 ">
+        <JobLists />
+        <SideBar />
       </div>
     </div>
   );

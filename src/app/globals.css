@@ -11,7 +11,6 @@
 
 body {
   font-family: var(--font-inter);
-  background-color: white;
 }
 
 :root {
@@ -125,14 +124,19 @@ body {
 }
 
 @theme {
-  --color-primary: #46a3be;
+  --color-primary: #3cc9ab;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+}
+
+.container1 {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.container1::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }

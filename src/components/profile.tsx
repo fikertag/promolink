@@ -8,29 +8,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
+import { LogOut, Menu, User } from "lucide-react";
 
 export default function ProfileDropdown() {
-  const userEmail = "Fikiryilkal tages g/mariammm";
+  const userEmail = "Fikiryilkal tages ";
   const userTitle = "Developer";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex items-center justify-end gap-2 cursor-pointer relative">
-          <Avatar className="h-8 w-8 ">
-            <AvatarImage
-              src="/placeholder.svg?height=40&width=40"
-              alt="Profile"
-            />
-            <AvatarFallback>F</AvatarFallback>
+        <div className="flex items-center justify-end sm:gap-2 cursor-pointer relative">
+          <Menu className=" flex lg:hidden mr-3" />
+          <Avatar className="h-8 w-8  ">
+            <AvatarImage src="/pawn.png" alt="Profile" />
+            <AvatarFallback className="">F</AvatarFallback>
           </Avatar>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 ">
             {/* Email shown only on medium screens and larger */}
-            <div className="hidden lg:flex flex-col gap-0.5  ">
-              <span className="text-[12px]   text-white">{userEmail}</span>
-              <span className="text-[11px]  text-white">{userTitle}</span>
+            <div className="hidden lg:flex   ">
+              <span className="text-md   ">{userEmail}</span>
             </div>
 
             <svg
@@ -38,7 +35,8 @@ export default function ProfileDropdown() {
               width="12"
               height="12"
               viewBox="0 0 24 24"
-              fill="white"
+              fill="black"
+              className="hidden lg:flex"
             >
               <path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"></path>
             </svg>
@@ -53,7 +51,7 @@ export default function ProfileDropdown() {
               src="/placeholder.svg?height=40&width=40"
               alt="Profile"
             />
-            <AvatarFallback className="text-xs">F</AvatarFallback>
+            <AvatarFallback className="text-xs bg-gray-400">F</AvatarFallback>
           </Avatar>
           <div className="lg:hidden flex flex-col gap-0.5  ">
             <span className=" truncate ">{userEmail}</span>

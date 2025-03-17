@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google"; // ✅ Import Inter and keep Geist_Mono
 import "./globals.css";
+import Nav from "@/layouts/Nav";
 
 // ✅ Instantiate Inter font (replacing Geist)
 const inter = Inter({
@@ -21,8 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} antialiased`} //  Apply Inter and Geist_Mono
+        className={`${inter.variable} antialiased bg-[#f6f6f8]`} //  Apply Inter and Geist_Mono
       >
+        <Nav />
+
         {children}
       </body>
     </html>
