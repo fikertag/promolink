@@ -8,10 +8,13 @@ export default function Home() {
   const signUp = async () => {
     const { data, error } = await authClient.signUp.email(
       {
-        email: "fikeryilkaltages@gmail.com", // user email address
+        email: "test@gmail.com", // user email address
         password: "12345678", // user password -> min 8 characters by default
         name: "fikir", // user display name
-        callbackURL: "/dashboard", // a url to redirect to after the user verifies their email (optional)
+        callbackURL: "/dashboard",
+        image: "fikiryilkal.me/pawn.png",
+        location: "aa",
+        totalEarnings: 1000,
       },
       {
         onRequest: (ctx) => {
@@ -29,9 +32,28 @@ export default function Home() {
     );
   };
 
+  const sendVerificationEmail = async () => {
+    const { data, error } = await authClient.sendVerificationEmail({
+      email: "fikeryilkaltages@gmail.com", // User's email
+      callbackURL: "/dashboard", // Redirect URL after verification
+    });
+
+    if (error) {
+      alert(`Error sending verification email: ${error.message}`);
+    } else {
+      alert("Verification email sent successfully!");
+    }
+  };
+
   return (
     <div className="h-screen overflow-hidden ">
       <button onClick={signUp}>signup</button>
+      <button
+        onClick={sendVerificationEmail}
+        className="px-4 py-2 bg-green-500 text-white rounded ml-4"
+      >
+        Resend Verification Email
+      </button>
       <div className="grid lg:grid-cols-[8fr_3fr] grid-cols-1 gap-10 mx-3 lg:ml-20 ">
         <JobLists />
         <SideBar />
