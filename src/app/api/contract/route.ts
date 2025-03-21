@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import Contract, { IContract } from "@/models/ContractSchema"; // Adjust the path as needed
+import Contract, { IContract } from "@/models/ContractSchema"; // Import the Contract model
 import dbConnect from "@/lib/mongoose"; // Utility to connect to MongoDB
 import { z } from "zod"; // For input validation
 import mongoose from "mongoose"; // For ObjectId validation
@@ -14,7 +14,7 @@ const CreateContractSchema = z.object({
 
 // POST: Create a new contract (client sends a contract to an influencer)
 export async function POST(request: NextRequest) {
-  await dbConnect();
+  await dbConnect(); // Ensure the database is connected
 
   try {
     // Validate request body
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     });
 
     const savedContract = await newContract.save();
-    return NextResponse.json(savedContract, { status: 201 });
+    return NextResponse.json(savedContract, { status: 201 }); // Return the created contract
   } catch (error) {
     console.error("Error creating contract:", error); // Log the error for debugging
     return NextResponse.json(
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
 
 // GET: Fetch contracts for a specific user (client or influencer)
 export async function GET(request: NextRequest) {
-  await dbConnect();
+  await dbConnect(); // Ensure the database is connected
 
   try {
     const url = new URL(request.url);
@@ -93,12 +93,12 @@ export async function GET(request: NextRequest) {
 
     // Fetch contracts
     const contracts = await Contract.find(query)
-      .populate("jobId", "title description") // Populate job details
-      .populate("influencerId", "name email") // Populate influencer details
-      .populate("clientId", "name email") // Populate client details
+      //   .populate("jobId", "title description") // Populate job details
+      //   .populate("influencerId", "name email") // Populate influencer details
+      //   .populate("clientId", "name email") // Populate client details
       .sort({ createdAt: -1 }); // Sort by most recent first
 
-    return NextResponse.json(contracts, { status: 200 });
+    return NextResponse.json(contracts, { status: 200 }); // Return the fetched contracts
   } catch (error) {
     console.error("Error fetching contracts:", error); // Log the error for debugging
     return NextResponse.json(
@@ -107,3 +107,80 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+/**
+ * API Documentation:
+ *
+ * POST /api/contract
+ * - Description: Creates a new contract between a client and an influencer for a specific job.
+ * - Request Body:
+ *   {
+ *     "jobId": "JobObjectId",
+ *     "influencerId": "InfluencerObjectId",
+ *     "clientId": "ClientObjectId",
+ *     "terms": "Contract terms and conditions"
+ *   }
+ * - Response:
+ *   - 201: Returns the created contract document.
+ *   - 400: Returns validation errors or invalid ObjectId errors.
+ *   - 500: Returns an error message if the creation fails.
+ *
+ * Example Request:
+ * POST /api/contract
+ * Body:
+ * {
+ *   "jobId": "64f8c0e2b5d6c9a1f8e7b123",
+ *   "influencerId": "67ddc27bac1483e290fd607b",
+ *   "clientId": "67ddc27bac1483e290fd607c",
+ *   "terms": "The influencer agrees to promote the product on TikTok for 2 weeks."
+ * }
+ *
+ * Example Response (201):
+ * {
+ *   "_id": "64f8c0e2b5d6c9a1f8e7b456",
+ *   "jobId": "64f8c0e2b5d6c9a1f8e7b123",
+ *   "influencerId": "67ddc27bac1483e290fd607b",
+ *   "clientId": "67ddc27bac1483e290fd607c",
+ *   "terms": "The influencer agrees to promote the product on TikTok for 2 weeks.",
+ *   "createdAt": "2023-09-01T12:00:00.000Z",
+ *   "updatedAt": "2023-09-01T12:00:00.000Z"
+ * }
+ *
+ * GET /api/contract
+ * - Description: Fetches contracts for a specific user (client or influencer).
+ * - Query Parameters:
+ *   - userId: The ID of the user fetching contracts (required).
+ *   - role: The role of the user ("client" or "influencer") (required).
+ * - Response:
+ *   - 200: Returns an array of contract documents.
+ *   - 400: Returns validation errors for invalid userId or role.
+ *   - 500: Returns an error message if the fetch fails.
+ *
+ * Example Request:
+ * GET /api/contract?userId=67ddc27bac1483e290fd607b&role=influencer
+ *
+ * Example Response (200):
+ * [
+ *   {
+ *     "_id": "64f8c0e2b5d6c9a1f8e7b456",
+ *     "jobId": {
+ *       "_id": "64f8c0e2b5d6c9a1f8e7b123",
+ *       "title": "Social Media Promoter Needed",
+ *       "description": "Looking for someone to promote our product on TikTok and YouTube."
+ *     },
+ *     "influencerId": {
+ *       "_id": "67ddc27bac1483e290fd607b",
+ *       "name": "John Doe",
+ *       "email": "john.doe@example.com"
+ *     },
+ *     "clientId": {
+ *       "_id": "67ddc27bac1483e290fd607c",
+ *       "name": "Jane Smith",
+ *       "email": "jane.smith@example.com"
+ *     },
+ *     "terms": "The influencer agrees to promote the product on TikTok for 2 weeks.",
+ *     "createdAt": "2023-09-01T12:00:00.000Z",
+ *     "updatedAt": "2023-09-01T12:00:00.000Z"
+ *   }
+ * ]
+ */

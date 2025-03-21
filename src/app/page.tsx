@@ -8,13 +8,13 @@ export default function Home() {
   const signUp = async () => {
     const { data, error } = await authClient.signUp.email(
       {
-        email: "test@gmail.com", // user email address
+        email: "firsttest@gmail.com", // user email address
         password: "12345678", // user password -> min 8 characters by default
         name: "fikir", // user display name
         callbackURL: "/dashboard",
         image: "fikiryilkal.me/pawn.png",
-        location: "aa",
-        totalEarnings: 1000,
+        location: "AddisAbaba",
+        totalEarnings: 0,
       },
       {
         onRequest: (ctx) => {
