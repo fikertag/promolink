@@ -10,6 +10,8 @@ export interface IJob extends Document {
     platform: "instagram" | "youtube" | "tiktok" | "twitter";
   }[];
   postedBy: mongoose.Types.ObjectId;
+  status: "open" | "in-progress" | "completed" | "cancelled";
+  hiredInfluencers: mongoose.Types.ObjectId[]; // Array of hired influencers
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,6 +37,17 @@ const JobSchema = new Schema<IJob>(
       ref: "User", // Reference to the User model
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["open", "in-progress", "completed", "cancelled"], // Restrict to valid statuses
+      default: "open", // Default status is "open"
+    },
+    hiredInfluencers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User", // Reference to the User model
+      },
+    ],
   },
   { timestamps: true }
 );

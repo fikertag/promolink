@@ -4,7 +4,7 @@ import mongoose, { Schema, Document, model } from "mongoose";
 export interface IProposal extends Document {
   jobId: mongoose.Types.ObjectId;
   influencerId: mongoose.Types.ObjectId;
-  message?: string;
+  message: string;
   status: "pending" | "accepted" | "rejected";
   createdAt: Date;
   updatedAt: Date;
