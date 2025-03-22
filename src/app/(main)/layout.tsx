@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google"; // ✅ Import Inter and keep Geist_Mono
-import "./globals.css";
+import "../globals.css";
 import Nav from "@/layouts/Nav";
 
 // ✅ Instantiate Inter font (replacing Geist)
