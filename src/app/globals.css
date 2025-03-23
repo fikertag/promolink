@@ -4,6 +4,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+input[type="password"]::-ms-reveal {
+  display: none;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
+}
+
 :root {
   --font-inter: "Inter", sans-serif;
   --font-geist-mono: "Geist Mono", monospace;
