@@ -2,11 +2,13 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff, Lock, Mail, AlertCircle, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation"; // Import useRouter
 import { authClient } from "@/lib/auth-client"; //import the auth client
 
 type AuthMode = "signin" | "signup";
 
 const AuthForm = () => {
+  const router = useRouter(); // Initialize router
   const [mode, setMode] = useState<AuthMode>("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -62,6 +64,9 @@ const AuthForm = () => {
         },
         onError: (ctx) => {
           setError(ctx.error.message || "sign-in failed");
+          if (ctx.error.status === 403) {
+            router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+          }
         },
       }
     );
@@ -85,6 +90,7 @@ const AuthForm = () => {
           setPassword("");
           setName("");
           setConfirmPassword("");
+          router.push(`/verify-email?email=${encodeURIComponent(email)}`);
         },
         onError: (ctx) => {
           setError(ctx.error.message || "sign-up failed");

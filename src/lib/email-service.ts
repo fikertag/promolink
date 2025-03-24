@@ -11,7 +11,7 @@ interface SendEmailProps {
 export async function sendEmail({ to, subject, html }: SendEmailProps) {
   try {
     const { data, error } = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>", // Replace with a verified email address
+      from: "Fikir Yilkal <onboarding@fikiryilkal.me>", // Replace with a verified email address
       to: [to], // Accepts the `to` prop
       subject, // Accepts the `subject` prop
       html, // Accepts the `html` prop
