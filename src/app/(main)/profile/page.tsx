@@ -1,32 +1,42 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
+import SocialIcon, { SocialPlatform } from "../../../components/SocialIcons";
+
 import {
   Edit2,
   MapPin,
   Camera,
   Star,
-  ChevronRight,
   DollarSign,
   Users,
-  Instagram,
-  Youtube,
-  Twitter,
   TrendingUp,
 } from "lucide-react";
+import { platform } from "node:process";
 
 function App() {
   const [location, setLocation] = useState("Addis Ababa, Ethiopia");
 
-  const socialStats = [
+  const socialStats: {
+    platform: SocialPlatform;
+    followers: string;
+    growth: string;
+  }[] = [
     {
-      platform: "Instagram",
+      platform: "instagram",
       followers: "28.2K",
-      icon: Instagram,
       growth: "+5.2%",
     },
-    { platform: "Youtube", followers: "15.6K", icon: Youtube, growth: "+3.8%" },
-    { platform: "Twitter", followers: "8.6K", icon: Twitter, growth: "+2.4%" },
+    {
+      platform: "tiktok",
+      followers: "15.6K",
+      growth: "+3.8%",
+    },
+    {
+      platform: "telegram",
+      followers: "8.6K",
+      growth: "+2.4%",
+    },
   ];
 
   return (
@@ -81,7 +91,7 @@ function App() {
             {socialStats.map((social) => (
               <div key={social.platform} className="bg-gray-50 rounded-xl p-4">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <social.icon className="text-primary" size={20} />
+                  <SocialIcon platform={social.platform} />
                   <span className="text-gray-700 font-medium">
                     {social.platform}
                   </span>
@@ -122,33 +132,6 @@ function App() {
                 <span className="text-2xl font-bold">4.9</span>
               </div>
               <p className="text-gray-600 text-sm">Rating</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl shadow-sm p-8 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              Previous Campaigns
-            </h2>
-            <div className="space-y-4">
-              {["spring fashion", "Kebe Food Delivery", "Flash Gym"].map(
-                (campaign) => (
-                  <div
-                    key={campaign}
-                    className="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-prtext-primary transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div>
-                        <h3 className="font-medium text-gray-900">
-                          {campaign}
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          Completed • Feb 2024
-                        </p>
-                      </div>
-                    </div>
-                    <ChevronRight className="text-gray-400" size={20} />
-                  </div>
-                )
-              )}
             </div>
           </div>
           <div className="flex justify-center">

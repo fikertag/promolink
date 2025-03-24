@@ -7,7 +7,7 @@ export interface IJob extends Document {
   price: number;
   location?: string;
   socialMedia: {
-    platform: "instagram" | "youtube" | "tiktok" | "twitter";
+    platform: "instagram" | "youtube" | "tiktok" | "telegram";
   }[];
   postedBy: mongoose.Types.ObjectId;
   status: "open" | "in-progress" | "completed" | "cancelled";
@@ -27,7 +27,7 @@ const JobSchema = new Schema<IJob>(
       {
         platform: {
           type: String,
-          enum: ["instagram", "youtube", "tiktok", "twitter"], // Restrict to valid platforms
+          enum: ["instagram", "youtube", "tiktok", "telegram"], // Restrict to valid platforms
           required: true,
         },
       },

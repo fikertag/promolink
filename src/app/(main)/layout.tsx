@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google"; // ✅ Import Inter and keep Geist_Mono
 import "../globals.css";
 import Nav from "@/layouts/Nav";
+import { JobProvider } from "@/context/Job";
 
 // ✅ Instantiate Inter font (replacing Geist)
 const inter = Inter({
@@ -21,13 +22,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} antialiased bg-[#f6f6f8]`} //  Apply Inter and Geist_Mono
-      >
-        <Nav />
+      <JobProvider>
+        <body
+          className={`${inter.variable} antialiased bg-[#EBF2FA]`} //  Apply Inter and Geist_Mono
+        >
+          <Nav />
 
-        {children}
-      </body>
+          {children}
+        </body>
+      </JobProvider>
     </html>
   );
 }

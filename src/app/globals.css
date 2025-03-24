@@ -21,6 +21,10 @@ body {
   font-family: var(--font-inter);
 }
 
+.h2 {
+  @apply text-3xl sm:text-4xl font-semibold tracking-tight;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);

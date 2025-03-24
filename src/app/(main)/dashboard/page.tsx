@@ -1,14 +1,11 @@
 import React from "react";
 import {
   Users,
-  UserCheck,
   MessageSquare,
   TrendingUp,
   DollarSign,
   Star,
   BadgeCheck,
-  Award,
-  Zap,
 } from "lucide-react";
 
 const Dashboard = () => {

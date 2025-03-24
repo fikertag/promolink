@@ -1,66 +1,30 @@
 import JobPreview from "@/components/JobPreview";
-import { SocialPlatform } from "@/components/SocialIcons"; // adjust path
-
-const jobData: {
-  postedTime: string;
-  title: string;
-  price: string;
-  description: string;
-  tags: SocialPlatform[];
-  location: string;
-}[] = [
-  {
-    postedTime: "Posted 1 hour ago",
-    title: "Looking for Social Media Promoter",
-    price: "100 birr",
-    description:
-      "We are seeking dedicated and articulate Social Media Promoters to join our marketing team. You will be responsible for ...",
-    tags: ["tiktok", "instagram", "facebook", "telegram"],
-    location: "Tecno",
-  },
-  {
-    postedTime: "Posted 2 hours ago",
-    title: "Hiring Influencers for Product Promotion",
-    price: "200 birr",
-    description:
-      "Join our team as an influencer to promote our latest products. We are looking for individuals with a strong social media presence.",
-    tags: ["instagram", "youtube", "twitter"],
-    location: "Main",
-  },
-  {
-    postedTime: "Posted 3 hours ago",
-    title: "Brand Ambassadors Needed",
-    price: "150 birr",
-    description:
-      "We are looking for brand ambassadors to represent our brand at various events and on social media platforms.",
-    tags: ["instagram", "facebook"],
-    location: "Tecno",
-  },
-  {
-    postedTime: "Posted 4 hours ago",
-    title: "Content Creators for Social Media",
-    price: "120 birr",
-    description:
-      "We need content creators to develop engaging content for our social media channels. Experience with video editing is a plus.",
-    tags: ["youtube", "tiktok"],
-    location: "Agri",
-  },
-];
+import { useJobs } from "@/context/Job";
 
 export default function JobLists() {
+  const { jobs } = useJobs(); // Fetch jobs from the JobContext
+
   return (
-    <div className="mx-auto  h-[calc(100vh-1rem)] overflow-y-scroll container1 pb-10 w-full pt-7 ">
-      <h1 className="text-2xl font-semibold mb-10 px-3">Available Campaigns</h1>
-      <div className="flex flex-col gap-1">
-        <JobPreview job={jobData[0]} />
-        <JobPreview job={jobData[1]} />
-        <JobPreview job={jobData[2]} />
-        <JobPreview job={jobData[3]} />
-        <JobPreview job={jobData[0]} />
-        <JobPreview job={jobData[1]} />
-        <JobPreview job={jobData[2]} />
-        <JobPreview job={jobData[3]} />
-        <JobPreview job={jobData[0]} />
+    <div className="mx-auto h-[calc(100vh-1rem)] overflow-y-scroll container1 pb-10 w-full pt-7">
+      <div className="text-center max-w-3xl mx-auto mb-8">
+        <div className="text-center max-w-3xl mx-auto mb-8">
+          <h1 className="h2 mb-4">Available Opportunities</h1>
+          <p className="text-foreground/70">
+            Find the perfect collaborative opportunities between businesses and
+            influencers.
+          </p>
+        </div>
+        <div className="flex flex-col gap-1">
+          {jobs.length > 0 ? (
+            jobs.map((job) => (
+              <JobPreview key={job._id} job={job} /> // Render each job dynamically
+            ))
+          ) : (
+            <p className="text-center text-gray-500">
+              No jobs available at the moment.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
