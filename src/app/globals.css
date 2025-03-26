@@ -152,3 +152,7 @@ body {
 .container1::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
+
+.hidewebkit::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}

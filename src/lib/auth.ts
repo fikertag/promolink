@@ -27,15 +27,16 @@ export const auth = betterAuth({
         defaultValue: "influencer",
         input: false,
       },
+
       location: {
         type: "string",
         required: false,
-        defaultValue: "",
+        defaultValue: "Tecno",
       },
       socialMedia: {
         type: "string", // Store as a JSON string
         required: false,
-        defaultValue: "[]", // Default empty array as a string
+        defaultValue: JSON.stringify([]), // Default is an empty array as a string
       },
       verified: {
         type: "boolean",
@@ -48,6 +49,16 @@ export const auth = betterAuth({
         defaultValue: 0,
       },
       totalEarnings: {
+        type: "number",
+        required: false,
+        defaultValue: 0,
+      },
+      bio: {
+        type: "string",
+        required: false,
+        defaultValue: " ",
+      },
+      price: {
         type: "number",
         required: false,
         defaultValue: 0,
