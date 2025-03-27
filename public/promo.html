@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromoLink - Turn Social Reach Into Revenue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#6366F1',
+                        accent: '#A855F7',
+                        accent2: '#EC4899',
+                        light: '#F9FAFB',
+                        dark: '#111827',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'gradient': 'gradient 8s ease infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': {
+                                'background-position': '0% 50%'
+                            },
+                            '50%': {
+                                'background-position': '100% 50%'
+                            },
+                        }
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        /* Animation effects */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        /* Animated gradient background */
+        .animate-gradient {
+            background: linear-gradient(-45deg, #5D5CDE, #6366F1, #A855F7, #EC4899);
+            background-size: 400% 400%;
+            animation: gradient 8s ease infinite;
+        }
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Neumorphism effects */
+        .neumorph {
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.05),
+                -8px -8px 16px rgba(255, 255, 255, 0.8);
+        }
+        
+        .dark .neumorph {
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.25),
+                -8px -8px 16px rgba(255, 255, 255, 0.03);
+        }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(93, 92, 222, 0.6);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(93, 92, 222, 0.8);
+        }
+        
+        /* Card hover effect */
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .dark .card-hover:hover {
+            box-shadow: 0 10px 25px -5px rgba(93, 92, 222, 0.2), 0 10px 10px -5px rgba(93, 92, 222, 0.1);
+        }
+        
+        /* 3D floating animation */
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Blob shapes */
+        .blob {
+            border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+            animation: blob-animation 8s linear infinite;
+        }
+        
+        @keyframes blob-animation {
+            0% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
+            25% { border-radius: 45% 55% 65% 35% / 50% 50% 50% 50%; }
+            50% { border-radius: 50% 50% 55% 45% / 55% 45% 45% 55%; }
+            75% { border-radius: 55% 45% 45% 55% / 45% 55% 45% 55%; }
+            100% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
+        }
+        
+        /* Count up animation */
+        .counter-value {
+            transition: all 0.3s ease;
+        }
+        
+        /* Text gradient */
+        .text-gradient {
+            background: linear-gradient(to right, #5D5CDE, #A855F7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Glowing effect */
+        .glow {
+            box-shadow: 0 0 15px rgba(93, 92, 222, 0.5);
+        }
+        
+        /* Growing underline effect */
+        .grow-underline {
+            position: relative;
+        }
+        
+        .grow-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #5D5CDE;
+            transition: width 0.3s ease;
+        }
+        
+        .grow-underline:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-light dark:bg-dark text-gray-800 dark:text-gray-200 transition-colors duration-300">
+    <!-- Top Navigation -->
+    <nav class="glass fixed w-full top-0 z-50 transition-colors duration-300 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center mr-3 shadow-lg">
+                            <i class="fas fa-link text-white text-xl"></i>
+                        </div>
+                        <span class="font-extrabold text-2xl text-gradient">PromoLink</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block">Features</button>
+                    <button class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block">Pricing</button>
+                    <button class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block">Resources</button>
+                    <button id="toggleTheme" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                    <button class="py-2 px-4 bg-primary hover:bg-secondary text-white rounded-lg transition-colors hidden md:block">
+                        Sign Up
+                    </button>
+                    <button class="md:hidden">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="pt-24 pb-10 px-4 sm:px-6 lg:px-8 min-h-screen">
+        <!-- Landing Section -->
+        <section id="landing" class="fade-in">
+            <!-- Hero Section -->
+            <section id="hero" class="max-w-7xl mx-auto">
+                <div class="relative overflow-hidden rounded-3xl animate-gradient p-1">
+                    <div class="bg-white dark:bg-gray-900 rounded-3xl p-8 md:p-12">
+                        <div class="flex flex-col md:flex-row items-center">
+                            <div class="w-full md:w-1/2 pr-0 md:pr-8 mb-10 md:mb-0">
+                                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
+                                    <span class="text-gradient">Turn Social Reach</span>
+                                    <span class="block">Into Revenue</span>
+                                </h1>
+                                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
+                                    The first platform that bridges the gap between <span class="font-semibold">businesses</span>, <span class="font-semibold">influencers</span>, and <span class="font-semibold">customers</span> in a seamless ecosystem where everyone wins.
+                                </p>
+                                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                                    <button class="py-3 px-8 bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-white rounded-lg transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold">
+                                        Get Started
+                                        <i class="fas fa-arrow-right ml-2"></i>
+                                    </button>
+                                    <button class="py-3 px-8 border border-gray-300 dark:border-gray-700 hover:border-primary dark:hover:border-primary text-gray-800 dark:text-gray-200 rounded-lg transition-colors flex items-center justify-center font-medium">
+                                        <i class="fas fa-play text-primary mr-2"></i>
+                                        Watch Demo
+                                    </button>
+                                </div>
+                                <div class="flex items-center mt-10">
+                                    <div class="flex -space-x-2">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center border-2 border-white dark:border-gray-900">
+                                            <span class="font-bold text-blue-600 dark:text-blue-300 text-xs">EG</span>
+                                        </div>
+                                        <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center border-2 border-white dark:border-gray-900">
+                                            <span class="font-bold text-green-600 dark:text-green-300 text-xs">NF</span>
+                                        </div>
+                                        <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center border-2 border-white dark:border-gray-900">
+                                            <span class="font-bold text-purple-600 dark:text-purple-300 text-xs">FK</span>
+                                        </div>
+                                        <div class="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center border-2 border-white dark:border-gray-900">
+                                            <span class="font-bold text-yellow-600 dark:text-yellow-300 text-xs">K</span>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star-half-alt"></i>
+                                            </div>
+                                            <span class="ml-2 font-medium">4.8/5</span>
+                                        </div>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">from 500+ reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/2 relative">
+                                <!-- Floating mobile mockup -->
+                                <div class="relative h-96 sm:h-[450px] md:h-[500px]">
+                                    <!-- Gradient blob decorations -->
+                                    <div class="absolute top-5 right-5 w-32 h-32 bg-purple-400/20 dark:bg-purple-600/20 rounded-full filter blur-xl"></div>
+                                    <div class="absolute bottom-10 left-10 w-40 h-40 bg-blue-400/20 dark:bg-blue-600/20 rounded-full filter blur-xl"></div>
+                                    
+                                    <!-- Dashboard Mockup -->
+                                    <div class="absolute left-0 right-0 mx-auto w-full max-w-sm neumorph rounded-xl overflow-hidden shadow-xl floating">
+                                        <div class="bg-white dark:bg-gray-800 p-4">
+                                            <div class="flex items-center justify-between mb-4">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center mr-2">
+                                                        <i class="fas fa-link text-white text-xs"></i>
+                                                    </div>
+                                                    <span class="font-bold text-sm">PromoLink</span>
+                                                </div>
+                                                <div class="flex space-x-2">
+                                                    <div class="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                                                        <i class="fas fa-bell text-gray-500 dark:text-gray-400 text-xs"></i>
+                                                    </div>
+                                                    <div class="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                                        <span class="font-bold text-blue-600 dark:text-blue-300 text-xs">ST</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg mb-4">
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <p class="text-sm font-medium">Total Earnings</p>
+                                                    <span class="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
+                                                        +15%
+                                                    </span>
+                                                </div>
+                                                <p class="text-2xl font-bold">$1,249.87</p>
+                                            </div>
+                                            <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <p class="text-sm font-medium">Performance</p>
+                                                    <span class="text-xs text-gray-500 dark:text-gray-400">This Month</span>
+                                                </div>
+                                                <div class="h-12 bg-white dark:bg-gray-800 rounded-lg"></div>
+                                            </div>
+                                            <p class="text-sm font-medium mt-4 mb-2">Active Links</p>
+                                            <div class="space-y-3">
+                                                <div class="bg-gray-50 dark:bg-gray-700 p-2 rounded-lg flex items-center">
+                                                    <div class="w-8 h-8 rounded-md bg-gray-200 dark:bg-gray-600 mr-2"></div>
+                                                    <div class="flex-1 text-xs">
+                                                        <p class="font-medium">smart wactch</p>
+                                                        <div class="Eden Girum-between">
+                                                            <span>smart Tech</span>
+                                                            <span class="text-primary">86 sales</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="bg-gray-50 dark:bg-gray-700 p-2 rounded-lg flex items-center">
+                                                    <div class="w-8 h-8 rounded-md bg-gray-200 dark:bg-gray-600 mr-2"></div>
+                                                    <div class="flex-1 text-xs">
+                                                        <p class="font-medium">Protein Powder Pack</p>
+                                                        <div class="numan-between">
+                                                            <span>GreenLeaf Supplements</span>
+                                                            <span class="text-primary">62 sales</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sponsors/Trusted by section -->
+                <div class="mt-16 text-center">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 uppercase font-medium tracking-wide mb-5">Trusted by leading brands</p>
+                    <div class="flex flex-wrap justify-center gap-8 md:gap-16">
+                        <div class="w-24 h-12 flex items-center justify-center">
+                            <div class="text-gray-400 dark:text-gray-500 font-bold text-lg">smart tech</div>
+                        </div>
+                        <div class="w-24 h-12 flex items-center justify-center">
+                            <div class="text-gray-400 dark:text-gray-500 font-bold text-lg">lekecoffe</div>
+                        </div>
+                        <div class="w-24 h-12 flex items-center justify-center">
+                            <div class="text-gray-400 dark:text-gray-500 font-bold text-lg">TechPro</div>
+                        </div>
+                        <div class="w-24 h-12 flex items-center justify-center">
+                            <div class="text-gray-400 dark:text-gray-500 font-bold text-lg">StyleX</div>
+                        </div>
+                        <div class="w-24 h-12 flex items-center justify-center">
+                            <div class="text-gray-400 dark:text-gray-500 font-bold text-lg">mks</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metrics Section -->
+            <section class="max-w-7xl mx-auto mt-24">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
+                        <div class="text-primary text-5xl font-extrabold mb-2 counter" data-target="10000">0</div>
+                        <div class="text-lg font-medium">Active Creators</div>
+                        <p class="text-gray-500 dark:text-gray-400 mt-2">Growing every day with successful partnerships</p>
+                    </div>
+                    <div class="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
+                        <div class="text-primary text-5xl font-extrabold mb-2 counter" data-target="5000">0</div>
+                        <div class="text-lg font-medium">Business Partners</div>
+                        <p class="text-gray-500 dark:text-gray-400 mt-2">Brands seeing real growth through collaborations</p>
+                    </div>
+                    <div class="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
+                        <div class="text-primary text-5xl font-extrabold mb-2 counter" data-target="500000">0</div>
+                        <div class="text-lg font-medium">Successful Sales</div>
+                        <p class="text-gray-500 dark:text-gray-400 mt-2">Creating win-win scenarios for everyone involved</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Roles Section -->
+            <section class="max-w-7xl mx-auto mt-24">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Who Benefits from PromoLink?</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                        Our platform creates a seamless ecosystem that benefits everyone involved in the collaboration economy.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                    <!-- Business Card -->
+                    <div class="relative group">
+                        <div class="absolute inset-0.5 bg-gradient-to-r from-primary to-accent rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+                        <div class="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
+                            <div class="h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-6 mx-auto transform transition group-hover:rotate-6 duration-300">
+                                <i class="fas fa-store text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-center mb-3">For Businesses</h3>
+                            <ul class="space-y-4 text-gray-600 dark:text-gray-300 mb-6 flex-grow">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Create a profile showcasing your products to relevant audiences</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Get exposure to influencers whose followers match your target market</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Track performance with real-time analytics and insights</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Pay only for results with our commission-based system</span>
+                                </li>
+                            </ul>
+                            <button class="user-type-btn mt-6 w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors" data-type="business">
+                                Enter as Business
+                                <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Influencer Card -->
+                    <div class="relative group">
+                        <div class="absolute inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+                        <div class="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
+                            <div class="h-16 w-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-6 mx-auto transform transition group-hover:rotate-6 duration-300">
+                                <i class="fas fa-bullhorn text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-center mb-3">For Influencers</h3>
+                            <ul class="space-y-4 text-gray-600 dark:text-gray-300 mb-6 flex-grow">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Browse businesses that align with your audience's interests</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Generate custom promo codes and earn 5-15% commission on sales</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Track earnings and conversions in an intuitive dashboard</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Build long-term relationships with brands you love</span>
+                                </li>
+                            </ul>
+                            <button class="user-type-btn mt-6 w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all" data-type="influencer">
+                                Enter as Influencer
+                                <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Customer Card -->
+                    <div class="relative group">
+                        <div class="absolute inset-0.5 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+                        <div class="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
+                            <div class="h-16 w-16 rounded-2xl bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center mb-6 mx-auto transform transition group-hover:rotate-6 duration-300">
+                                <i class="fas fa-user text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-center mb-3">For Customers</h3>
+                            <ul class="space-y-4 text-gray-600 dark:text-gray-300 mb-6 flex-grow">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Discover exclusive deals from your favorite influencers</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Enjoy special discounts not available elsewhere</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Explore new brands through trusted recommendations</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>Support both businesses and creators you love</span>
+                                </li>
+                            </ul>
+                            <button class="user-type-btn mt-6 w-full py-3 px-4 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-lg transition-all" data-type="customer">
+                                Enter as Customer
+                                <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works Section -->
+            <section class="max-w-7xl mx-auto mt-20 py-16 px-6 bg-gray-50 dark:bg-gray-800/50 rounded-3xl">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">How PromoLink Works</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                        A simple, effective process that creates value at every step.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="relative">
+                        <div class="absolute top-12 left-1/2 w-full h-1 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
+                        <div class="relative z-10 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg text-center transform transition-all hover:-translate-y-2 duration-300">
+                            <div class="h-14 w-14 rounded-full bg-primary flex items-center justify-center mb-4 mx-auto">
+                                <span class="font-bold text-white text-xl">1</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-3">Businesses Join</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Companies create profiles and set commission rates for their products</p>
+                            <div class="h-1 w-12 bg-primary mx-auto mt-4 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute top-12 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
+                        <div class="relative z-10 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg text-center transform transition-all hover:-translate-y-2 duration-300">
+                            <div class="h-14 w-14 rounded-full bg-secondary flex items-center justify-center mb-4 mx-auto">
+                                <span class="font-bold text-white text-xl">2</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-3">Influencers Connect</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Creators find relevant products and generate unique promo codes</p>
+                            <div class="h-1 w-12 bg-secondary mx-auto mt-4 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute top-12 right-1/2 w-full h-1 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
+                        <div class="relative z-10 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg text-center transform transition-all hover:-translate-y-2 duration-300">
+                            <div class="h-14 w-14 rounded-full bg-accent flex items-center justify-center mb-4 mx-auto">
+                                <span class="font-bold text-white text-xl">3</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-3">Audiences Engage</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Followers discover products through authentic recommendations</p>
+                            <div class="h-1 w-12 bg-accent mx-auto mt-4 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="relative z-10 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg text-center transform transition-all hover:-translate-y-2 duration-300">
+                            <div class="h-14 w-14 rounded-full bg-accent2 flex items-center justify-center mb-4 mx-auto">
+                                <span class="font-bold text-white text-xl">4</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-3">Everyone Wins</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Businesses grow, influencers earn, and customers discover great deals</p>
+                            <div class="h-1 w-12 bg-accent2 mx-auto mt-4 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonial Section -->
+            <section class="max-w-7xl mx-auto mt-24">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our Users Say</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                        Real stories from businesses, influencers, and customers using PromoLink.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="relative">
+                        <div class="absolute -top-4 -right-4 w-16 h-16 text-5xl text-primary opacity-20">"</div>
+                        <div class="glass p-8 rounded-xl relative z-10">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mr-4">
+                                    <span class="font-bold text-blue-600 dark:text-blue-300">N</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">numan</h4>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Founder, smartTech</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                "PromoLink transformed how we connect with our audience. Our sales have increased by 135% since joining, and we've built relationships with amazing creators who truly understand our brand."
+                            </p>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative mt-8 md:mt-0">
+                        <div class="absolute -top-4 -right-4 w-16 h-16 text-5xl text-primary opacity-20">"</div>
+                        <div class="glass p-8 rounded-xl relative z-10">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center mr-4">
+                                    <span class="font-bold text-purple-600 dark:text-purple-300">E</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Eden</h4>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">tech , Fitness Influencer, 200K followers</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                "I've tried many partnership platforms, but PromoLink is different. The analytics are incredible, and I only promote products I believe in. My audience trusts my recommendations, and I earn consistent income."
+                            </p>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative mt-8 md:mt-0">
+                        <div class="absolute -top-4 -right-4 w-16 h-16 text-5xl text-primary opacity-20">"</div>
+                        <div class="glass p-8 rounded-xl relative z-10">
+                            <div class="flex items-center mb-4">
+                                <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mr-4">
+                                    <span class="font-bold text-green-600 dark:text-green-300">F</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Fiker</h4>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Customer</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                "I love finding new products through the creators I follow. The discounts are great, but what I appreciate most is knowing these are genuine recommendations, not just paid ads."
+                            </p>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- CTA Section -->
+            <section class="max-w-7xl mx-auto mt-24 mb-16">
+                <div class="relative overflow-hidden rounded-3xl">
+                    <div class="absolute inset-0 animate-gradient opacity-90"></div>
+                    <div class="relative glass p-10 md:p-16 text-center">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Join the Collaboration Economy?</h2>
+                        <p class="text-lg text-white/90 max-w-3xl mx-auto mb-10">
+                            Whether you're a business looking to grow, an influencer wanting to monetize your audience, or a customer seeking great deals, PromoLink is your gateway to meaningful connections.
+                        </p>
+                        <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                            <button class="py-4 px-8 bg-white text-primary hover:bg-gray-100 rounded-lg transition-colors duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold">
+                                Create Your Account
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                            <button class="py-4 px-8 border border-white text-white hover:bg-white/10 rounded-lg transition-colors flex items-center justify-center font-medium">
+                                <i class="fas fa-headset mr-2"></i>
+                                Talk to Our Team
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+<!--  -->
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+                <div class="col-span-2">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center mr-2">
+                            <i class="fas fa-link text-white text-sm"></i>
+                        </div>
+                        <span class="font-bold text-lg text-gradient">PromoLink</span>
+                    </div>
+                    <p class="text-gray-500 dark:text-gray-400 mb-4">
+                        Transforming how businesses, creators, and customers connect in the digital economy.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-twitter text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-linkedin text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-youtube text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Platform</h4>
+                    <ul class="space-y-3 text-gray-500 dark:text-gray-400">
+                        <li><a href="#" class="hover:text-primary grow-underline">For Businesses</a></li>
+                        <li><a href="#" class="hover:text-primary grow-underline">For Influencers</a></li>
+                        <li><a href="#" class="hover:text-primary grow-underline">For Customers</a></li>
+                        <li><a href="#" class="hover:text-primary grow-underline">Pricing</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-3 text-gray-500 dark:text-gray-400">
+                        <li><a href="#" class="hover:text-primary grow-underline">Blog</a></li>
+                        <li><a href="#" class="hover:text-primary grow-underline">Success Stories</a></li>
+                        <li><a href="#" class="hover:text-primary grow-underline">Help Center</a></li>
+                        <li><a href="#" class="hover:text-primary grow-underline">API Docs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <ul class="space-y-3 text-gray-500 dark:text-gray-400">
+                        <li><a href="#" class="hover:text-primary grow-underline">About Us</a></li>
+                        <li><a href="#" class="hover:text-primary grow-underline">Careers</a></li>
+                        <li><a href="#" class="hover:text-primary grow-underline">Press</a></li>
+                        <li><a href="#" class="hover:text-primary grow-underline">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-4 md:mb-0">
+                    © 2023 PromoLink. All rights reserved.
+                </p>
+                <div class="flex space-x-6 text-sm text-gray-500 dark:text-gray-400">
+                    <a href="#" class="hover:text-primary grow-underline">Terms</a>
+                    <a href="#" class="hover:text-primary grow-underline">Privacy</a>
+                    <a href="#" class="hover:text-primary grow-underline">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dark mode detection and toggle
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        document.getElementById('toggleTheme').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Section navigation
+        const sections = {
+            landing: document.getElementById('landing'),
+            businessDashboard: document.getElementById('business-dashboard'),
+            influencerDashboard: document.getElementById('influencer-dashboard'),
+            customerDashboard: document.getElementById('customer-dashboard')
+        };
+
+        // User type buttons
+        document.querySelectorAll('.user-type-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const userType = button.getAttribute('data-type');
+                hideAllSections();
+                
+                if (userType === 'business') {
+                    sections.businessDashboard.classList.remove('hidden');
+                } else if (userType === 'influencer') {
+                    sections.influencerDashboard.classList.remove('hidden');
+                } else if (userType === 'customer') {
+                    sections.customerDashboard.classList.remove('hidden');
+                }
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            });
+        });
+
+        // Back to landing buttons
+        document.getElementById('back-to-landing-business')?.addEventListener('click', () => {
+            hideAllSections();
+            sections.landing.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        });
+
+        document.getElementById('back-to-landing-influencer')?.addEventListener('click', () => {
+            hideAllSections();
+            sections.landing.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        });
+
+        document.getElementById('back-to-landing-customer')?.addEventListener('click', () => {
+            hideAllSections();
+            sections.landing.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        });
+
+        function hideAllSections() {
+            sections.landing.classList.add('hidden');
+            sections.businessDashboard.classList.add('hidden');
+            sections.influencerDashboard.classList.add('hidden');
+            sections.customerDashboard.classList.add('hidden');
+        }
+        
+        // Animated counter implementation
+        let counted = false;
+        
+        function animateCounters() {
+            if (counted) return;
+            
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                let count = 0;
+                
+                const inc = target / speed;
+                
+                const updateCount = () => {
+                    if (count < target) {
+                        count += inc;
+                        counter.innerText = Math.floor(count).toLocaleString();
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target.toLocaleString();
+                    }
+                };
+                
+                updateCount();
+            });
+            
+            counted = true;
+        }
+        
+        // Initialize counters when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        const metricsSection = document.querySelector('.counter')?.parentElement?.parentElement?.parentElement;
+        if (metricsSection) {
+            observer.observe(metricsSection);
+        }
+        
+        // Influencer Dashboard Navigation
+        const infNavItems = {
+            dashboard: document.getElementById('infDashboardNav'),
+            profile: document.getElementById('infProfileNav'),
+            businesses: document.getElementById('infBusinessesNav'),
+            promoLinks: document.getElementById('infPromoLinksNav'),
+            analytics: document.getElementById('infAnalyticsNav')
+        };
+
+        const infContentSections = {
+            dashboard: document.getElementById('infDashboardContent'),
+            profile: document.getElementById('infProfileContent'),
+            businesses: document.getElementById('infBusinessesContent'),
+            promoLinks: document.getElementById('infPromoLinksContent'),
+            analytics: document.getElementById('infAnalyticsContent')
+        };
+
+        function showInfluencerSection(sectionName) {
+            // Hide all content sections
+            Object.values(infContentSections).forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Remove active class from all nav items
+            Object.values(infNavItems).forEach(navItem => {
+                navItem.classList.remove('bg-primary', 'text-white');
+                navItem.classList.add('text-gray-700', 'dark:text-gray-200', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+            });
+            
+            // Show selected content section
+            infContentSections[sectionName].classList.remove('hidden');
+            
+            // Add active class to selected nav item
+            infNavItems[sectionName].classList.add('bg-primary', 'text-white');
+            infNavItems[sectionName].classList.remove('text-gray-700', 'dark:text-gray-200', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+        }
+
+        // Set up event listeners for influencer nav items
+        if (infNavItems.dashboard) {
+            infNavItems.dashboard.addEventListener('click', (e) => {
+                e.preventDefault();
+                showInfluencerSection('dashboard');
+            });
+        }
+
+        if (infNavItems.profile) {
+            infNavItems.profile.addEventListener('click', (e) => {
+                e.preventDefault();
+                showInfluencerSection('profile');
+                initCharts();
+            });
+        }
+
+        if (infNavItems.businesses) {
+            infNavItems.businesses.addEventListener('click', (e) => {
+                e.preventDefault();
+                showInfluencerSection('businesses');
+            });
+        }
+
+        if (infNavItems.promoLinks) {
+            infNavItems.promoLinks.addEventListener('click', (e) => {
+                e.preventDefault();
+                showInfluencerSection('promoLinks');
+            });
+        }
+
+        if (infNavItems.analytics) {
+            infNavItems.analytics.addEventListener('click', (e) => {
+                e.preventDefault();
+                showInfluencerSection('analytics');
+            });
+        }
+
+        // Chart initialization function
+        function initCharts() {
+            // Performance Sales Chart
+            if (document.getElementById('salesChart')) {
+                const salesCtx = document.getElementById('salesChart').getContext('2d');
+                
+                // Check if chart already exists and destroy it
+                if (window.salesChart) {
+                    window.salesChart.destroy();
+                }
+                
+                // Create new chart
+                window.salesChart = new Chart(salesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                        datasets: [{
+                            label: 'Sales',
+                            data: [18, 25, 32, 28, 35, 42, 48, 56],
+                            borderColor: '#5D5CDE',
+                            backgroundColor: 'rgba(93, 92, 222, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    display: true,
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Earnings Chart
+            if (document.getElementById('earningsChart')) {
+                const earningsCtx = document.getElementById('earningsChart').getContext('2d');
+                
+                // Check if chart already exists and destroy it
+                if (window.earningsChart) {
+                    window.earningsChart.destroy();
+                }
+                
+                // Create new chart
+                window.earningsChart = new Chart(earningsCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                        datasets: [{
+                            label: 'Earnings',
+                            data: [432, 518, 607, 542, 685, 789, 842, 925],
+                            backgroundColor: 'rgba(93, 92, 222, 0.7)',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return '$ ' + context.raw;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    display: true,
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

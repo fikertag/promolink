@@ -26,7 +26,7 @@ export default function RootLayout({
         <body
           className={`${inter.variable} antialiased bg-[#EBF2FA]`} //  Apply Inter and Geist_Mono
         >
-          <Nav />
+          {/* <Nav /> */}
 
           {children}
         </body>

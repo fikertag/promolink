@@ -136,7 +136,13 @@ body {
 }
 
 @theme {
-  --color-primary: #3cc9ab;
+  /* --color-primary: #3cc9ab; */
+  --color-primary: #5d5cde;
+  --color-secondary: #6366f1;
+  --color-accent: #a855f7;
+  --color-accent2: #ec4899;
+  --color-light: #f9fafb;
+  --color-dark: #060c19;
 }
 
 @layer base {
@@ -155,4 +161,10 @@ body {
 
 .hidewebkit::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
+}
+.text-gradient {
+  background: linear-gradient(to right, #5d5cde, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
