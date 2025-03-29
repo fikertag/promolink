@@ -103,7 +103,7 @@ const AuthForm = () => {
   return (
     <div className="min-h-screen bg-gray-400 flex items-center justify-center p-4">
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-md p-5 transition-all duration-300 "
+        className="bg-white rounded-lg shadow-xl w-full max-w-md min-w-[380px] p-5 transition-all duration-300 "
         style={{
           transform: "scale(0.8)", // Scale down to 80%
           transformOrigin: "center", // Keep the scaling centered

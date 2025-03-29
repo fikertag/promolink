@@ -134,7 +134,7 @@ const LandingPage = () => {
                 </button>
                 <Link
                   href={"/signup"}
-                  className="py-1.5 ml-3 px-4 bg-primary hover:bg-secondary text-white rounded-lg transition-colors hidden md:block"
+                  className="py-1.5 ml-3 px-4 text-sm bg-primary hover:bg-secondary text-white rounded-lg transition-colors hidden md:block"
                 >
                   Sign Up
                 </Link>
@@ -152,10 +152,10 @@ const LandingPage = () => {
           <section className="max-w-7xl mx-auto">
             <div className="bg-white dark:bg-dark rounded-3xl p-4 md:p-10  md:px-24 h-fit">
               <div className="grid grid-cols-1 md:grid-cols-2  ">
-                <div className="mb-10 md:mb-0 mt-5">
-                  <h1 className="text-3xl  sm:text-5xl lg:text-6xl font-extrabold mb-3 md:mb-6">
-                    <span className="text-gradient">Rurn Social Reach</span>
-                    <span className="block">Into Revenue</span>
+                <div className="mb-10 md:mb-0 mt-2 sm:mt-5">
+                  <h1 className="text-5xl  sm:text-5xl lg:text-6xl font-extrabold mb-3 md:mb-6">
+                    <span className="text-gradient">Socials</span>
+                    <span className="block">To Revenue</span>
                   </h1>
                   <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 md:mb-8">
                     The first platform that bridges the gap between{" "}
@@ -165,10 +165,13 @@ const LandingPage = () => {
                     seamless ecosystem where everyone wins.
                   </p>
                   <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <button className="py-3 px-8 bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-white rounded-lg transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold">
+                    <Link
+                      href={"/signup"}
+                      className="py-3 px-8 bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-white rounded-lg transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold"
+                    >
                       Get Started
                       <i className="fas fa-arrow-right ml-2"></i>
-                    </button>
+                    </Link>
                     <button className="py-3 px-8 border border-gray-300 dark:border-gray-700 hover:border-primary dark:hover:border-primary text-gray-800 dark:text-gray-200 rounded-lg transition-colors flex items-center justify-center font-medium">
                       <i className="fas fa-play text-primary mr-2"></i>
                       Watch Demo
@@ -323,6 +326,16 @@ const LandingPage = () => {
                   {/* Duplicated content for seamless looping */}
                   <div className="flex py-2 animate-marquee2 whitespace-nowrap">
                     {[
+                      "smart tech",
+                      "lekecoffe",
+                      "TechPro",
+                      "StyleX",
+                      "mks",
+                      "smart tech",
+                      "lekecoffe",
+                      "TechPro",
+                      "StyleX",
+                      "mks",
                       "smart tech",
                       "lekecoffe",
                       "TechPro",
@@ -758,10 +771,13 @@ const LandingPage = () => {
                   deals, PromoLink is your gateway to meaningful connections.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                  <button className="py-4 w-full max-w-[300px] bg-white text-primary hover:bg-gray-100 rounded-lg transition-colors duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold">
+                  <Link
+                    href={"/signup"}
+                    className="py-4 w-full max-w-[300px] bg-white text-primary hover:bg-gray-100 rounded-lg transition-colors duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold"
+                  >
                     Create Your Account
                     <i className="fas fa-arrow-right ml-2"></i>
-                  </button>
+                  </Link>
                   <button className="py-4 w-full max-w-[300px] border border-white text-white hover:bg-white/10 rounded-lg transition-colors flex items-center justify-center font-medium">
                     <i className="fas fa-headset mr-2"></i>
                     Talk to Our Team

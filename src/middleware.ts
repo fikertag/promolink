@@ -10,21 +10,33 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // Redirect logged-in users away from the landing page
-  if (sessionCookie && pathname === "/") {
-    console.log("User is logged in. Redirecting to /dashboard...");
+  // Redirect logged-in users away from the landing page and signup page
+  if (sessionCookie && (pathname === "/" || pathname === "/signup")) {
     return NextResponse.redirect(new URL("/main", request.url));
   }
 
   // Redirect unauthenticated users trying to access protected routes
-  if (!sessionCookie && pathname === "/profile") {
-    console.log("No session cookie found. Redirecting to /signup...");
+  if (
+    !sessionCookie &&
+    (pathname === "/profile" ||
+      pathname === "/dashboard" ||
+      pathname === "/main" ||
+      pathname === "/message")
+  ) {
     return NextResponse.redirect(new URL("/signup", request.url));
   }
 
+  // Allow access to the requested page
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/", "/profile"], // Apply middleware to the landing page and profile page
+  matcher: [
+    "/", // Landing page
+    "/signup", // All routes under /auth
+    "/profile", // Profile route
+    "/dashboard", // Dashboard route
+    "/main", // Dashboard route
+    "/message", // Dashboard route
+  ],
 };
