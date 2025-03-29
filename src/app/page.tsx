@@ -484,7 +484,7 @@ const LandingPage = () => {
                     <li className="flex items-start">
                       <i className="fas fa-check-circle text-green-500  mr-2"></i>
                       <span>
-                        Browse businesses that align with your audience's
+                        Browse businesses that align with your audience&apos;s
                         interests
                       </span>
                     </li>
@@ -643,7 +643,7 @@ const LandingPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative">
                 <div className="absolute -top-4 -right-4 w-16 h-16 text-5xl text-primary opacity-20">
-                  "
+                  &quot
                 </div>
                 <div className="glass p-8 rounded-xl relative z-10 bg-accent/10">
                   <div className="flex items-center mb-4">
@@ -660,10 +660,10 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    "PromoLink transformed how we connect with our audience. Our
-                    sales have increased by 135% since joining, and we've built
-                    relationships with amazing creators who truly understand our
-                    brand."
+                    &quotPromoLink transformed how we connect with our audience.
+                    Our sales have increased by 135% since joining, and
+                    we&apos;ve built relationships with amazing creators who
+                    truly understand our brand.&quot
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>
@@ -677,7 +677,7 @@ const LandingPage = () => {
 
               <div className="relative mt-8 md:mt-0 ">
                 <div className="absolute -top-4 -right-4 w-16 h-16 text-5xl text-primary opacity-20">
-                  "
+                  &quot
                 </div>
                 <div className="glass p-8 rounded-xl relative z-10 bg-accent/10">
                   <div className="flex items-center mb-4">
@@ -694,9 +694,9 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    "PromoLink is different. The analytics are incredible, and I
-                    only promote products I believe in. My audience trusts my
-                    recommendations, and I earn consistent income."
+                    &quotPromoLink is different. The analytics are incredible,
+                    and I only promote products I believe in. My audience trusts
+                    my recommendations, and I earn consistent income.&quot
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>
@@ -710,7 +710,7 @@ const LandingPage = () => {
 
               <div className="relative mt-8 md:mt-0">
                 <div className="absolute -top-4 -right-4 w-16 h-16 text-5xl text-primary opacity-20">
-                  "
+                  &quot
                 </div>
                 <div className="glass p-8 rounded-xl relative z-10 bg-accent/10">
                   <div className="flex items-center mb-4">
@@ -727,10 +727,10 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    "I love finding new products through the creators I follow.
-                    The discounts are great, but what I appreciate most is
-                    knowing these are genuine recommendations, not just paid
-                    ads."
+                    &quotI love finding new products through the creators I
+                    follow. The discounts are great, but what I appreciate most
+                    is knowing these are genuine recommendations, not just paid
+                    ads.&quot
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>
@@ -753,7 +753,7 @@ const LandingPage = () => {
                   Ready to Join the Economy?
                 </h2>
                 <p className="text-lg text-white/90 max-w-3xl mx-auto mb-6">
-                  Whether you're a business looking to grow, an influencer
+                  Whether you&apos;re a business looking to grow, an influencer
                   wanting to monetize your audience, or a customer seeking great
                   deals, PromoLink is your gateway to meaningful connections.
                 </p>

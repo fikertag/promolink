@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import Proposal, { IProposal } from "@/models/ProposalSchema"; // Import the Proposal model
+import Proposal from "@/models/ProposalSchema"; // Import the Proposal model
 import Job from "@/models/JobSchema"; // Import the Job model
 import dbConnect from "@/lib/mongoose"; // Utility to connect to MongoDB
 import { z } from "zod"; // For input validation
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     const savedProposal = await newProposal.save();
 
     // Update job - make sure field name matches your schema exactly
-    const updatedJob = await Job.findByIdAndUpdate(
+    await Job.findByIdAndUpdate(
       jobId,
       { $push: { proposalsSubmitted: savedProposal._id } }, // Fixed field name
       { new: true }
@@ -92,7 +92,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Build the query
-    let query: any = {};
+    const query: {
+      jobId?: string;
+      influencerId?: string;
+    } = {};
     if (jobId) query.jobId = jobId;
     if (influencerId) query.influencerId = influencerId;
 

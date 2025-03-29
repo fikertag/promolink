@@ -84,7 +84,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Build the query
-    let query: any = {};
+    const query: {
+      senderId?: string;
+      receiverId?: string;
+    } = {};
     if (type === "sent") {
       query.senderId = userId; // Fetch messages sent by the user
     } else if (type === "received") {

@@ -33,6 +33,7 @@ function ProfilePage() {
       toast.success("Profile image updated!");
     } catch (error) {
       toast.error("Failed to update image");
+      console.log(error);
     }
   };
 
@@ -61,7 +62,7 @@ function ProfilePage() {
   const {
     data: session,
     isPending: isSessionLoading,
-    error: sessionError,
+    // error: sessionError,
     refetch,
   } = authClient.useSession();
 

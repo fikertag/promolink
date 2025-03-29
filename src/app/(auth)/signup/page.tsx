@@ -56,10 +56,10 @@ const AuthForm = () => {
         callbackURL: "/main",
       },
       {
-        onRequest: (ctx) => {
-          console.log("loading...");
+        onRequest: () => {
+          console.log("loading ...");
         },
-        onSuccess: (ctx) => {
+        onSuccess: () => {
           console.log("sign-in successful");
         },
         onError: (ctx) => {
@@ -81,10 +81,10 @@ const AuthForm = () => {
         callbackURL: "/main",
       },
       {
-        onRequest: (ctx) => {
+        onRequest: () => {
           console.log("loading...");
         },
-        onSuccess: (ctx) => {
+        onSuccess: () => {
           setError("");
           setEmail("");
           setPassword("");

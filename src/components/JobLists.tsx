@@ -6,9 +6,9 @@ export default function JobLists() {
   // Auth session
   const {
     data: session,
-    isPending: isSessionLoading,
-    error: sessionError,
-    refetch,
+    // isPending: isSessionLoading,
+    // error: sessionError,
+    // refetch,
   } = authClient.useSession();
 
   const { jobs } = useJobs(); // Fetch jobs from the JobContext

@@ -84,7 +84,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Build the query
-    let query: any = {};
+    const query: {
+      clientId?: string;
+      influencerId?: string;
+    } = {};
     if (role === "client") {
       query.clientId = userId; // Fetch contracts where the user is the client
     } else if (role === "influencer") {
