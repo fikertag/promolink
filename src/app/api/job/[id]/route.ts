@@ -5,12 +5,12 @@ import mongoose from "mongoose"; // For ObjectId validation
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   await dbConnect(); // Ensure the database is connected
 
   try {
-    const { id } = await params; // Extract the job ID from the dynamic route parameter
+    const { id } = await context.params; // Extract the job ID from the dynamic route parameter
     const { influencerId } = await request.json(); // Extract the influencer ID from the request body
 
     // Validate the job ID and influencer ID

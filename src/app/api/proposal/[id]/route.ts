@@ -13,12 +13,12 @@ const UpdateProposalSchema = z.object({
 // PATCH: Update a proposal (e.g., status or message)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   await dbConnect(); // Ensure the database is connected
 
   try {
-    const { id: proposalId } = await params; // Access URL params
+    const { id: proposalId } = await context.params; // Access URL params
 
     // Validate proposalId
     if (!proposalId || !mongoose.Types.ObjectId.isValid(proposalId)) {
