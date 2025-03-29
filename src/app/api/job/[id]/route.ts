@@ -5,12 +5,12 @@ import mongoose from "mongoose"; // For ObjectId validation
 
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   await dbConnect(); // Ensure the database is connected
 
   try {
-    const { id } = await context.params; // Extract the job ID from the dynamic route parameter
+    const { id } = await params; // Extract the job ID from the dynamic route parameter
     const { influencerId } = await request.json(); // Extract the influencer ID from the request body
 
     // Validate the job ID and influencer ID
@@ -49,8 +49,8 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   await dbConnect(); // Ensure the database is connected
 
   try {

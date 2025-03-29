@@ -12,12 +12,12 @@ const UpdateContractSchema = z.object({
 // PATCH: Update the contract status (influencer accepts or declines)
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   await dbConnect(); // Ensure the database is connected
 
   try {
-    const { id: contractId } = await context.params; // Access URL params
+    const { id: contractId } = await params; // Access URL params
 
     // Validate contractId
     if (!contractId || !mongoose.Types.ObjectId.isValid(contractId)) {
