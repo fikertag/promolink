@@ -50,7 +50,7 @@ export async function PATCH(
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-): Promise<NextResponse> {
+) {
   await dbConnect(); // Ensure the database is connected
 
   try {

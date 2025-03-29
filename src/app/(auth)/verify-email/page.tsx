@@ -1,39 +1,38 @@
 "use client";
 
+import { Suspense } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
-const VerifyEmailPage = () => {
+const VerifyEmailContent = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
 
-  const [isCooldown, setIsCooldown] = useState(false); // Cooldown state
-  const [cooldownTime, setCooldownTime] = useState(60); // Cooldown timer (in seconds)
-  const [isLoading, setIsLoading] = useState(false); // Loading state for resend button
+  const [isCooldown, setIsCooldown] = useState(false);
+  const [cooldownTime, setCooldownTime] = useState(60);
+  const [isLoading, setIsLoading] = useState(false);
 
   const resendVerificationEmail = async () => {
-    if (isCooldown || isLoading) return; // Prevent resending during cooldown or loading
+    if (isCooldown || isLoading) return;
 
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
     try {
       await authClient.sendVerificationEmail({
         email: email,
-        callbackURL: "/", // The redirect URL after verification
+        callbackURL: "/",
       });
-      // Start cooldown
       setIsCooldown(true);
-      setCooldownTime(60); // Reset cooldown timer to 60 seconds
+      setCooldownTime(60);
     } catch (error) {
       alert("Failed to send verification email. Please try again later.");
       console.log(error);
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
-  // Cooldown timer logic
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isCooldown) {
@@ -41,37 +40,37 @@ const VerifyEmailPage = () => {
         setCooldownTime((prev) => {
           if (prev <= 1) {
             clearInterval(timer);
-            setIsCooldown(false); // End cooldown
-            return 60; // Reset timer
+            setIsCooldown(false);
+            return 60;
           }
           return prev - 1;
         });
-      }, 1000); // Decrease timer every second
+      }, 1000);
     }
-    return () => clearInterval(timer); // Cleanup timer on unmount
+    return () => clearInterval(timer);
   }, [isCooldown]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 px-5">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2 ">
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">
           Verify Your Email
         </h1>
         <p className="text-gray-600 mb-6 text-sm">
-          We&#39;ve sent a verification email to your email address. Please
-          check your inbox and click the link to verify your account.
+          We've sent a verification email to your email address. Please check
+          your inbox and click the link to verify your account.
         </p>
         <p className="text-gray-500 text-xs">
-          Didn&#39;t receive the email? Check your spam folder or
+          Didn't receive the email? Check your spam folder or
           <button
             onClick={resendVerificationEmail}
-            disabled={isCooldown || isLoading} // Disable button during cooldown or loading
+            disabled={isCooldown || isLoading}
             className={`text-blue-500 hover:underline w-full text-center flex ${
               isCooldown || isLoading ? "cursor-not-allowed text-gray-400" : ""
             } flex items-center justify-center`}
           >
             {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin " />
+              <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
               "resend the email"
             )}
@@ -85,6 +84,14 @@ const VerifyEmailPage = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const VerifyEmailPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 };
 
