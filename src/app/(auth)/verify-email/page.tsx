@@ -57,11 +57,11 @@ const VerifyEmailContent = () => {
           Verify Your Email
         </h1>
         <p className="text-gray-600 mb-6 text-sm">
-          We've sent a verification email to your email address. Please check
-          your inbox and click the link to verify your account.
+          We&aposve sent a verification email to your email address. Please
+          check your inbox and click the link to verify your account.
         </p>
         <p className="text-gray-500 text-xs">
-          Didn't receive the email? Check your spam folder or
+          Didn&apost receive the email? Check your spam folder or
           <button
             onClick={resendVerificationEmail}
             disabled={isCooldown || isLoading}
