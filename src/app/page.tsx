@@ -643,7 +643,7 @@ const LandingPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative">
                 <div className="absolute -top-4 -right-4 w-16 h-16 text-5xl text-primary opacity-20">
-                  &quot
+                  &quot;
                 </div>
                 <div className="glass p-8 rounded-xl relative z-10 bg-accent/10">
                   <div className="flex items-center mb-4">
@@ -660,9 +660,9 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    &quotPromoLink transformed how we connect with our audience.
-                    Our sales have increased by 135% since joining, and
-                    we&apos;ve built relationships with amazing creators who
+                    &quot;PromoLink transformed how we connect with our
+                    audience. Our sales have increased by 135% since joining,
+                    and we&apos;ve built relationships with amazing creators who
                     truly understand our brand.&quot
                   </p>
                   <div className="flex text-yellow-400">
@@ -677,7 +677,7 @@ const LandingPage = () => {
 
               <div className="relative mt-8 md:mt-0 ">
                 <div className="absolute -top-4 -right-4 w-16 h-16 text-5xl text-primary opacity-20">
-                  &quot
+                  &quot;
                 </div>
                 <div className="glass p-8 rounded-xl relative z-10 bg-accent/10">
                   <div className="flex items-center mb-4">
@@ -694,9 +694,9 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    &quotPromoLink is different. The analytics are incredible,
+                    &quot;PromoLink is different. The analytics are incredible,
                     and I only promote products I believe in. My audience trusts
-                    my recommendations, and I earn consistent income.&quot
+                    my recommendations, and I earn consistent income.&quot;
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>
@@ -710,7 +710,7 @@ const LandingPage = () => {
 
               <div className="relative mt-8 md:mt-0">
                 <div className="absolute -top-4 -right-4 w-16 h-16 text-5xl text-primary opacity-20">
-                  &quot
+                  &quot;
                 </div>
                 <div className="glass p-8 rounded-xl relative z-10 bg-accent/10">
                   <div className="flex items-center mb-4">
@@ -727,10 +727,10 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    &quotI love finding new products through the creators I
+                    &quot;I love finding new products through the creators I
                     follow. The discounts are great, but what I appreciate most
                     is knowing these are genuine recommendations, not just paid
-                    ads.&quot
+                    ads.&quot;
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>

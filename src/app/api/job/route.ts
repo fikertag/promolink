@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import Job, { IJob } from "@/models/JobSchema"; // Adjust the path as needed
 import dbConnect from "@/lib/mongoose"; // Utility to connect to MongoDB
 import mongoose from "mongoose"; // For ObjectId validation
+import Proposal from "@/models/ProposalSchema"; // Adjust the path as needed
 
 export async function POST(request: NextRequest) {
   await dbConnect();
@@ -48,6 +49,7 @@ export async function GET(request: NextRequest) {
       .populate({
         path: "proposalsSubmitted",
         select: "influencerId", // Get the influencerId from proposals
+        model: Proposal, // Explicitly reference the model name as a string
       })
       .lean(); // Convert to plain JavaScript objects
 
