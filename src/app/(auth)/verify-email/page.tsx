@@ -27,6 +27,7 @@ const VerifyEmailPage = () => {
       setCooldownTime(60); // Reset cooldown timer to 60 seconds
     } catch (error) {
       alert("Failed to send verification email. Please try again later.");
+      console.log(error);
     } finally {
       setIsLoading(false); // Stop loading
     }

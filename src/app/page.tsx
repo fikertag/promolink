@@ -31,9 +31,9 @@ const LandingPage = () => {
     };
   }, []);
 
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
+  // const toggleTheme = () => {
+  //   setDarkMode(!darkMode);
+  // };
 
   const animateCounters = () => {
     if (counted) return;
