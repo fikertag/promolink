@@ -1,26 +1,23 @@
 import mongoose from "mongoose";
 
-// 1. Define the cache type
 type MongooseCache = {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
 };
 
-// 2. Get the MongoDB URI with proper type checking
+const globalWithMongoose = global as typeof globalThis & {
+  mongoose: MongooseCache;
+};
+
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
 if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable");
 }
 
-// 3. Initialize the cache in a way that works on Vercel
-let cached: MongooseCache = (global as any).mongoose;
-
-if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
-}
-
-// 4. Define the dbConnect function with return type
+let cached = globalWithMongoose.mongoose ?? { conn: null, promise: null };
+globalWithMongoose.mongoose = cached;
+// 6. Define the dbConnect function
 async function dbConnect(): Promise<typeof mongoose> {
   if (cached.conn) {
     return cached.conn;
