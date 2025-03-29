@@ -12,6 +12,7 @@ export interface IJob extends Document {
   postedBy: mongoose.Types.ObjectId;
   status: "open" | "in-progress" | "completed" | "cancelled";
   hiredInfluencers: mongoose.Types.ObjectId[]; // Array of hired influencers
+  proposalsSubmitted: mongoose.Types.ObjectId[]; // Array of hired influencers
   createdAt: Date;
   updatedAt: Date;
 }
@@ -46,6 +47,12 @@ const JobSchema = new Schema<IJob>(
       {
         type: Schema.Types.ObjectId,
         ref: "User", // Reference to the User model
+      },
+    ],
+    proposalsSubmitted: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Proposal", // Reference to the User model
       },
     ],
   },

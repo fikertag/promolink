@@ -53,7 +53,7 @@ const AuthForm = () => {
       {
         email: email,
         password: password,
-        callbackURL: "/dashboard",
+        callbackURL: "/main",
       },
       {
         onRequest: (ctx) => {
@@ -78,7 +78,7 @@ const AuthForm = () => {
         email: email,
         password: password,
         name: name,
-        callbackURL: "/dashboard",
+        callbackURL: "/main",
       },
       {
         onRequest: (ctx) => {

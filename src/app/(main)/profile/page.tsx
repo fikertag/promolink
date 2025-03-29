@@ -171,7 +171,7 @@ function ProfilePage() {
 
   return (
     <div className="min-h- bg-gray-50">
-      <button onClick={() => authClient.signOut()}> signout</button>
+      {/* <button onClick={() => authClient.signOut()}> signout</button> */}
       {/* Edit Profile Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">

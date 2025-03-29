@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import { MenuIcon, Camera } from "lucide-react";
+import Link from "next/link";
 
 const LandingPage = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -131,9 +132,12 @@ const LandingPage = () => {
                 <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block">
                   Support
                 </button>
-                <button className="py-1.5 ml-3 px-4 bg-primary hover:bg-secondary text-white rounded-lg transition-colors hidden md:block">
+                <Link
+                  href={"/signup"}
+                  className="py-1.5 ml-3 px-4 bg-primary hover:bg-secondary text-white rounded-lg transition-colors hidden md:block"
+                >
                   Sign Up
-                </button>
+                </Link>
                 <button className="md:hidden">
                   <MenuIcon />
                 </button>

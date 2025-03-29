@@ -15,6 +15,10 @@ interface Job {
   postedBy: string;
   status: "open" | "in-progress" | "completed" | "cancelled";
   hiredInfluencers: string[];
+  proposalsSubmitted: Array<{
+    _id: string;
+    influencerId: string;
+  }>;
   createdAt: string;
   updatedAt: string;
 }
@@ -23,12 +27,17 @@ interface JobContextType {
   jobs: Job[];
   fetchJobs: () => Promise<void>;
   addJob: (job: Omit<Job, "_id" | "createdAt" | "updatedAt">) => Promise<void>;
+  addProposalToJob: (
+    jobId: string,
+    proposal: { _id: string; influencerId: string }
+  ) => void;
 }
 
 const JobContext = createContext<JobContextType>({
   jobs: [],
   fetchJobs: async () => {},
   addJob: async () => {},
+  addProposalToJob: () => {},
 });
 
 export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -56,6 +65,23 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Add a proposal to a job
+  const addProposalToJob = (
+    jobId: string,
+    proposal: { _id: string; influencerId: string }
+  ) => {
+    setJobs((prevJobs) =>
+      prevJobs.map((job) =>
+        job._id === jobId
+          ? {
+              ...job,
+              proposalsSubmitted: [...(job.proposalsSubmitted || []), proposal],
+            }
+          : job
+      )
+    );
+  };
+
   // Fetch jobs on component mount
   useEffect(() => {
     fetchJobs();
@@ -71,6 +97,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
         jobs,
         fetchJobs,
         addJob,
+        addProposalToJob,
       }}
     >
       {children}

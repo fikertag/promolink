@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import Proposal, { IProposal } from "@/models/ProposalSchema"; // Import the Proposal model
+import Job from "@/models/JobSchema"; // Import the Job model
 import dbConnect from "@/lib/mongoose"; // Utility to connect to MongoDB
 import { z } from "zod"; // For input validation
 import mongoose from "mongoose"; // For ObjectId validation
@@ -13,10 +14,9 @@ const CreateProposalSchema = z.object({
 
 // POST: Create a new proposal
 export async function POST(request: NextRequest) {
-  await dbConnect(); // Ensure the database is connected
+  await dbConnect();
 
   try {
-    // Validate request body
     const body = await request.json();
     const validation = CreateProposalSchema.safeParse(body);
 
@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
 
     const { jobId, influencerId, message } = validation.data;
 
-    // Validate ObjectIds
     if (
       !mongoose.Types.ObjectId.isValid(jobId) ||
       !mongoose.Types.ObjectId.isValid(influencerId)
@@ -40,17 +39,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create a new proposal
-    const newProposal: IProposal = new Proposal({
+    // Verify job exists first
+    const jobExists = await Job.exists({ _id: jobId });
+    if (!jobExists) {
+      return NextResponse.json({ message: "Job not found" }, { status: 404 });
+    }
+
+    // Create proposal
+    const newProposal = new Proposal({
       jobId,
       influencerId,
       message,
     });
 
     const savedProposal = await newProposal.save();
-    return NextResponse.json(savedProposal, { status: 201 }); // Return the created proposal
+
+    // Update job - make sure field name matches your schema exactly
+    const updatedJob = await Job.findByIdAndUpdate(
+      jobId,
+      { $push: { proposalsSubmitted: savedProposal._id } }, // Fixed field name
+      { new: true }
+    );
+
+    return NextResponse.json(savedProposal, { status: 201 });
   } catch (error) {
-    console.error("Error creating proposal:", error); // Log the error for debugging
+    console.error("Error:", error);
     return NextResponse.json(
       { message: "Failed to create proposal", error },
       { status: 500 }

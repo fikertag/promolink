@@ -41,14 +41,21 @@ export async function GET(request: NextRequest) {
 
     let query = {};
     if (excludeCompleted === "true") {
-      query = { status: { $ne: "completed" } }; // Exclude jobs with status "completed"
+      query = { status: { $ne: "completed" } };
     }
 
-    const jobs = await Job.find(query); // Populate is not working
+    const jobs = await Job.find(query)
+      .populate({
+        path: "proposalsSubmitted",
+        select: "influencerId", // Get the influencerId from proposals
+      })
+      .lean(); // Convert to plain JavaScript objects
+
     return NextResponse.json(jobs, { status: 200 });
   } catch (error) {
+    console.error("Error fetching jobs:", error);
     return NextResponse.json(
-      { message: "Failed to fetch jobs", error },
+      { message: "Failed to fetch jobs", error: error },
       { status: 500 }
     );
   }
@@ -78,6 +85,8 @@ export async function PATCH(request: NextRequest) {
     if (!updatedJob) {
       return NextResponse.json({ message: "Job not found" }, { status: 404 });
     }
+
+    console.log("Updated job:", updatedJob); // Log the updated job for debugging
 
     return NextResponse.json(updatedJob, { status: 200 });
   } catch (error) {

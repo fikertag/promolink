@@ -8,10 +8,17 @@ export async function middleware(request: NextRequest) {
     useSecureCookies: process.env.NODE_ENV === "production", // Use secure cookies only in production
   });
 
-  console.log("Session Cookie:", sessionCookie);
+  const pathname = request.nextUrl.pathname;
 
-  if (!sessionCookie) {
-    console.log("No session cookie found. Redirecting...");
+  // Redirect logged-in users away from the landing page
+  if (sessionCookie && pathname === "/") {
+    console.log("User is logged in. Redirecting to /dashboard...");
+    return NextResponse.redirect(new URL("/main", request.url));
+  }
+
+  // Redirect unauthenticated users trying to access protected routes
+  if (!sessionCookie && pathname === "/profile") {
+    console.log("No session cookie found. Redirecting to /signup...");
     return NextResponse.redirect(new URL("/signup", request.url));
   }
 
@@ -19,5 +26,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/profile"], // Specify the routes the middleware applies to
+  matcher: ["/", "/profile"], // Apply middleware to the landing page and profile page
 };
