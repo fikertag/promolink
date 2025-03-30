@@ -30,6 +30,7 @@ export async function GET(
 
     return NextResponse.json(messages);
   } catch (error) {
+    console.error("Error fetching messages:", error);
     return NextResponse.json(
       { error: "Failed to load messages" },
       { status: 500 }

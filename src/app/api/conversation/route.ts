@@ -36,6 +36,7 @@ export async function POST(request: Request) {
     const savedConversation = await newConversation.save();
     return NextResponse.json(savedConversation, { status: 201 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: "Failed to create conversation" },
       { status: 500 }

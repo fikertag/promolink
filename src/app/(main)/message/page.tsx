@@ -26,16 +26,16 @@ import {
 type TabType = "sent" | "received" | "messages";
 type ProposalStatus = "pending" | "accepted" | "rejected";
 
-interface Proposal {
-  id: string;
-  brandName: string;
-  brandLogo: string;
-  campaignTitle: string;
-  price: number;
-  status: ProposalStatus;
-  date: string;
-  description?: string;
-}
+// interface Proposal {
+//   id: string;
+//   brandName: string;
+//   brandLogo: string;
+//   campaignTitle: string;
+//   price: number;
+//   status: ProposalStatus;
+//   date: string;
+//   description?: string;
+// }
 
 interface Message {
   id: string;
