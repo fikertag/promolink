@@ -14,6 +14,7 @@ if (!db) {
 }
 
 export const auth = betterAuth({
+  trustedOrigins: ["http://localhost:3000", "http://192.168.221.213:3000"],
   database: mongodbAdapter(db),
   emailAndPassword: {
     enabled: true,

@@ -99,10 +99,13 @@ export async function GET(request: NextRequest) {
     if (jobId) query.jobId = jobId;
     if (influencerId) query.influencerId = influencerId;
 
-    // Fetch proposals
-    const proposals = await Proposal.find(query);
-    // .populate("jobId", "title description") // Populate job details
-    // .populate("influencerId", "name email"); // Populate influencer details
+    const proposals = await Proposal.find(query)
+      .populate({
+        path: "jobId",
+        select: "title description price location socialMedia status",
+        model: Job,
+      })
+      .lean();
 
     return NextResponse.json(proposals, { status: 200 }); // Return the fetched proposals
   } catch (error) {

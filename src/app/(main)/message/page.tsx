@@ -1,19 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
+import { useProposals } from "@/context/Proposal";
 import {
   MessageSquare,
   Send,
   Paperclip,
-  ChevronRight,
-  // Clock,
+  Clipboard,
   CheckCircle,
+  MessageCircle,
   XCircle,
   Clock3,
+  DollarSign,
+  MapPin,
+  Calendar,
+  FileText,
 } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 type TabType = "sent" | "received" | "messages";
-type ProposalStatus = "pending" | "accepted" | "declined";
+type ProposalStatus = "pending" | "accepted" | "rejected";
 
 interface Proposal {
   id: string;
@@ -39,55 +50,7 @@ function MessagesAndProposals() {
   const [activeTab, setActiveTab] = useState<TabType>("received");
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [messageInput, setMessageInput] = useState("");
-
-  const proposalsSent: Proposal[] = [
-    {
-      id: "1",
-      brandName: "EcoStyle",
-      brandLogo:
-        "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=100",
-      campaignTitle: "Sustainable Fashion Campaign",
-      price: 750,
-      status: "pending",
-      date: "2024-02-15",
-    },
-    {
-      id: "2",
-      brandName: "GreenLife",
-      brandLogo:
-        "https://images.unsplash.com/photo-1542838132-92c53300491e?w=100",
-      campaignTitle: "Eco-Friendly Products",
-      price: 500,
-      status: "accepted",
-      date: "2024-02-10",
-    },
-  ];
-
-  const proposalsReceived: Proposal[] = [
-    {
-      id: "3",
-      brandName: "Wellness Co",
-      brandLogo:
-        "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=100",
-      campaignTitle: "Healthy Living Series",
-      price: 800,
-      status: "pending",
-      date: "2024-02-18",
-      description:
-        "Looking for wellness influencers to promote our new product line",
-    },
-    {
-      id: "4",
-      brandName: "FitLife",
-      brandLogo:
-        "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=100",
-      campaignTitle: "Fitness Challenge",
-      price: 600,
-      status: "pending",
-      date: "2024-02-16",
-      description: "30-day fitness transformation challenge campaign",
-    },
-  ];
+  const { proposals } = useProposals();
 
   const messages: Message[] = [
     {
@@ -116,7 +79,7 @@ function MessagesAndProposals() {
         return "bg-yellow-100 text-yellow-800";
       case "accepted":
         return "bg-green-100 text-green-800";
-      case "declined":
+      case "rejected":
         return "bg-red-100 text-red-800";
     }
   };
@@ -124,11 +87,11 @@ function MessagesAndProposals() {
   const getStatusIcon = (status: ProposalStatus) => {
     switch (status) {
       case "pending":
-        return <Clock3 size={16} className="mr-1" />;
+        return <Clock3 size={16} className="sm:mr-1" />;
       case "accepted":
-        return <CheckCircle size={16} className="mr-1" />;
-      case "declined":
-        return <XCircle size={16} className="mr-1" />;
+        return <CheckCircle size={16} className="sm:mr-1" />;
+      case "rejected":
+        return <XCircle size={16} className="sm:mr-1" />;
     }
   };
 
@@ -139,30 +102,40 @@ function MessagesAndProposals() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
-    <div className=" bg-gray-50 py-8">
+    <div className="bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Tab Navigation */}
         <div className="bg-white rounded-t-2xl shadow-sm">
           <div className="border-b border-gray-200">
             <nav className="flex -mb-px">
               {[
-                { id: "sent", label: "Proposals Sent" },
-                { id: "received", label: "Proposals Received" },
+                { id: "sent", label: "Proposals" },
                 { id: "messages", label: "Messages" },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as TabType)}
                   className={`
-                    flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm
-                    ${
-                      activeTab === tab.id
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                    }
-                    transition-colors duration-200
-                  `}
+                  flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm
+                  ${
+                    activeTab === tab.id
+                      ? "border-primary text-primary"
+                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  }
+                  transition-colors duration-200
+                `}
                 >
                   {tab.label}
                 </button>
@@ -174,121 +147,142 @@ function MessagesAndProposals() {
         {/* Content Area */}
         <div className="bg-white rounded-b-2xl shadow-sm min-h-[500px]">
           {activeTab === "sent" && (
-            <div className="p-6">
-              <div className="space-y-4">
-                {proposalsSent.map((proposal) => (
-                  <div
-                    key={proposal.id}
-                    className="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-primary transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={proposal.brandLogo}
-                        alt={proposal.brandName}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
-                      <div>
-                        <h3 className="font-medium text-gray-900">
-                          {proposal.brandName}
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          {proposal.campaignTitle}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-sm font-medium text-gray-900">
-                            ${proposal.price}
-                          </span>
-                          <span className="text-sm text-gray-500">•</span>
-                          <span className="text-sm text-gray-500">
-                            {new Date(proposal.date).toLocaleDateString()}
-                          </span>
-                        </div>
+            <div className="p-3 sm:p-6">
+              {proposals.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+                  <FileText size={48} className="mb-4 opacity-50" />
+                  <p className="text-lg">No proposals yet</p>
+                  <p className="text-sm">Your proposals will appear here</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {proposals.map((proposal) => (
+                    <div
+                      key={proposal._id}
+                      className="px-2 sm:px-6 rounded-lg border border-gray-400 hover:shadow-sm transition-all"
+                    >
+                      <div className="flex flex-col">
+                        <Accordion type="single" collapsible>
+                          <AccordionItem value="item-1">
+                            <AccordionTrigger>
+                              {/* Header with title and status */}
+                              <div className="flex flex-col w-full">
+                                <div className="flex justify-between items-start mb-4">
+                                  <div>
+                                    <h3 className="sm:text-lg font-semibold text-[18px] text-gray-900 flex items-center">
+                                      <Clipboard
+                                        size={18}
+                                        className="mr-2 text-gray-400"
+                                      />
+                                      {proposal.jobId.title}
+                                    </h3>
+                                  </div>
+                                  <span
+                                    className={` ml-2 inline-flex items-center px-3 py-1 rounded-md text-xs font-medium border ${getStatusColor(
+                                      proposal.status
+                                    )}`}
+                                  >
+                                    {getStatusIcon(proposal.status)}
+                                    <span className="hidden sm:inline-flex">
+                                      {proposal.status.charAt(0).toUpperCase() +
+                                        proposal.status.slice(1)}
+                                    </span>
+                                  </span>
+                                </div>
+
+                                {/* Key details in compact grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 sm:gap-4 gap-2 mb-4">
+                                  <div className="flex items-center text-sm">
+                                    <DollarSign
+                                      size={16}
+                                      className="mr-2 text-gray-400 flex-shrink-0"
+                                    />
+                                    <div>
+                                      <span className="text-gray-500">
+                                        Budget
+                                      </span>
+                                      <p className="font-medium">
+                                        ${proposal.jobId.price}
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  {proposal.jobId.location && (
+                                    <div className="flex items-center text-sm">
+                                      <MapPin
+                                        size={16}
+                                        className="mr-2 text-gray-400 flex-shrink-0"
+                                      />
+                                      <div>
+                                        <span className="text-gray-500">
+                                          Location
+                                        </span>
+                                        <p className="font-medium">
+                                          {proposal.jobId.location}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  <div className="flex items-center text-sm">
+                                    <Calendar
+                                      size={16}
+                                      className="mr-2 text-gray-400 flex-shrink-0"
+                                    />
+                                    <div>
+                                      <span className="text-gray-500">
+                                        Submitted
+                                      </span>
+                                      <p className="font-medium">
+                                        {formatDate(proposal.createdAt)}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              {/* Job description */}
+                              <div className="mb-4">
+                                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                  <FileText
+                                    size={16}
+                                    className="mr-2 text-gray-400"
+                                  />
+                                  Job Description
+                                </h4>
+                                <p className="text-sm text-gray-600 pl-6">
+                                  {proposal.jobId.description}
+                                </p>
+                              </div>
+
+                              {/* Your proposal message */}
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                  <MessageCircle
+                                    size={16}
+                                    className="mr-2 text-gray-400"
+                                  />
+                                  Your Proposal
+                                </h4>
+                                <p className="text-sm text-gray-600 pl-6">
+                                  {proposal.message}
+                                </p>
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <span
-                        className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                          proposal.status
-                        )}`}
-                      >
-                        {getStatusIcon(proposal.status)}
-                        {proposal.status.charAt(0).toUpperCase() +
-                          proposal.status.slice(1)}
-                      </span>
-                      <button className="text-primary hover:text-primary">
-                        <ChevronRight size={20} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
-          {activeTab === "received" && (
-            <div className="p-6">
-              <div className="space-y-4">
-                {proposalsReceived.map((proposal) => (
-                  <div
-                    key={proposal.id}
-                    className="p-4 rounded-lg border border-gray-100 hover:border-primary transition-colors"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-4">
-                        <img
-                          src={proposal.brandLogo}
-                          alt={proposal.brandName}
-                          className="w-12 h-12 rounded-lg object-cover"
-                        />
-                        <div>
-                          <h3 className="font-medium text-gray-900">
-                            {proposal.brandName}
-                          </h3>
-                          <p className="text-sm text-gray-500">
-                            {proposal.campaignTitle}
-                          </p>
-                        </div>
-                      </div>
-                      <span
-                        className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                          proposal.status
-                        )}`}
-                      >
-                        {getStatusIcon(proposal.status)}
-                        {proposal.status.charAt(0).toUpperCase() +
-                          proposal.status.slice(1)}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">
-                      {proposal.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-gray-900">
-                          ${proposal.price}
-                        </span>
-                        <span className="text-sm text-gray-500">•</span>
-                        <span className="text-sm text-gray-500">
-                          {new Date(proposal.date).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <div className="flex gap-2">
-                        <button className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                          Decline
-                        </button>
-                        <button className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary rounded-lg transition-colors">
-                          Accept
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
+          {/* Messages section remains unchanged */}
           {activeTab === "messages" && (
-            <div className="grid grid-cols-3 min-h-[500px]">
+            <div className="grid lg:grid-cols-3 grid-cols-1 min-h-[500px]">
               {/* Message Threads */}
               <div className="col-span-1 border-r border-gray-200">
                 <div className="p-4">
@@ -363,7 +357,7 @@ function MessagesAndProposals() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex-1 flex items-center justify-center text-gray-500">
+                  <div className="flex-1 sm:flex hidden items-center justify-center text-gray-500">
                     <div className="text-center">
                       <MessageSquare
                         size={48}
