@@ -50,7 +50,6 @@ export async function GET(request: NextRequest) {
   try {
     const userId = request.nextUrl.searchParams.get("userId");
 
-    // Validate user ID
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json(
         { error: "Invalid or missing user ID" },
@@ -59,45 +58,56 @@ export async function GET(request: NextRequest) {
     }
 
     const conversations = await Conversation.aggregate([
-      // 1. Match conversations where the user is a participant
+      // 1. Find conversations with this user
       { $match: { participants: new mongoose.Types.ObjectId(userId) } },
 
-      // 2. Sort by the most recent update
+      // 2. Sort by most recent
       { $sort: { updatedAt: -1 } },
 
-      // 3. Lookup participant details (fetch user details for all participants)
+      // 3. Lookup participant details
       {
         $lookup: {
-          from: "users", // Collection name for users
+          from: "user",
           localField: "participants",
           foreignField: "_id",
-          as: "users",
+          as: "participantDetails",
         },
       },
 
-      // 4. Add fields to reshape the data
-      {
-        $addFields: {
-          otherUser: {
-            $filter: {
-              input: "$users",
-              as: "user",
-              cond: {
-                $ne: ["$$user._id", new mongoose.Types.ObjectId(userId)],
-              },
-            },
-          },
-        },
-      },
-
-      // 5. Simplify the structure
+      // 4. Transform to your desired format
       {
         $project: {
           _id: 1,
           updatedAt: 1,
           lastMessage: 1,
-          unreadCount: 1,
-          otherUser: { $arrayElemAt: ["$otherUser", 0] }, // Get the first other user
+          unreadCount: { $ifNull: ["$unreadCount", 0] }, // Default to 0 if missing
+          otherUser: {
+            $let: {
+              vars: {
+                otherUser: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: "$participantDetails",
+                        as: "user",
+                        cond: {
+                          $ne: [
+                            "$$user._id",
+                            new mongoose.Types.ObjectId(userId),
+                          ],
+                        },
+                      },
+                    },
+                    0,
+                  ],
+                },
+              },
+              in: {
+                name: "$$otherUser.name",
+                image: { $ifNull: ["$$otherUser.image", "user.png"] },
+              },
+            },
+          },
         },
       },
     ]);
@@ -158,9 +168,8 @@ export async function GET(request: NextRequest) {
  *         "lastMessage": "Last message content",
  *         "unreadCount": 3,
  *         "otherUser": {
- *           "_id": "OtherUserObjectId",
  *           "name": "Other User Name",
- *           "email": "otheruser@example.com"
+ *            "image": "https://example.com/image.jpg",
  *         }
  *       }
  *     ]

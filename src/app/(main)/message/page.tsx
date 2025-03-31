@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useProposals } from "@/context/Proposal";
+import { useMessages } from "@/context/Message"; // Import the new context
 import {
   MessageSquare,
   Send,
@@ -15,6 +16,7 @@ import {
   MapPin,
   Calendar,
   FileText,
+  User,
 } from "lucide-react";
 import {
   Accordion,
@@ -22,56 +24,32 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { authClient } from "@/lib/auth-client";
 
 type TabType = "sent" | "received" | "messages";
 type ProposalStatus = "pending" | "accepted" | "rejected";
 
-// interface Proposal {
-//   id: string;
-//   brandName: string;
-//   brandLogo: string;
-//   campaignTitle: string;
-//   price: number;
-//   status: ProposalStatus;
-//   date: string;
-//   description?: string;
-// }
-
-interface Message {
-  id: string;
-  brandName: string;
-  brandLogo: string;
-  lastMessage: string;
-  timestamp: string;
-  unread: boolean;
-}
-
 function MessagesAndProposals() {
   const [activeTab, setActiveTab] = useState<TabType>("received");
-  const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [messageInput, setMessageInput] = useState("");
   const { proposals } = useProposals();
+  const {
+    conversations,
+    currentMessages,
+    selectedConversation,
+    fetchMessages,
+    sendMessage,
+    startNewConversation,
+    fetchConversations,
+  } = useMessages();
 
-  const messages: Message[] = [
-    {
-      id: "1",
-      brandName: "EcoStyle",
-      brandLogo:
-        "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=100",
-      lastMessage: "Looking forward to your response!",
-      timestamp: "10:30 AM",
-      unread: true,
-    },
-    {
-      id: "2",
-      brandName: "GreenLife",
-      brandLogo:
-        "https://images.unsplash.com/photo-1542838132-92c53300491e?w=100",
-      lastMessage: "Great! Lets schedule a call.",
-      timestamp: "Yesterday",
-      unread: false,
-    },
-  ];
+  // Auth session
+  const {
+    data: session,
+    // isPending: isSessionLoading,
+    // error: sessionError,
+    // refetch,
+  } = authClient.useSession();
 
   const getStatusColor = (status: ProposalStatus) => {
     switch (status) {
@@ -95,9 +73,9 @@ function MessagesAndProposals() {
     }
   };
 
-  const handleSendMessage = () => {
-    if (messageInput.trim()) {
-      // Handle sending message
+  const handleSendMessage = async () => {
+    if (messageInput.trim() && selectedConversation) {
+      await sendMessage(messageInput);
       setMessageInput("");
     }
   };
@@ -113,6 +91,27 @@ function MessagesAndProposals() {
     });
   };
 
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Auto-refresh conversations when tab changes
+  useEffect(() => {
+    if (activeTab === "messages") {
+      fetchConversations();
+    }
+  }, [activeTab]);
+
+  if (conversations.length > 0) {
+    conversations.map((convo) => {
+      console.log(convo);
+    });
+  }
+
   return (
     <div className="bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -121,7 +120,7 @@ function MessagesAndProposals() {
           <div className="border-b border-gray-200">
             <nav className="flex -mb-px">
               {[
-                { id: "sent", label: "Proposals" },
+                { id: "received", label: "Proposals" },
                 { id: "messages", label: "Messages" },
               ].map((tab) => (
                 <button
@@ -146,7 +145,7 @@ function MessagesAndProposals() {
 
         {/* Content Area */}
         <div className="bg-white rounded-b-2xl shadow-sm min-h-[500px]">
-          {activeTab === "sent" && (
+          {activeTab === "received" && (
             <div className="p-3 sm:p-6">
               {proposals.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-gray-500">
@@ -280,60 +279,97 @@ function MessagesAndProposals() {
             </div>
           )}
 
-          {/* Messages section remains unchanged */}
+          {/* Messages section with real data */}
           {activeTab === "messages" && (
             <div className="grid lg:grid-cols-3 grid-cols-1 min-h-[500px]">
-              {/* Message Threads */}
+              {/* Conversation List */}
               <div className="col-span-1 border-r border-gray-200">
                 <div className="p-4">
-                  {messages.map((thread) => (
-                    <button
-                      key={thread.id}
-                      onClick={() => setSelectedChat(thread.id)}
-                      className={`
-                        w-full p-3 rounded-lg mb-2 text-left
-                        ${
-                          selectedChat === thread.id
-                            ? "bg-primary/10"
-                            : "hover:bg-gray-50"
-                        }
-                        transition-colors
-                      `}
-                    >
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={thread.brandLogo}
-                          alt={thread.brandName}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <h3 className="font-medium text-gray-900 truncate">
-                              {thread.brandName}
-                            </h3>
-                            <span className="text-xs text-gray-500">
-                              {thread.timestamp}
-                            </span>
+                  {conversations.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                      <p>No conversations yet</p>
+                    </div>
+                  ) : (
+                    conversations.map((convo) => (
+                      <button
+                        key={convo._id}
+                        onClick={() => fetchMessages(convo._id)}
+                        className={`
+                          w-full p-3 rounded-lg mb-2 text-left
+                          ${
+                            selectedConversation === convo._id
+                              ? "bg-primary/10"
+                              : "hover:bg-gray-50"
+                          }
+                          transition-colors
+                        `}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                            <User size={20} className="text-gray-500" />
                           </div>
-                          <p className="text-sm text-gray-500 truncate">
-                            {thread.lastMessage}
-                          </p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <h3 className="font-medium text-gray-900 truncate">
+                                {convo._id}
+                              </h3>
+                              <span className="text-xs text-gray-500">
+                                {formatTime(convo.updatedAt)}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-500 truncate">
+                              {convo.lastMessage}
+                            </p>
+                          </div>
                         </div>
-                        {thread.unread && (
-                          <div className="w-2 h-2 bg-primary rounded-full"></div>
-                        )}
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    ))
+                  )}
                 </div>
               </div>
 
               {/* Chat Window */}
               <div className="col-span-2 flex flex-col">
-                {selectedChat ? (
+                {selectedConversation ? (
                   <>
-                    <div className="flex-1 p-6">
-                      {/* Chat messages would go here */}
+                    <div className="flex-1 p-6 overflow-y-auto">
+                      {currentMessages.length === 0 ? (
+                        <div className="flex items-center justify-center h-full text-gray-500">
+                          No messages yet
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {[...currentMessages].reverse().map((message) => (
+                            <div
+                              key={message._id}
+                              className={`flex ${
+                                message.senderId === session?.user.id
+                                  ? "justify-end"
+                                  : "justify-start"
+                              }`}
+                            >
+                              <div
+                                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                                  message.senderId === session?.user.id
+                                    ? "bg-primary text-white"
+                                    : "bg-gray-100"
+                                }`}
+                              >
+                                <p>{message.content}</p>
+                                <p
+                                  className={`text-xs mt-1 ${
+                                    message.senderId === session?.user.id
+                                      ? "text-primary-100"
+                                      : "text-gray-500"
+                                  }`}
+                                >
+                                  {formatTime(message.createdAt)}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div className="p-4 border-t border-gray-200">
                       <div className="flex items-center gap-2">
@@ -344,12 +380,16 @@ function MessagesAndProposals() {
                           type="text"
                           value={messageInput}
                           onChange={(e) => setMessageInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSendMessage();
+                          }}
                           placeholder="Type your message..."
                           className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
                         <button
                           onClick={handleSendMessage}
-                          className="p-2 text-primary hover:text-primary transition-colors"
+                          disabled={!messageInput.trim()}
+                          className="p-2 text-primary hover:text-primary-dark transition-colors disabled:text-gray-400"
                         >
                           <Send size={20} />
                         </button>
