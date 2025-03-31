@@ -39,7 +39,7 @@ function MessagesAndProposals() {
     selectedConversation,
     fetchMessages,
     sendMessage,
-    startNewConversation,
+    // startNewConversation,
     fetchConversations,
   } = useMessages();
 
