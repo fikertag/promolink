@@ -1,23 +1,15 @@
 import React from "react";
 import {
-  Users,
+  // Users,
   MessageSquare,
-  TrendingUp,
+  // TrendingUp,
   DollarSign,
-  Star,
+  // Star,
   BadgeCheck,
 } from "lucide-react";
 
 const Dashboard = () => {
   const stats = [
-    {
-      icon: <Users size={20} />,
-      label: "Total Followers",
-      value: "124.8K",
-      trend: { value: "15% vs last week", positive: true },
-      gradient: "bg-gradient-to-br from-emerald-50 to-emerald-100",
-      iconColor: "text-emerald-600",
-    },
     {
       icon: <DollarSign size={20} />,
       label: "Total Earnings",
@@ -27,12 +19,20 @@ const Dashboard = () => {
       iconColor: "text-sky-600",
     },
     {
-      icon: <Star size={20} />,
-      label: "Average Rating",
-      value: "4.9 ★",
-      trend: { value: "0.2 vs last month", positive: true },
-      gradient: "bg-gradient-to-br from-purple-50 to-purple-100",
-      iconColor: "text-purple-600",
+      icon: <DollarSign size={20} />,
+      label: "Paid Earnings",
+      value: "ETB 12,580",
+      trend: { value: "6% vs last month", positive: true },
+      gradient: "bg-gradient-to-br from-sky-50 to-sky-100",
+      iconColor: "text-sky-600",
+    },
+    {
+      icon: <DollarSign size={20} />,
+      label: "Unpaid Earnings",
+      value: "ETB 30,000",
+      trend: { value: "6% vs last month", positive: true },
+      gradient: "bg-gradient-to-br from-sky-50 to-sky-100",
+      iconColor: "text-sky-600",
     },
     {
       icon: <MessageSquare size={20} />,
@@ -42,15 +42,6 @@ const Dashboard = () => {
       gradient: "bg-gradient-to-br from-rose-50 to-rose-100",
       iconColor: "text-rose-600",
     },
-    {
-      icon: <TrendingUp size={20} />,
-      label: "Applications",
-      value: "284",
-      trend: { value: "8% vs last month", positive: true },
-      gradient: "bg-gradient-to-br from-orange-50 to-orange-100",
-      iconColor: "text-orange-600",
-    },
-
     {
       icon: <BadgeCheck size={20} />,
       label: "Verification Status",
