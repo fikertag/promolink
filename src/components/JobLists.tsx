@@ -1,6 +1,7 @@
 import JobPreview from "@/components/JobPreview";
 import { useJobs } from "@/context/Job";
 import { authClient } from "@/lib/auth-client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function JobLists() {
   // Auth session
@@ -33,9 +34,26 @@ export default function JobLists() {
             /> // Render each job dynamically
           ))
         ) : (
-          <p className="text-center text-gray-500">
-            No jobs available at the moment.
-          </p>
+          <div className="flex flex-col space-y-3">
+            <Skeleton className="h-[50px] w-full rounded-sm" />
+            <div className="space-y-2 mb-10">
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+            </div>
+            <Skeleton className="h-[50px] w-full rounded-sm" />
+            <div className="space-y-2 mb-10">
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+            </div>
+            <Skeleton className="h-[50px] w-full rounded-sm" />
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-full rounded-sm" />
+              <Skeleton className="h-6 w-full rounded-sm" />
+              <Skeleton className="h-6 w-full rounded-sm" />
+            </div>
+          </div>
         )}
       </div>
     </div>
