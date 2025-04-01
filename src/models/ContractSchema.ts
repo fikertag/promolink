@@ -1,33 +1,65 @@
-import mongoose, { Schema, Document, model } from "mongoose";
+import mongoose from "mongoose";
 
-// Define an interface for the Contract document
-export interface IContract extends Document {
-  jobId: mongoose.Types.ObjectId;
-  influencerId: mongoose.Types.ObjectId;
-  clientId: mongoose.Types.ObjectId;
-  terms: string;
-  status: "pending" | "accepted" | "declined";
-  createdAt: Date;
-  updatedAt: Date;
-}
+const SocialMediaActionSchema = new mongoose.Schema({
+  platform: {
+    type: String,
+    enum: ["instagram", "tiktok", "youtube", "twitter"],
+    required: true,
+  },
+  actionType: {
+    type: String,
+    enum: ["post", "story", "reel", "live"],
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    default: 1,
+  },
+});
 
-// Define the Contract schema
-const ContractSchema = new Schema<IContract>(
+const ContractSchema = new mongoose.Schema(
   {
-    jobId: { type: Schema.Types.ObjectId, ref: "Job", required: true },
-    influencerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    clientId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    terms: { type: String, required: true, trim: true },
+    // Core References
+    proposalId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Proposal",
+      required: true,
+    },
+    // Contract Terms
+    price: {
+      type: Number,
+      required: true,
+    },
+    socialMediaActions: [SocialMediaActionSchema],
+    deadline: {
+      type: Date,
+      required: true,
+    },
     status: {
       type: String,
-      enum: ["pending", "accepted", "declined"],
-      default: "pending",
+      enum: ["draft", "active", "completed", "terminated"],
+      default: "draft",
     },
+
+    activatedAt: Date,
+    completedAt: Date,
   },
-  { timestamps: true } // Automatically adds `createdAt` and `updatedAt` fields
+  { timestamps: true }
 );
 
-// Export the Contract model
-const Contract =
-  mongoose.models.Contract || model<IContract>("Contract", ContractSchema);
-export default Contract;
+// Auto-update timestamps
+ContractSchema.pre("save", function (next) {
+  if (
+    this.isModified("status") &&
+    this.status === "active" &&
+    !this.activatedAt
+  ) {
+    this.activatedAt = new Date();
+  }
+  if (this.isModified("status") && this.status === "completed") {
+    this.completedAt = new Date();
+  }
+  next();
+});
+export default mongoose.models.Contract ||
+  mongoose.model("Contract", ContractSchema);

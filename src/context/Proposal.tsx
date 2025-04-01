@@ -63,7 +63,7 @@ export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchProposals = async () => {
     try {
       const response = await axios.get(
-        `/api/proposal?influencerId=${session?.user.id || ""}`
+        `/api/proposal?influencerId=${session?.user.id || "00000000"}`
       );
       setProposals(response.data);
     } catch (error) {
@@ -105,11 +105,7 @@ export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchProposals();
-  }, []);
-
-  useEffect(() => {
-    console.log("proposals", proposals);
-  }, [proposals]);
+  }, [session?.user.id]);
 
   return (
     <ProposalContext.Provider

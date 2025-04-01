@@ -25,16 +25,16 @@ export default function Nav() {
       {/* Profile Dropdown */}
       <div className="flex justify-end items-center col-span-2">
         <nav className="hidden mr-10 sm:flex justify-center   dark:text-white text- font-  text-gray-600">
-          {/* <Link
+          <Link
             href="/dashboard"
-            className={`hover:text-primary transition ${
+            className={`hover:text-primary transition border-x px-5 ${
               isActive("/dashboard")
-                ? "text-primary underline-offset-4 underline"
+                ? "text-primary underline-offset-8 underline"
                 : ""
             }`}
           >
             Dashboard
-          </Link> */}
+          </Link>
 
           <Link
             href="/profile"
@@ -55,7 +55,18 @@ export default function Nav() {
                 : ""
             }`}
           >
-            Messages
+            Message
+          </Link>
+
+          <Link
+            href="/contract"
+            className={`hover:text-primary transition border-x px-5 ${
+              isActive("/message")
+                ? "text-primary underline-offset-8 underline"
+                : ""
+            }`}
+          >
+            contract
           </Link>
         </nav>
         <ProfileDropdown />
