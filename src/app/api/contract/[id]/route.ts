@@ -2,6 +2,8 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongoose";
 import Contract from "@/models/ContractSchema";
+import Proposal from "@/models/ProposalSchema";
+import Job from "@/models/JobSchema";
 
 export async function GET(
   request: Request,
@@ -11,15 +13,13 @@ export async function GET(
 
   try {
     const { id } = await params; // Access URL params
-
     const contract = await Contract.findById(id)
       .populate({
         path: "proposalId",
         select: "jobId influencerId",
-        populate: [
-          { path: "jobId", select: "title postedBy" },
-          { path: "influencerId", select: "name avatar" },
-        ],
+        model: Proposal,
+        populate: { path: "jobId", select: "title postedBy", model: Job },
+        //     { path: "influencerId", select: "name avatar" },
       })
       .lean();
 

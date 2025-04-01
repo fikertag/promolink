@@ -71,7 +71,18 @@ export async function GET(request: Request) {
  *   {
  *     "proposalId": "ProposalObjectId",
  *     "price": 1000,
- *     "socialMediaActions": ["post", "story"],
+ *     "socialMediaActions": [
+ *       {
+ *         "platform": "instagram",
+ *         "actionType": "post",
+ *         "quantity": 2
+ *       },
+ *       {
+ *         "platform": "tiktok",
+ *         "actionType": "story",
+ *         "quantity": 1
+ *       }
+ *     ],
  *     "deadline": "2025-04-15T00:00:00.000Z"
  *   }
  * - Response:
@@ -80,7 +91,18 @@ export async function GET(request: Request) {
  *       "_id": "ContractObjectId",
  *       "proposalId": "ProposalObjectId",
  *       "price": 1000,
- *       "socialMediaActions": ["post", "story"],
+ *       "socialMediaActions": [
+ *         {
+ *           "platform": "instagram",
+ *           "actionType": "post",
+ *           "quantity": 2
+ *         },
+ *         {
+ *           "platform": "tiktok",
+ *           "actionType": "story",
+ *           "quantity": 1
+ *         }
+ *       ],
  *       "deadline": "2025-04-15T00:00:00.000Z",
  *       "status": "draft",
  *       "createdAt": "2025-03-30T12:00:00.000Z",
@@ -108,7 +130,18 @@ export async function GET(request: Request) {
  *         "_id": "ContractObjectId",
  *         "proposalId": "ProposalObjectId",
  *         "price": 1000,
- *         "socialMediaActions": ["post", "story"],
+ *         "socialMediaActions": [
+ *           {
+ *             "platform": "instagram",
+ *             "actionType": "post",
+ *             "quantity": 2
+ *           },
+ *           {
+ *             "platform": "tiktok",
+ *             "actionType": "story",
+ *             "quantity": 1
+ *           }
+ *         ],
  *         "deadline": "2025-04-15T00:00:00.000Z",
  *         "status": "draft",
  *         "createdAt": "2025-03-30T12:00:00.000Z",
@@ -124,6 +157,10 @@ export async function GET(request: Request) {
  * - **POST**:
  *   - Validates that the `proposalId` exists in the database.
  *   - Creates a new contract with the provided `price`, `socialMediaActions`, and `deadline`.
+ *   - The `socialMediaActions` field is an array of objects, where each object contains:
+ *     - `platform`: The social media platform (e.g., "instagram", "tiktok", "youtube", "twitter").
+ *     - `actionType`: The type of action (e.g., "post", "story", "reel", "live").
+ *     - `quantity`: The number of actions (default is 1 if not provided).
  *   - Sets the default `status` to `"draft"`.
  * - **GET**:
  *   - Builds a query object based on the provided `status` and `proposalId` query parameters.
@@ -137,7 +174,18 @@ export async function GET(request: Request) {
  *   {
  *     "proposalId": "64f8c0e2b5d6c9a1f8e7b123",
  *     "price": 1000,
- *     "socialMediaActions": ["post", "story"],
+ *     "socialMediaActions": [
+ *       {
+ *         "platform": "instagram",
+ *         "actionType": "post",
+ *         "quantity": 2
+ *       },
+ *       {
+ *         "platform": "tiktok",
+ *         "actionType": "story",
+ *         "quantity": 1
+ *       }
+ *     ],
  *     "deadline": "2025-04-15T00:00:00.000Z"
  *   }
  * Response (201):
@@ -145,7 +193,18 @@ export async function GET(request: Request) {
  *     "_id": "64f8c0e2b5d6c9a1f8e7b789",
  *     "proposalId": "64f8c0e2b5d6c9a1f8e7b123",
  *     "price": 1000,
- *     "socialMediaActions": ["post", "story"],
+ *     "socialMediaActions": [
+ *       {
+ *         "platform": "instagram",
+ *         "actionType": "post",
+ *         "quantity": 2
+ *       },
+ *       {
+ *         "platform": "tiktok",
+ *         "actionType": "story",
+ *         "quantity": 1
+ *       }
+ *     ],
  *     "deadline": "2025-04-15T00:00:00.000Z",
  *     "status": "draft",
  *     "createdAt": "2025-03-30T12:00:00.000Z",
@@ -159,7 +218,18 @@ export async function GET(request: Request) {
  *       "_id": "64f8c0e2b5d6c9a1f8e7b789",
  *       "proposalId": "64f8c0e2b5d6c9a1f8e7b123",
  *       "price": 1000,
- *       "socialMediaActions": ["post", "story"],
+ *       "socialMediaActions": [
+ *         {
+ *           "platform": "instagram",
+ *           "actionType": "post",
+ *           "quantity": 2
+ *         },
+ *         {
+ *           "platform": "tiktok",
+ *           "actionType": "story",
+ *           "quantity": 1
+ *         }
+ *       ],
  *       "deadline": "2025-04-15T00:00:00.000Z",
  *       "status": "draft",
  *       "createdAt": "2025-03-30T12:00:00.000Z",
