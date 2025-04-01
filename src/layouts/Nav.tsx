@@ -55,7 +55,7 @@ export default function Nav() {
                 : ""
             }`}
           >
-            Messages
+            Message
           </Link>
 
           <Link
