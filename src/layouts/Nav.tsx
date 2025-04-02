@@ -61,7 +61,7 @@ export default function Nav() {
           <Link
             href="/contract"
             className={`hover:text-primary transition border-x px-5 ${
-              isActive("/message")
+              isActive("/contract")
                 ? "text-primary underline-offset-8 underline"
                 : ""
             }`}
