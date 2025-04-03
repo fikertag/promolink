@@ -3,6 +3,7 @@ import { JobProvider } from "@/context/Job";
 import { ProposalProvider } from "@/context/Proposal";
 import { MessageProvider } from "@/context/Message";
 import { ContractProvider } from "@/context/Contract";
+import { UserProvider } from "@/context/User";
 
 export default function RootLayout({
   children,
@@ -11,16 +12,18 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <ProposalProvider>
-        <ContractProvider>
-          <JobProvider>
-            <MessageProvider>
-              <Nav />
-              {children}
-            </MessageProvider>
-          </JobProvider>
-        </ContractProvider>
-      </ProposalProvider>
+      <UserProvider>
+        <JobProvider>
+          <ProposalProvider>
+            <ContractProvider>
+              <MessageProvider>
+                <Nav />
+                {children}
+              </MessageProvider>
+            </ContractProvider>
+          </ProposalProvider>
+        </JobProvider>
+      </UserProvider>
     </>
   );
 }

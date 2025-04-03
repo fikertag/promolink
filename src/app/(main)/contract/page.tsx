@@ -1,7 +1,7 @@
 "use client";
 
 import { useContracts } from "@/context/Contract";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Clipboard, CheckCircle, XCircle, Clock, FileText } from "lucide-react";
 
 export default function ContractsPage() {
@@ -12,10 +12,6 @@ export default function ContractsPage() {
   // const [isLoading, setIsLoading] = useState(false);
 
   const isLoading = false;
-
-  useEffect(() => {
-    console.log("Contracts:", contracts);
-  }, [contracts]);
 
   const filteredContracts = contracts.filter(
     (contract) => contract.status === activeTab

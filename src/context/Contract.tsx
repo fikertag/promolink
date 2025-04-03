@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { useUser } from "@/context/User";
 
 interface SocialMediaAction {
   platform: "instagram" | "tiktok" | "telegram";
@@ -43,11 +44,15 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [contracts, setContracts] = useState<Contract[]>([]);
+  const { user } = useUser();
 
   // Fetch all contracts
   const fetchContracts = async () => {
     try {
-      const response = await axios.get("/api/contract");
+      if (!user) return;
+      const response = await axios.get(
+        `/api/contract?influencerId=${user?.id}`
+      );
       setContracts(response.data);
     } catch (error) {
       console.error("Error fetching contracts:", error);
@@ -93,7 +98,7 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
   // Initial fetch
   useEffect(() => {
     fetchContracts();
-  }, []);
+  }, [user?.id]);
 
   // useEffect(() => {
   //   console.log(contracts);

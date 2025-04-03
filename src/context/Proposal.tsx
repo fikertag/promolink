@@ -2,8 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { authClient } from "@/lib/auth-client";
-
+import { useUser } from "@/context/User";
 interface SocialMedia {
   platform: "instagram" | "youtube" | "tiktok" | "twitter";
   _id: string;
@@ -57,13 +56,14 @@ const ProposalContext = createContext<ProposalContextType>({
 export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { data: session } = authClient.useSession();
+  const { user } = useUser();
   const [proposals, setProposals] = useState<Proposal[]>([]); // Fixed variable name
 
   const fetchProposals = async () => {
+    if (!user) return; // Ensure user is defined before making the request
     try {
       const response = await axios.get(
-        `/api/proposal?influencerId=${session?.user.id || "00000000"}`
+        `/api/proposal?influencerId=${user?.id}`
       );
       setProposals(response.data);
     } catch (error) {
@@ -105,7 +105,7 @@ export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchProposals();
-  }, [session?.user.id]);
+  }, [user?.id]);
 
   return (
     <ProposalContext.Provider

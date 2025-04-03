@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongoose";
 import Contract from "@/models/ContractSchema";
+import Job from "@/models/JobSchema";
 import Proposal from "@/models/ProposalSchema";
 
 export async function POST(request: Request) {
@@ -38,6 +39,30 @@ export async function POST(request: Request) {
   }
 }
 
+// export async function GET(request: Request) {
+//   await dbConnect();
+
+//   try {
+//     const { searchParams } = new URL(request.url);
+//     const status = searchParams.get("status");
+//     const proposalId = searchParams.get("proposalId");
+
+//     const query: Record<string, unknown> = {};
+//     if (status) query.status = status;
+//     if (proposalId) query.proposalId = proposalId;
+
+//     const contracts = await Contract.find(query).sort({ createdAt: -1 }).lean();
+
+//     return NextResponse.json(contracts, { status: 200 });
+//   } catch (error) {
+//     console.error("Error fetching contracts:", error); // Log the error for debugging
+//     return NextResponse.json(
+//       { error: "Failed to fetch contracts" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
 export async function GET(request: Request) {
   await dbConnect();
 
@@ -45,16 +70,40 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
     const proposalId = searchParams.get("proposalId");
+    const userId = searchParams.get("userId"); // The job poster's ID
+    const influencerId = searchParams.get("influencerId");
 
     const query: Record<string, unknown> = {};
-    if (status) query.status = status;
-    if (proposalId) query.proposalId = proposalId;
 
-    const contracts = await Contract.find(query).sort({ createdAt: -1 }).lean();
+    if (status) query.status = status;
+    if (proposalId) {
+      query.proposalId = proposalId;
+    } else if (userId || influencerId) {
+      // Build a proposal query to find relevant proposals
+      const proposalQuery: Record<string, unknown> = {};
+      if (userId) proposalQuery["jobId.userId"] = userId;
+      if (influencerId) proposalQuery.influencerId = influencerId;
+
+      // Find matching proposals
+      const proposals = await Proposal.find(proposalQuery).select("_id").lean();
+      const proposalIds = proposals.map((p) => p._id);
+
+      query.proposalId = { $in: proposalIds };
+    }
+
+    const contracts = await Contract.find(query)
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "proposalId",
+        populate: [
+          { path: "jobId", select: "title description userId", model: Job },
+        ],
+      })
+      .lean();
 
     return NextResponse.json(contracts, { status: 200 });
   } catch (error) {
-    console.error("Error fetching contracts:", error); // Log the error for debugging
+    console.error("Error fetching contracts:", error);
     return NextResponse.json(
       { error: "Failed to fetch contracts" },
       { status: 500 }

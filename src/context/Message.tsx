@@ -2,8 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { authClient } from "@/lib/auth-client";
-
+import { useUser } from "@/context/User";
 interface Message {
   _id: string;
   conversationId: string;
@@ -53,7 +52,7 @@ const MessageContext = createContext<MessageContextType>({
 export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { data: session } = authClient.useSession();
+  const { user } = useUser();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentMessages, setCurrentMessages] = useState<Message[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<
@@ -62,9 +61,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get(
-        `/api/conversation?userId=${session?.user.id}`
-      );
+      const response = await axios.get(`/api/conversation?userId=${user?.id}`);
       setConversations(response.data);
     } catch (error) {
       console.error("Error fetching conversations:", error);
@@ -90,13 +87,13 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const conversationId = existingConversationId || selectedConversation;
 
-      if (!conversationId || !session?.user.id) {
+      if (!conversationId || !user?.id) {
         throw new Error("No active conversation");
       }
 
       const newMessage = {
         conversationId,
-        senderId: session.user.id,
+        senderId: user.id,
         content,
       };
 
@@ -112,7 +109,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
   const startNewConversation = async (participantId: string) => {
     try {
       const response = await axios.post("/api/conversation", {
-        participantIds: [session?.user.id, participantId],
+        participantIds: [user?.id, participantId],
       });
 
       setConversations((prev) => [response.data, ...prev]);
@@ -138,10 +135,10 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    if (session?.user.id) {
+    if (user?.id) {
       fetchConversations();
     }
-  }, [session?.user.id]);
+  }, [user?.id]);
 
   return (
     <MessageContext.Provider

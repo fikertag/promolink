@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useProposals } from "@/context/Proposal";
 import { useMessages } from "@/context/Message"; // Import the new context
+import { useUser } from "@/context/User";
 import {
   MessageSquare,
   Send,
@@ -24,7 +25,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { authClient } from "@/lib/auth-client";
 
 type TabType = "sent" | "received" | "messages";
 type ProposalStatus = "pending" | "accepted" | "rejected";
@@ -43,13 +43,7 @@ function MessagesAndProposals() {
     fetchConversations,
   } = useMessages();
 
-  // Auth session
-  const {
-    data: session,
-    // isPending: isSessionLoading,
-    // error: sessionError,
-    // refetch,
-  } = authClient.useSession();
+  const { user } = useUser();
 
   const getStatusColor = (status: ProposalStatus) => {
     switch (status) {
@@ -105,12 +99,6 @@ function MessagesAndProposals() {
       fetchConversations();
     }
   }, [activeTab]);
-
-  if (conversations.length > 0) {
-    conversations.map((convo) => {
-      console.log(convo);
-    });
-  }
 
   return (
     <div className="bg-gray-50 py-8">
@@ -343,14 +331,14 @@ function MessagesAndProposals() {
                             <div
                               key={message._id}
                               className={`flex ${
-                                message.senderId === session?.user.id
+                                message.senderId === user?.id
                                   ? "justify-end"
                                   : "justify-start"
                               }`}
                             >
                               <div
                                 className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                                  message.senderId === session?.user.id
+                                  message.senderId === user?.id
                                     ? "bg-primary text-white"
                                     : "bg-gray-100"
                                 }`}
@@ -358,7 +346,7 @@ function MessagesAndProposals() {
                                 <p>{message.content}</p>
                                 <p
                                   className={`text-xs mt-1 ${
-                                    message.senderId === session?.user.id
+                                    message.senderId === user?.id
                                       ? "text-primary-100"
                                       : "text-gray-500"
                                   }`}

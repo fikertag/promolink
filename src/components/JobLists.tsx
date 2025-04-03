@@ -1,16 +1,11 @@
 import JobPreview from "@/components/JobPreview";
 import { useJobs } from "@/context/Job";
-import { authClient } from "@/lib/auth-client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUser } from "@/context/User";
 
 export default function JobLists() {
   // Auth session
-  const {
-    data: session,
-    // isPending: isSessionLoading,
-    // error: sessionError,
-    // refetch,
-  } = authClient.useSession();
+  const { user } = useUser();
 
   const { jobs } = useJobs(); // Fetch jobs from the JobContext
 
@@ -27,11 +22,7 @@ export default function JobLists() {
       <div className="flex flex-col gap-1">
         {jobs.length > 0 ? (
           jobs.map((job) => (
-            <JobPreview
-              key={job._id}
-              job={job}
-              influencerId={session?.user.id || ""}
-            /> // Render each job dynamically
+            <JobPreview key={job._id} job={job} influencerId={user?.id || ""} /> // Render each job dynamically
           ))
         ) : (
           <div className="flex flex-col space-y-3">

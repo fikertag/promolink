@@ -87,10 +87,6 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
     fetchJobs();
   }, []);
 
-  useEffect(() => {
-    console.log(jobs);
-  }, [jobs]);
-
   return (
     <JobContext.Provider
       value={{
