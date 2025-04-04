@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { useProposals } from "@/context/Proposal";
-import { useMessages } from "@/context/Message"; // Import the new context
+import { useMessages } from "@/context/Message";
 import { useUser } from "@/context/User";
+import Image from "next/image";
 import {
   MessageSquare,
   Send,
@@ -18,6 +19,7 @@ import {
   Calendar,
   FileText,
   User,
+  ChevronLeft,
 } from "lucide-react";
 import {
   Accordion,
@@ -32,6 +34,8 @@ type ProposalStatus = "pending" | "accepted" | "rejected";
 function MessagesAndProposals() {
   const [activeTab, setActiveTab] = useState<TabType>("received");
   const [messageInput, setMessageInput] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [showConversationList, setShowConversationList] = useState(true);
   const { proposals } = useProposals();
   const {
     conversations,
@@ -39,7 +43,6 @@ function MessagesAndProposals() {
     selectedConversation,
     fetchMessages,
     sendMessage,
-    // startNewConversation,
     fetchConversations,
   } = useMessages();
 
@@ -69,8 +72,13 @@ function MessagesAndProposals() {
 
   const handleSendMessage = async () => {
     if (messageInput.trim() && selectedConversation) {
-      await sendMessage(messageInput);
-      setMessageInput("");
+      setIsSending(true);
+      try {
+        await sendMessage(messageInput);
+        setMessageInput("");
+      } finally {
+        setIsSending(false);
+      }
     }
   };
 
@@ -93,10 +101,20 @@ function MessagesAndProposals() {
     });
   };
 
-  // Auto-refresh conversations when tab changes
+  const handleSelectConversation = (convoId: string) => {
+    fetchMessages(convoId);
+    setShowConversationList(false);
+  };
+
+  const handleBackToConversations = () => {
+    setShowConversationList(true);
+  };
+
   useEffect(() => {
     if (activeTab === "messages") {
       fetchConversations();
+      // Reset conversation view on tab change
+      setShowConversationList(true);
     }
   }, [activeTab]);
 
@@ -115,14 +133,14 @@ function MessagesAndProposals() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as TabType)}
                   className={`
-                  flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm
-                  ${
-                    activeTab === tab.id
-                      ? "border-primary text-primary"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }
-                  transition-colors duration-200
-                `}
+                    flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm
+                    ${
+                      activeTab === tab.id
+                        ? "border-primary text-primary"
+                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    }
+                    transition-colors duration-200
+                  `}
                 >
                   {tab.label}
                 </button>
@@ -267,63 +285,135 @@ function MessagesAndProposals() {
             </div>
           )}
 
-          {/* Messages section with real data */}
           {activeTab === "messages" && (
             <div className="grid lg:grid-cols-3 grid-cols-1 min-h-[500px]">
-              {/* Conversation List */}
-              <div className="col-span-1 border-r border-gray-200">
+              {/* Conversation List - Always visible on desktop, conditionally on mobile */}
+              <div
+                className={`col-span-1 border-r border-gray-200 bg-gray-50 ${
+                  !showConversationList ? "hidden lg:block" : "block"
+                }`}
+              >
                 <div className="p-4">
+                  <h2 className="text-lg font-semibold mb-4 text-gray-800">
+                    Conversations
+                  </h2>
                   {conversations.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
+                      <MessageSquare size={24} className="mx-auto mb-2" />
                       <p>No conversations yet</p>
                     </div>
                   ) : (
-                    conversations.map((convo) => (
-                      <button
-                        key={convo._id}
-                        onClick={() => fetchMessages(convo._id)}
-                        className={`
-                          w-full p-3 rounded-lg mb-2 text-left
-                          ${
-                            selectedConversation === convo._id
-                              ? "bg-primary/10"
-                              : "hover:bg-gray-50"
-                          }
-                          transition-colors
-                        `}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                            <User size={20} className="text-gray-500" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between">
-                              <h3 className="font-medium text-gray-900 truncate">
-                                {convo._id}
-                              </h3>
-                              <span className="text-xs text-gray-500">
-                                {formatTime(convo.updatedAt)}
-                              </span>
+                    <div className="space-y-2">
+                      {conversations.map((convo) => (
+                        <button
+                          key={convo._id}
+                          onClick={() => handleSelectConversation(convo._id)}
+                          className={`
+                            w-full p-3 rounded-lg transition-colors
+                            ${
+                              selectedConversation === convo._id
+                                ? "bg-white shadow-sm border border-gray-200"
+                                : "hover:bg-gray-100"
+                            }
+                          `}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="relative">
+                              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                                {convo.otherUser.image ? (
+                                  <Image
+                                    src={convo.otherUser.image}
+                                    alt={convo.otherUser.name}
+                                    width={40}
+                                    height={40}
+                                    className="object-cover"
+                                  />
+                                ) : (
+                                  <User size={20} className="text-gray-500" />
+                                )}
+                              </div>
                             </div>
-                            <p className="text-sm text-gray-500 truncate">
-                              {convo.lastMessage}
-                            </p>
+                            <div className="flex-1 min-w-0 text-left">
+                              <div className="flex items-center justify-between">
+                                <h3 className="font-medium text-gray-900 truncate">
+                                  {convo.otherUser.name}
+                                </h3>
+                                <span className="text-xs text-gray-500 whitespace-nowrap">
+                                  {formatTime(convo.updatedAt)}
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-500 truncate">
+                                {convo.lastMessage}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </button>
-                    ))
+                        </button>
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>
 
-              {/* Chat Window */}
-              <div className="col-span-2 flex flex-col">
+              {/* Chat Window - Conditionally shown on mobile */}
+              <div
+                className={`col-span-2 flex flex-col bg-white ${
+                  showConversationList ? "hidden lg:flex" : "flex"
+                }`}
+              >
                 {selectedConversation ? (
                   <>
-                    <div className="flex-1 p-6 overflow-y-auto">
+                    {/* Chat Header with back button on mobile */}
+                    <div className="border-b border-gray-200 p-4 flex items-center gap-3">
+                      <button
+                        onClick={handleBackToConversations}
+                        className="lg:hidden p-1 mr-1 text-gray-500 hover:text-gray-700"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                        {conversations.find(
+                          (c) => c._id === selectedConversation
+                        )?.otherUser.image ? (
+                          <Image
+                            src={
+                              conversations.find(
+                                (c) => c._id === selectedConversation
+                              )!.otherUser.image
+                            }
+                            alt={
+                              conversations.find(
+                                (c) => c._id === selectedConversation
+                              )!.otherUser.name
+                            }
+                            width={40}
+                            height={40}
+                            className="object-cover"
+                          />
+                        ) : (
+                          <User size={20} className="text-gray-500" />
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          {
+                            conversations.find(
+                              (c) => c._id === selectedConversation
+                            )?.otherUser.name
+                          }
+                        </h3>
+                      </div>
+                    </div>
+
+                    {/* Scrollable Messages Area */}
+                    <div className="flex-1 p-4 overflow-y-auto bg-gray-50 max-h-[calc(100vh-300px)]">
                       {currentMessages.length === 0 ? (
-                        <div className="flex items-center justify-center h-full text-gray-500">
-                          No messages yet
+                        <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                          <MessageSquare
+                            size={48}
+                            className="mb-4 opacity-50"
+                          />
+                          <p>No messages yet</p>
+                          <p className="text-sm">Start the conversation</p>
                         </div>
                       ) : (
                         <div className="space-y-4">
@@ -337,15 +427,15 @@ function MessagesAndProposals() {
                               }`}
                             >
                               <div
-                                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg relative ${
                                   message.senderId === user?.id
-                                    ? "bg-primary text-white"
-                                    : "bg-gray-100"
-                                }`}
+                                    ? "bg-primary text-white rounded-br-none"
+                                    : "bg-white border border-gray-200 rounded-bl-none"
+                                } shadow-sm`}
                               >
                                 <p>{message.content}</p>
                                 <p
-                                  className={`text-xs mt-1 ${
+                                  className={`text-xs mt-1 text-right ${
                                     message.senderId === user?.id
                                       ? "text-primary-100"
                                       : "text-gray-500"
@@ -359,7 +449,9 @@ function MessagesAndProposals() {
                         </div>
                       )}
                     </div>
-                    <div className="p-4 border-t border-gray-200">
+
+                    {/* Message Input */}
+                    <div className="border-t border-gray-200 p-4 bg-white">
                       <div className="flex items-center gap-2">
                         <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
                           <Paperclip size={20} />
@@ -372,26 +464,39 @@ function MessagesAndProposals() {
                             if (e.key === "Enter") handleSendMessage();
                           }}
                           placeholder="Type your message..."
-                          className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
                         <button
                           onClick={handleSendMessage}
-                          disabled={!messageInput.trim()}
-                          className="p-2 text-primary hover:text-primary-dark transition-colors disabled:text-gray-400"
+                          disabled={!messageInput.trim() || isSending}
+                          className={`p-2 rounded-full ${
+                            messageInput.trim()
+                              ? "bg-primary text-white hover:bg-primary-dark"
+                              : "bg-gray-100 text-gray-400"
+                          } transition-colors min-w-[40px] flex items-center justify-center`}
                         >
-                          <Send size={20} />
+                          {isSending ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          ) : (
+                            <Send size={20} />
+                          )}
                         </button>
                       </div>
                     </div>
                   </>
                 ) : (
-                  <div className="flex-1 sm:flex hidden items-center justify-center text-gray-500">
+                  <div className="flex-1 flex items-center justify-center text-gray-500 bg-gray-50">
                     <div className="text-center">
                       <MessageSquare
                         size={48}
-                        className="mx-auto mb-2 opacity-50"
+                        className="mx-auto mb-4 opacity-50"
                       />
-                      <p>Select a conversation to start messaging</p>
+                      <h3 className="text-lg font-medium mb-1">
+                        No conversation selected
+                      </h3>
+                      <p className="text-sm">
+                        Select a conversation or start a new one
+                      </p>
                     </div>
                   </div>
                 )}

@@ -13,7 +13,6 @@ export async function GET(
 
   try {
     // 1. Validate conversation ID
-    console.log("Conversation ID:", id);
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid conversation ID" },

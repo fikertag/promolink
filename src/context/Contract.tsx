@@ -62,7 +62,7 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
   // Create new contract from proposal
   const createContract = async (proposalId: string) => {
     try {
-      const response = await axios.post("/api/contracts", { proposalId });
+      const response = await axios.post("/api/contract", { proposalId });
       setContracts((prev) => [...prev, response.data]);
       return response.data;
     } catch (error) {
@@ -77,7 +77,7 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
     status: Contract["status"]
   ) => {
     try {
-      await axios.patch(`/api/contracts/${contractId}/status`, { status });
+      await axios.patch(`/api/contract/${contractId}/status`, { status });
       setContracts((prev) =>
         prev.map((contract) =>
           contract._id === contractId

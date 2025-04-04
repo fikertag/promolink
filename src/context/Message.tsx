@@ -61,6 +61,9 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchConversations = async () => {
     try {
+      if (!user) {
+        return;
+      }
       const response = await axios.get(`/api/conversation?userId=${user?.id}`);
       setConversations(response.data);
     } catch (error) {

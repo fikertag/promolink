@@ -13,6 +13,7 @@ import {
   Users,
   X,
   Camera,
+  Loader2,
 } from "lucide-react";
 
 // Type definitions
@@ -24,7 +25,11 @@ type SocialMediaData = {
 type SocialMediaState = Record<SocialMediaPlatform, SocialMediaData>;
 
 function ProfilePage() {
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
   const handleImageUpload = async (url: string) => {
+    setIsUploading(true);
     try {
       await authClient.updateUser({
         image: url,
@@ -33,7 +38,10 @@ function ProfilePage() {
       toast.success("Profile image updated!");
     } catch (error) {
       toast.error("Failed to update image");
-      console.log(error);
+      console.error(error);
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -62,20 +70,17 @@ function ProfilePage() {
   const {
     data: session,
     isPending: isSessionLoading,
-    // error: sessionError,
     refetch,
   } = authClient.useSession();
 
   // Initialize data from session/database
   useEffect(() => {
     if (session?.user) {
-      // Set basic profile info from session
       setLocation(session.user.location || "");
       setUsername(session.user.name || "");
       setBio(session.user.bio || "");
       setImage(session.user.image || "");
 
-      // Parse social media data from user metadata or use defaults
       try {
         const userSocialMedia = session.user.socialMedia
           ? JSON.parse(session.user.socialMedia)
@@ -98,7 +103,6 @@ function ProfilePage() {
         console.error("Error parsing social media data", e);
       }
 
-      // Set numeric values from user metadata or use 0 as default
       setPricePerCampaign(session.user.price || 0);
       setRating(session.user.rating || 0);
     }
@@ -113,14 +117,13 @@ function ProfilePage() {
     0
   );
 
-  // Save handler - updates all profile data including social media
+  // Save handler
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
     try {
-      // Prepare social media data to be saved as JSON string
       const socialMediaData = JSON.stringify({
         instagram: socialMedia.instagram,
         tiktok: socialMedia.tiktok,
@@ -131,7 +134,7 @@ function ProfilePage() {
         name: username,
         bio: bio,
         location: location,
-        socialMedia: socialMediaData, // Store as JSON string
+        socialMedia: socialMediaData,
         price: pricePerCampaign,
       });
 
@@ -171,8 +174,7 @@ function ProfilePage() {
   }
 
   return (
-    <div className="min-h- bg-gray-50">
-      {/* <button onClick={() => authClient.signOut()}> signout</button> */}
+    <div className="min-h-screen bg-gray-50">
       {/* Edit Profile Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -331,26 +333,7 @@ function ProfilePage() {
                 >
                   {isLoading ? (
                     <>
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <Loader2 className="animate-spin mr-2 h-4 w-4" />
                       Saving...
                     </>
                   ) : (
@@ -363,7 +346,7 @@ function ProfilePage() {
         </div>
       )}
       <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl shadow-sm p-8 mb-6 relative">
+        <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-6 relative">
           <button
             className="text-gray-400 hover:text-white transition-all hover:bg-primary rounded-full p-2 absolute top-3 right-4"
             onClick={() => setIsEditModalOpen(true)}
@@ -371,104 +354,126 @@ function ProfilePage() {
             <Edit2 size={18} />
           </button>
 
-          <div className="relative w-20 h-20 mx-auto mb-1 ">
-            <div className="absolute -bottom-2 -right-2 bg-primary p-2 rounded-full">
-              <Camera />
-            </div>
+          {/* In your ProfilePage component, replace the image upload section with this: */}
+          <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto mb-4">
             {image ? (
-              <Image
-                src={image}
-                alt="Profile"
-                width={80}
-                height={80}
-                className="rounded-full object-cover"
-              />
+              <>
+                <Image
+                  src={image}
+                  alt="Profile"
+                  width={128}
+                  height={128}
+                  className="rounded-full object-cover w-full h-full"
+                  priority
+                />
+                <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full shadow-md">
+                  <ImageUpload
+                    onUpload={handleImageUpload}
+                    className="text-primary hover:text-primary-dark"
+                  >
+                    <Camera size={20} />
+                  </ImageUpload>
+                </div>
+                {isUploading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-full">
+                    <div className="w-16 h-16 border-4 border-t-primary border-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+              </>
             ) : (
-              <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
-                <ImageUpload onUpload={handleImageUpload} />
+              <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                <ImageUpload
+                  onUpload={handleImageUpload}
+                  className="w-full h-full flex items-center justify-center"
+                >
+                  <div className="text-center p-4">
+                    <Camera size={32} className="mx-auto text-gray-400 mb-2" />
+                    <span className="text-gray-500 text-sm">Upload Photo</span>
+                  </div>
+                </ImageUpload>
               </div>
             )}
           </div>
 
-          <div className="text-center mb-3 flex flex-col gap-1">
+          <div className="text-center mb-4 flex flex-col gap-1">
             <div className="flex items-center justify-center gap-2">
-              <h1 className="text-2xl font-semibold text-gray-900 mt-1">
+              <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
                 {username || "No username set"}
               </h1>
             </div>
             <div className="flex items-center justify-center gap-2 text-gray-600">
               <MapPin size={16} />
-              <span className="text-base">{location || "No location set"}</span>
+              <span className="text-sm md:text-base">
+                {location || "No location set"}
+              </span>
             </div>
           </div>
 
-          <div className="text-center mb-8">
-            <p className="text-gray-600 max-w-lg mx-auto text-base font-light">
+          <div className="text-center mb-6 md:mb-8">
+            <p className="text-gray-600 max-w-lg mx-auto text-sm md:text-base font-light">
               {bio || "No bio set"}
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8">
             {(
               Object.entries(socialMedia) as [
                 SocialMediaPlatform,
                 SocialMediaData
               ][]
             ).map(([platform, data]) => (
-              <div key={platform} className="bg-gray-50 rounded-xl p-4">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <SocialIcon platform={platform} />
-                  <span className="text-gray-700 font-medium capitalize">
+              <div key={platform} className="bg-gray-50 rounded-xl p-3 md:p-4">
+                <div className="flex items-center justify-center gap-2 mb-1 md:mb-2">
+                  <SocialIcon platform={platform} size={18} />
+                  <span className="text-gray-700 font-medium text-sm md:text-base capitalize">
                     {platform}
                   </span>
                 </div>
                 {data.username ? (
-                  <div className="text-center text-sm text-gray-600 mb-1">
+                  <div className="text-center text-xs md:text-sm text-gray-600 mb-1">
                     @{data.username.replace("@", "")}
                   </div>
                 ) : (
-                  <div className="text-center text-sm text-gray-400 mb-1">
+                  <div className="text-center text-xs md:text-sm text-gray-400 mb-1">
                     Not set
                   </div>
                 )}
-                <div className="text-2xl text-center font-bold text-gray-900">
+                <div className="text-xl md:text-2xl text-center font-bold text-gray-900">
                   {data.followers === "0" ? "0" : data.followers}
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
             <div className="text-center">
-              <div className="flex items-center justify-center gap-2 text-primary mb-1">
-                <Users size={20} />
-                <span className="text-2xl font-bold">
+              <div className="flex items-center justify-center gap-1 md:gap-2 text-primary mb-1">
+                <Users size={16} className="md:w-5 md:h-5" />
+                <span className="text-xl md:text-2xl font-bold">
                   {totalFollowers.toFixed(1)}K
                 </span>
               </div>
-              <p className="text-gray-600 text-sm text-center">
+              <p className="text-gray-600 text-xs md:text-sm">
                 Total Followers
               </p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center gap-2 text-primary mb-1">
-                <DollarSign size={20} />
-                <span className="text-2xl font-bold">
+              <div className="flex items-center justify-center gap-1 md:gap-2 text-primary mb-1">
+                <DollarSign size={16} className="md:w-5 md:h-5" />
+                <span className="text-xl md:text-2xl font-bold">
                   {pricePerCampaign === 0 ? "0" : pricePerCampaign}
                 </span>
               </div>
-              <p className="text-gray-600 text-sm text-center">
-                Price/Campaign
-              </p>
+              <p className="text-gray-600 text-xs md:text-sm">Price/Campaign</p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center gap-2 text-primary mb-1">
-                <Star size={20} />
-                <span className="text-2xl font-bold">
+              <div className="flex items-center justify-center gap-1 md:gap-2 text-primary mb-1">
+                <Star size={16} className="md:w-5 md:h-5" />
+                <span className="text-xl md:text-2xl font-bold">
                   {rating === 0 ? "0" : rating}
                 </span>
               </div>
-              <p className="text-gray-600 text-sm">Rating</p>
+              <p className="text-gray-600 text-xs md:text-sm">Rating</p>
             </div>
           </div>
         </div>

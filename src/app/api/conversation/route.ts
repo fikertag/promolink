@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
               },
               in: {
                 name: "$$otherUser.name",
-                image: { $ifNull: ["$$otherUser.image", "user.png"] },
+                image: { $ifNull: ["$$otherUser.image", null] },
               },
             },
           },
