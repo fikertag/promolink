@@ -26,7 +26,6 @@ type SocialMediaState = Record<SocialMediaPlatform, SocialMediaData>;
 
 function ProfilePage() {
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleImageUpload = async (url: string) => {
     setIsUploading(true);
@@ -41,7 +40,6 @@ function ProfilePage() {
       console.error(error);
     } finally {
       setIsUploading(false);
-      setUploadProgress(0);
     }
   };
 
