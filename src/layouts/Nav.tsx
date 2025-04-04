@@ -36,7 +36,7 @@ export default function Nav() {
           <nav className="hidden sm:flex justify-center text-gray-600">
             <Link
               href="/dashboard"
-              className={`hover:text-primary transition px-5 py-2 ${
+              className={`hover:text-primary transition px-5 py-2  ${
                 isActive("/dashboard")
                   ? "text-primary underline-offset-8 underline"
                   : ""
@@ -44,18 +44,6 @@ export default function Nav() {
               onClick={closeMobileMenu}
             >
               Dashboard
-            </Link>
-
-            <Link
-              href="/profile"
-              className={`hover:text-primary transition px-5 py-2 ${
-                isActive("/profile")
-                  ? "text-primary underline-offset-8 underline"
-                  : ""
-              }`}
-              onClick={closeMobileMenu}
-            >
-              Profile
             </Link>
 
             <Link
@@ -80,6 +68,17 @@ export default function Nav() {
               onClick={closeMobileMenu}
             >
               Contract
+            </Link>
+            <Link
+              href="/profile"
+              className={`hover:text-primary transition px-5 py-2 ${
+                isActive("/profile")
+                  ? "text-primary underline-offset-8 underline"
+                  : ""
+              }`}
+              onClick={closeMobileMenu}
+            >
+              Profile
             </Link>
           </nav>
 
