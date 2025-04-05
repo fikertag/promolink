@@ -165,14 +165,14 @@ function ProfilePage() {
 
   if (isSessionLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className=" flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className=" bg-gray-50">
       {/* Edit Profile Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -343,7 +343,7 @@ function ProfilePage() {
           </div>
         </div>
       )}
-      <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto  px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-6 relative">
           <button
             className="text-gray-400 hover:text-white transition-all hover:bg-primary rounded-full p-2 absolute top-3 right-4"

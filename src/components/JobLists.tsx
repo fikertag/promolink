@@ -12,11 +12,11 @@ export default function JobLists() {
   return (
     <div className="text-center w-4xl mx-auto mb-8">
       <div className="text-center mx-auto mb-8">
-        <h1 className=" mt-4 text-3xl text-blue-600">
+        <h1 className=" mt-4 text-2xl md:text-3xl text-blue-600">
           Available Opportunities
         </h1>
         <p className="text-foreground/70 mt-1">
-          Find the perfect collaborative opportunities.
+          Find the perfect collaborative opportunities
         </p>
       </div>
       <div className="flex flex-col gap-1">
