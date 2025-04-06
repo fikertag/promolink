@@ -73,7 +73,7 @@ const LandingPage = () => {
           }
         });
       },
-      { threshold: 2 }
+      { threshold: 0.5 }
     );
 
     const metricsSection =
