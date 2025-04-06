@@ -37,8 +37,10 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     const userId = url.searchParams.get("userId");
     const status = url.searchParams.get("status");
-
-    let query: any = {};
+    const query: {
+      userId?: string;
+      status?: string;
+    } = {};
     if (userId) query.userId = userId;
     if (status) query.status = status;
 
