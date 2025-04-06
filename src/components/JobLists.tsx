@@ -38,12 +38,6 @@ export default function JobLists() {
               <Skeleton className="h-6 w-full" />
               <Skeleton className="h-6 w-full" />
             </div>
-            <Skeleton className="h-[50px] w-full rounded-sm" />
-            <div className="space-y-2">
-              <Skeleton className="h-6 w-full rounded-sm" />
-              <Skeleton className="h-6 w-full rounded-sm" />
-              <Skeleton className="h-6 w-full rounded-sm" />
-            </div>
           </div>
         )}
       </div>

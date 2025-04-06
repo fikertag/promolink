@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useProposals } from "@/context/Proposal";
 import { useMessages } from "@/context/Message";
 import { useUser } from "@/context/User";

@@ -4,6 +4,7 @@ import { ProposalProvider } from "@/context/Proposal";
 import { MessageProvider } from "@/context/Message";
 import { ContractProvider } from "@/context/Contract";
 import { UserProvider } from "@/context/User";
+import { EarningProvider } from "@/context/Earning";
 
 export default function RootLayout({
   children,
@@ -16,10 +17,12 @@ export default function RootLayout({
         <JobProvider>
           <ProposalProvider>
             <ContractProvider>
-              <MessageProvider>
-                <Nav />
-                {children}
-              </MessageProvider>
+              <EarningProvider>
+                <MessageProvider>
+                  <Nav />
+                  {children}
+                </MessageProvider>
+              </EarningProvider>
             </ContractProvider>
           </ProposalProvider>
         </JobProvider>

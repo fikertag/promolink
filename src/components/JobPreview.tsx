@@ -137,20 +137,20 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job, influencerId }) => {
                 <div
                   className={`hidden sm:flex w-fit px-5 cursor-pointer py-2 rounded-sm text-sm ${
                     hasAppliedOrHired
-                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      ? "bg-gray-300 cursor-not-allowed text-green-800 font-semibold"
                       : "bg-primary/10 hover:bg-primary/10 text-primary"
                   }`}
                   onClick={!hasAppliedOrHired ? handleApplyClick : undefined}
                 >
-                  {hasAppliedOrHired ? "Applied" : "Apply"}
+                  {hasAppliedOrHired ? "Already Applied" : "Apply"}
                 </div>
               </div>
 
               <div className="flex sm:hidden justify-between items-center flex-shrink-0">
                 <div
-                  className={`w-full px-5 cursor-pointer mt-3 py-2 rounded-sm text-white ${
+                  className={`w-full px-5 cursor-pointer mt-3 py-2 rounded-sm text-sm ${
                     hasAppliedOrHired
-                      ? "bg-gray-400 cursor-not-allowed"
+                      ? "bg-gray-300 cursor-not-allowed text-green-800 font-semibold"
                       : "bg-primary hover:bg-primary/80"
                   }`}
                   onClick={!hasAppliedOrHired ? handleApplyClick : undefined}

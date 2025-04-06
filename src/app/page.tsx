@@ -3,7 +3,7 @@
 // components/LandingPage.tsx
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, Building2, SquareUser, ShieldUser } from "lucide-react";
 import Link from "next/link";
 import SocialIcon from "@/components/SocialIcons";
 
@@ -452,7 +452,7 @@ const LandingPage = () => {
                 <div className="absolute inset-0.5 bg-gradient-to-r from-primary to-accent rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
                 <div className="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg py-4 px-4 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
                   <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-3 mx-auto transform transition group-hover:rotate-6 duration-300">
-                    <i className="fas fa-store text-white text-2xl"></i>
+                    <Building2 size={24} />
                   </div>
                   <h3 className="text-xl font-bold text-center mb-4">
                     For Businesses
@@ -500,7 +500,7 @@ const LandingPage = () => {
                 <div className="absolute inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
                 <div className="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg py-4 px-4 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
                   <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-3 mx-auto transform transition group-hover:rotate-6 duration-300">
-                    <i className="fas fa-bullhorn text-white text-2xl"></i>
+                    <SquareUser size={24} />
                   </div>
                   <h3 className="text-xl font-bold text-center mb-4">
                     For Influencers
@@ -548,7 +548,7 @@ const LandingPage = () => {
                 <div className="absolute inset-0.5 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
                 <div className="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg py-4 px-4 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
                   <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center mb-3 mx-auto transform transition group-hover:rotate-6 duration-300">
-                    <i className="fas fa-user text-white text-2xl"></i>
+                    <ShieldUser size={24} />
                   </div>
                   <h3 className="text-xl font-bold text-center mb-4">
                     For Customers
@@ -644,6 +644,8 @@ const LandingPage = () => {
                 </div>
               </div>
               <div className="relative">
+                <div className="absolute top-12 right-10 w-full h-1 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
+
                 <div className="relative z-10 bg-white dark:bg-gray-800 p-4 py-6  rounded-xl shadow-lg text-center transform transition-all hover:-translate-y-2 duration-300">
                   <div className="h-14 w-14 rounded-full bg-accent2 flex items-center justify-center mb-2 mx-auto">
                     <span className="font-bold text-white text-xl">4</span>

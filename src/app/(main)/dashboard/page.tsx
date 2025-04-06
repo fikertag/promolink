@@ -1,53 +1,33 @@
-import React from "react";
-import {
-  // Users,
-  MessageSquare,
-  // TrendingUp,
-  DollarSign,
-  // Star,
-  BadgeCheck,
-} from "lucide-react";
+"use client";
+
+import { useEarnings } from "@/context/Earning";
+import { DollarSign } from "lucide-react";
 
 const Dashboard = () => {
+  const { getTotalEarnings } = useEarnings();
+  // Calculate earnings for the current user
+  const userEarnings = getTotalEarnings();
   const stats = [
     {
       icon: <DollarSign size={20} />,
       label: "Total Earnings",
-      value: "ETB 42,580",
-      trend: { value: "6% vs last month", positive: true },
+      value: userEarnings.total,
       gradient: "bg-gradient-to-br from-sky-50 to-sky-100",
       iconColor: "text-sky-600",
     },
     {
       icon: <DollarSign size={20} />,
       label: "Paid Earnings",
-      value: "ETB 12,580",
-      trend: { value: "6% vs last month", positive: true },
+      value: userEarnings.paid,
       gradient: "bg-gradient-to-br from-sky-50 to-sky-100",
       iconColor: "text-sky-600",
     },
     {
       icon: <DollarSign size={20} />,
       label: "Unpaid Earnings",
-      value: "ETB 30,000",
-      trend: { value: "6% vs last month", positive: true },
+      value: userEarnings.unpaid,
       gradient: "bg-gradient-to-br from-sky-50 to-sky-100",
       iconColor: "text-sky-600",
-    },
-    {
-      icon: <MessageSquare size={20} />,
-      label: "Active Campaigns",
-      value: "12",
-      trend: { value: "4% vs last month", positive: true },
-      gradient: "bg-gradient-to-br from-rose-50 to-rose-100",
-      iconColor: "text-rose-600",
-    },
-    {
-      icon: <BadgeCheck size={20} />,
-      label: "Verification Status",
-      value: "Verified",
-      gradient: "bg-gradient-to-br from-emerald-50 to-emerald-100",
-      iconColor: "text-emerald-600",
     },
   ];
 
@@ -56,11 +36,9 @@ const Dashboard = () => {
       <div className="max-w-[1200px] mx-auto px-4 space-y-8">
         {/* Dashboard Header */}
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold mb-4 px-3">
-            Dashboard Overview
-          </h1>
+          <h1 className="text-2xl font-semibold px-3">Dashboard</h1>
           <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500">
-            ETB 7,239.00
+            ETB {userEarnings.total}
           </div>
         </div>
 
@@ -89,26 +67,6 @@ const Dashboard = () => {
                       {stat.value}
                     </p>
                   </div>
-
-                  {/* Trend (optional) */}
-                  {stat.trend && (
-                    <div
-                      className={`flex items-center text-sm ${
-                        stat.trend.positive
-                          ? "text-emerald-600"
-                          : "text-rose-600"
-                      }`}
-                    >
-                      <span
-                        className={`mr-1 ${
-                          stat.trend.positive ? "" : "rotate-180"
-                        }`}
-                      >
-                        ▲
-                      </span>
-                      {stat.trend.value}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
