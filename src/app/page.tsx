@@ -3,8 +3,9 @@
 // components/LandingPage.tsx
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import { MenuIcon, Camera } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import Link from "next/link";
+import SocialIcon from "@/components/SocialIcons";
 
 const LandingPage = () => {
   const darkMode = true;
@@ -39,7 +40,7 @@ const LandingPage = () => {
     if (counted) return;
 
     const counters = document.querySelectorAll(".counter");
-    const speed = 200;
+    const speed = 100;
 
     counters.forEach((counter) => {
       const target = +(counter.getAttribute("data-target") || 0);
@@ -51,7 +52,7 @@ const LandingPage = () => {
         if (count < target) {
           count += inc;
           if (counter) counter.textContent = Math.floor(count).toLocaleString();
-          setTimeout(updateCount, 20);
+          setTimeout(updateCount, 1);
         } else if (counter) {
           counter.textContent = target.toLocaleString();
         }
@@ -113,20 +114,20 @@ const LandingPage = () => {
             <div className="flex justify-between h-20">
               <div className="flex items-center">
                 <div className="flex-shrink-0 flex items-center">
-                  <span className="font-extrabold text-3xl text-gradient">
+                  <span className="font-extrabold text-3xl text-gradient cursor-pointer">
                     Promo<span className="text-[#e92865]">L</span>in
-                    <span className="text-[#e92865]">K</span>
+                    <span className="text-[#e92865]">k</span>
                   </span>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block">
+                <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block cursor-pointer">
                   About
                 </button>
-                <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block">
-                  socials
+                <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block cursor-pointer">
+                  Socials
                 </button>
-                <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block">
+                <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block cursor-pointer">
                   Support
                 </button>
                 <Link
@@ -397,7 +398,7 @@ const LandingPage = () => {
               <div className="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
                 <div
                   className="text-primary text-5xl font-extrabold mb-2 counter"
-                  data-target="1000"
+                  data-target="125"
                 >
                   0
                 </div>
@@ -409,7 +410,7 @@ const LandingPage = () => {
               <div className="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
                 <div
                   className="text-primary text-5xl font-extrabold mb-2 counter"
-                  data-target="500"
+                  data-target="51"
                 >
                   0
                 </div>
@@ -421,7 +422,7 @@ const LandingPage = () => {
               <div className="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
                 <div
                   className="text-primary text-5xl font-extrabold mb-2 counter"
-                  data-target="5000"
+                  data-target="450"
                 >
                   0
                 </div>
@@ -435,7 +436,7 @@ const LandingPage = () => {
 
           {/* Roles Section */}
           <section className="max-w-7xl mx-auto px-4 mt-18 md:mt-30">
-            <div className="text-center mb-16 ">
+            <div className="text-center mb-10 ">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Who Benefits from PromoLink?
               </h2>
@@ -445,11 +446,11 @@ const LandingPage = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10  mb-16">
               {/* Business Card */}
               <div className="relative group">
                 <div className="absolute inset-0.5 bg-gradient-to-r from-primary to-accent rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
-                <div className="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg py-8 px-4 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
+                <div className="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg py-4 px-4 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
                   <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-3 mx-auto transform transition group-hover:rotate-6 duration-300">
                     <i className="fas fa-store text-white text-2xl"></i>
                   </div>
@@ -497,7 +498,7 @@ const LandingPage = () => {
               {/* Influencer Card */}
               <div className="relative group">
                 <div className="absolute inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
-                <div className="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg py-8 px-4 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
+                <div className="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg py-4 px-4 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
                   <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-3 mx-auto transform transition group-hover:rotate-6 duration-300">
                     <i className="fas fa-bullhorn text-white text-2xl"></i>
                   </div>
@@ -545,7 +546,7 @@ const LandingPage = () => {
               {/* Customer Card */}
               <div className="relative group">
                 <div className="absolute inset-0.5 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
-                <div className="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg py-8 px-4 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
+                <div className="relative card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg py-4 px-4 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
                   <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center mb-3 mx-auto transform transition group-hover:rotate-6 duration-300">
                     <i className="fas fa-user text-white text-2xl"></i>
                   </div>
@@ -810,9 +811,6 @@ const LandingPage = () => {
             <div className="grid grid-cols-2  md:grid-cols-5 gap-8 mb-12">
               <div className="col-span-2">
                 <div className="flex items-center mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center mr-2">
-                    <Camera />{" "}
-                  </div>
                   <span className="font-bold text-lg text-gradient">
                     PromoLink
                   </span>
@@ -821,30 +819,42 @@ const LandingPage = () => {
                   Transforming how businesses, creators, and customers connect
                   in the digital economy.
                 </p>
-                <div className="flex space-x-4">
+                <div className="flex items-center space-x-4">
                   <a
                     href="#"
                     className="text-gray-400 hover:text-primary transition-colors"
                   >
-                    tiwter
+                    <SocialIcon
+                      platform={"instagram"}
+                      color="#99a1af"
+                      size={18}
+                    />
                   </a>
                   <a
                     href="#"
                     className="text-gray-400 hover:text-primary transition-colors"
                   >
-                    <i className="fab fa-instagram text-lg"></i>
+                    <SocialIcon
+                      platform={"telegram"}
+                      color="#99a1af"
+                      size={18}
+                    />
                   </a>
                   <a
                     href="#"
                     className="text-gray-400 hover:text-primary transition-colors"
                   >
-                    <i className="fab fa-linkedin text-lg"></i>
+                    <SocialIcon
+                      platform={"youtube"}
+                      color="#99a1af"
+                      size={18}
+                    />
                   </a>
                   <a
                     href="#"
                     className="text-gray-400 hover:text-primary transition-colors"
                   >
-                    <i className="fab fa-youtube text-lg"></i>
+                    <SocialIcon platform={"tiktok"} color="#99a1af" size={18} />
                   </a>
                 </div>
               </div>
@@ -854,22 +864,7 @@ const LandingPage = () => {
                 <ul className="space-y-3 text-gray-500 dark:text-gray-400">
                   <li>
                     <a href="#" className="hover:text-primary grow-underline">
-                      Blog
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary grow-underline">
-                      Success Stories
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary grow-underline">
                       Help Center
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary grow-underline">
-                      API Docs
                     </a>
                   </li>
                 </ul>
@@ -881,21 +876,6 @@ const LandingPage = () => {
                   <li>
                     <a href="#" className="hover:text-primary grow-underline">
                       About Us
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary grow-underline">
-                      Careers
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary grow-underline">
-                      Press
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-primary grow-underline">
-                      Contact
                     </a>
                   </li>
                 </ul>
