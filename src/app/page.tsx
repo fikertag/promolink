@@ -7,29 +7,29 @@ import { MenuIcon, Camera } from "lucide-react";
 import Link from "next/link";
 
 const LandingPage = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [counted, setCounted] = useState(false);
 
-  useEffect(() => {
-    // Dark mode detection
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      setDarkMode(true);
-    }
+  // useEffect(() => {
+  //   // Dark mode detection
+  //   if (
+  //     window.matchMedia &&
+  //     window.matchMedia("(prefers-color-scheme: dark)").matches
+  //   ) {
+  //     setDarkMode(true);
+  //   }
 
-    const darkModeListener = (event: MediaQueryListEvent) => {
-      setDarkMode(event.matches);
-    };
+  //   const darkModeListener = (event: MediaQueryListEvent) => {
+  //     setDarkMode(event.matches);
+  //   };
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addEventListener("change", darkModeListener);
+  //   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  //   mediaQuery.addEventListener("change", darkModeListener);
 
-    return () => {
-      mediaQuery.removeEventListener("change", darkModeListener);
-    };
-  }, []);
+  //   return () => {
+  //     mediaQuery.removeEventListener("change", darkModeListener);
+  //   };
+  // }, []);
 
   // const toggleTheme = () => {
   //   setDarkMode(!darkMode);
@@ -73,7 +73,7 @@ const LandingPage = () => {
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 2 }
     );
 
     const metricsSection =
@@ -106,10 +106,9 @@ const LandingPage = () => {
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
       </Head>
-
-      <div className="bg-light dark:bg-dark text-gray-800 dark:text-gray-200 transition-colors duration-300">
+      <div className=" dark:bg-black text-gray-800 dark:text-gray-200 absolute h-full bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:20px_24px]">
         {/* Top Navigation */}
-        <nav className="glass fixed w-full top-0 z-50 transition-colors duration-300 backdrop-blur-3xl">
+        <nav className="">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-20">
               <div className="flex items-center">
@@ -147,10 +146,10 @@ const LandingPage = () => {
         </nav>
 
         {/* Main Content */}
-        <main className="pt-24 pb-10 px-4 sm:px-6 lg:px-8 min-h-screen">
+        <main className=" pb-10 pt-5 px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
           <section className="max-w-7xl mx-auto">
-            <div className="bg-white dark:bg-dark rounded-3xl p-4 md:p-10  md:px-24 h-fit">
+            <div className=" rounded-3xl p-4 md:p-10  md:px-24">
               <div className="grid grid-cols-1 md:grid-cols-2  ">
                 <div className="mb-10 md:mb-0 mt-2 sm:mt-5">
                   <h1 className="text-5xl  sm:text-5xl lg:text-6xl font-extrabold mb-3 md:mb-6">
@@ -172,10 +171,13 @@ const LandingPage = () => {
                       Get Started
                       <i className="fas fa-arrow-right ml-2"></i>
                     </Link>
-                    <button className="py-3 px-8 border border-gray-300 dark:border-gray-700 hover:border-primary dark:hover:border-primary text-gray-800 dark:text-gray-200 rounded-lg transition-colors flex items-center justify-center font-medium">
+                    <Link
+                      href={"/signup"}
+                      className="py-3 px-8 border border-gray-300 dark:border-gray-700 hover:border-primary dark:hover:border-primary text-gray-800 dark:text-gray-200 rounded-lg transition-colors flex items-center justify-center font-medium"
+                    >
                       <i className="fas fa-play text-primary mr-2"></i>
                       Watch Demo
-                    </button>
+                    </Link>
                   </div>
                   <div className="flex items-center mt-6 md:mt-10">
                     <div className="flex -space-x-2">
@@ -293,21 +295,29 @@ const LandingPage = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-24 overflow-hidden relative">
-              <p className="text-sm text-gray-500 dark:text-gray-400 uppercase font-medium tracking-wide mb-5 text-center">
+            <div className="mt-24 overflow-hidden relative ">
+              <p className="text-sm md:text-xl md:font-semibold text-gray-500 dark:text-gray-400 uppercase font-medium tracking-wide mb-10 text-center">
                 Trusted by leading brands
               </p>
 
               {/* Marquee Container */}
               <div className="relative w-full">
                 {/* Gradient fade effects */}
-                <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-light dark:from-dark to-transparent z-10"></div>
-                <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-light dark:from-dark to-transparent z-10"></div>
 
                 {/* Marquee Content - Double the items for seamless looping */}
                 <div className="flex overflow-x-hidden">
-                  <div className="flex py-2 animate-marquee whitespace-nowrap">
+                  <div className="flex py-2 md:pt-4 animate-marquee whitespace-nowrap">
                     {[
+                      "smart tech",
+                      "lekecoffe",
+                      "TechPro",
+                      "StyleX",
+                      "mks",
+                      "smart tech",
+                      "lekecoffe",
+                      "TechPro",
+                      "StyleX",
+                      "mks",
                       "smart tech",
                       "lekecoffe",
                       "TechPro",
@@ -372,10 +382,10 @@ const LandingPage = () => {
                   }
                 }
                 .animate-marquee {
-                  animation: marquee 15s linear infinite;
+                  animation: marquee 30s linear infinite;
                 }
                 .animate-marquee2 {
-                  animation: marquee2 15s linear infinite;
+                  animation: marquee2 30s linear infinite;
                   position: absolute;
                   top: 0;
                 }
@@ -384,12 +394,12 @@ const LandingPage = () => {
           </section>
 
           {/* Metrics Section */}
-          <section className="max-w-7xl mx-auto px-4 mt-18">
+          <section className="max-w-7xl mx-auto px-4 mt-18 bg-black">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
                 <div
                   className="text-primary text-5xl font-extrabold mb-2 counter"
-                  data-target="10000"
+                  data-target="1000"
                 >
                   0
                 </div>
@@ -401,7 +411,7 @@ const LandingPage = () => {
               <div className="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
                 <div
                   className="text-primary text-5xl font-extrabold mb-2 counter"
-                  data-target="5000"
+                  data-target="500"
                 >
                   0
                 </div>
@@ -413,7 +423,7 @@ const LandingPage = () => {
               <div className="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
                 <div
                   className="text-primary text-5xl font-extrabold mb-2 counter"
-                  data-target="500000"
+                  data-target="5000"
                 >
                   0
                 </div>
@@ -426,7 +436,7 @@ const LandingPage = () => {
           </section>
 
           {/* Roles Section */}
-          <section className="max-w-7xl mx-auto px-4 mt-18">
+          <section className="max-w-7xl mx-auto px-4 mt-18 md:mt-30">
             <div className="text-center mb-16 ">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Who Benefits from PromoLink?
@@ -476,10 +486,13 @@ const LandingPage = () => {
                       </span>
                     </li>
                   </ul>
-                  <button className="mt-3 w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                  <Link
+                    href={"/signup"}
+                    className="mt-3 w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-center"
+                  >
                     Enter as Business
                     <i className="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all"></i>
-                  </button>
+                  </Link>
                 </div>
               </div>
 
@@ -521,10 +534,13 @@ const LandingPage = () => {
                       </span>
                     </li>
                   </ul>
-                  <button className="mt-3 w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all">
+                  <Link
+                    href={"/signup"}
+                    className="mt-3 w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all text-center"
+                  >
                     Enter as Influencer
                     <i className="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all"></i>
-                  </button>
+                  </Link>
                 </div>
               </div>
 
@@ -562,17 +578,20 @@ const LandingPage = () => {
                       <span>Support both businesses and creators you love</span>
                     </li>
                   </ul>
-                  <button className="mt-3 w-full py-3 px-4 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-lg transition-all">
+                  <Link
+                    href={"/signup"}
+                    className="mt-3 w-full py-3 px-4 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-lg transition-all text-center"
+                  >
                     Enter as Customer
                     <i className="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all"></i>
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
           </section>
 
           {/* How It Works Section */}
-          <section className="max-w-7xl mx-auto mt-18 px-4">
+          <section className="max-w-7xl mx-auto mt-18 md:mt-30 px-4">
             <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-bold ">
                 How PromoLink Works
@@ -606,7 +625,6 @@ const LandingPage = () => {
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400">
                     Creators find relevant products and generate unique promo
-                    codes
                   </p>
                   <div className="h-1 w-12 bg-secondary mx-auto mt-4 rounded"></div>
                 </div>
@@ -642,7 +660,7 @@ const LandingPage = () => {
           </section>
 
           {/* Testimonial Section */}
-          <section className="max-w-7xl mx-auto mt-16">
+          <section className="max-w-7xl mx-auto mt-16 md:mt-30">
             <div className="text-center mb-14">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 What Our Users Say
@@ -676,7 +694,7 @@ const LandingPage = () => {
                     &quot;PromoLink transformed how we connect with our
                     audience. Our sales have increased by 135% since joining,
                     and we&apos;ve built relationships with amazing creators who
-                    truly understand our brand.&quot
+                    truly
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>
@@ -709,7 +727,7 @@ const LandingPage = () => {
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
                     &quot;PromoLink is different. The analytics are incredible,
                     and I only promote products I believe in. My audience trusts
-                    my recommendations, and I earn consistent income.&quot;
+                    my recommendations, and I earn consistent
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>
@@ -773,7 +791,7 @@ const LandingPage = () => {
                 <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
                   <Link
                     href={"/signup"}
-                    className="py-4 w-full max-w-[300px] bg-white text-primary hover:bg-gray-100 rounded-lg transition-colors duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold"
+                    className="py-4 text-center w-full max-w-[300px] bg-white text-primary hover:bg-gray-100 rounded-lg transition-colors duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold"
                   >
                     Create Your Account
                     <i className="fas fa-arrow-right ml-2"></i>

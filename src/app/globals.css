@@ -142,7 +142,7 @@ body {
   --color-accent: #a855f7;
   --color-accent2: #ec4899;
   --color-light: #f9fafb;
-  --color-dark: #060c19;
+  --color-dark: #000000;
 }
 
 @layer base {

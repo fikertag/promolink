@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <JobProvider>
         <body
-          className={`${inter.variable} antialiased `} //  Apply Inter and Geist_Mono
+          className={`${inter.variable} antialiased bg-black `} //  Apply Inter and Geist_Mono
         >
           {/* <Nav /> */}
 
