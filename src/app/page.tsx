@@ -7,7 +7,7 @@ import { MenuIcon, Camera } from "lucide-react";
 import Link from "next/link";
 
 const LandingPage = () => {
-  const [darkMode, setDarkMode] = useState(true);
+  const darkMode = true;
   const [counted, setCounted] = useState(false);
 
   // useEffect(() => {
