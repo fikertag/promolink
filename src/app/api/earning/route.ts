@@ -69,7 +69,11 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const updateData: any = {};
+    const updateData: {
+      status?: string;
+      paymentDate?: Date;
+    } = {};
+
     if (status) updateData.status = status;
     if (status === "paid") updateData.paymentDate = paymentDate || new Date();
 
