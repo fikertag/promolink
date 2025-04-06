@@ -52,7 +52,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className=" min-h-screen py-7">
+    <div className="  py-7">
       <div className="max-w-[1200px] mx-auto px-4 space-y-8">
         {/* Dashboard Header */}
         <div className="flex items-center justify-between">
@@ -73,7 +73,7 @@ const Dashboard = () => {
             >
               <div className="absolute inset-0 bg-white/40 backdrop-blur-sm" />
 
-              <div className="relative z-10 space-y-4 flex gap-5">
+              <div className="relative space-y-4 flex gap-5">
                 {/* Icon */}
                 <div className="w-13 h-13 rounded-lg bg-white/50 border flex items-center justify-center backdrop-blur-sm">
                   <div className={stat.iconColor}>{stat.icon}</div>

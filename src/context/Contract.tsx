@@ -10,13 +10,31 @@ interface SocialMediaAction {
   quantity: number;
 }
 
+interface Job {
+  _id: string;
+  title: string;
+  description: string;
+}
+
+interface Proposal {
+  _id: string;
+  influencerId: string;
+  jobId: Job;
+  status: "pending" | "approved" | "rejected";
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface Contract {
   _id: string;
-  proposalId: string;
+  proposalId: Proposal;
   price: number;
   socialMediaActions: SocialMediaAction[];
   deadline: string;
   status: "draft" | "active" | "completed" | "terminated";
+  activatedAt?: string; // Optional field for when the contract is activated
+  completedAt?: string; // Optional field for when the contract is completed
   createdAt: string;
   updatedAt: string;
 }

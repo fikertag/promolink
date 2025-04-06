@@ -11,7 +11,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className=" min-h-screen bg-gray-50 ">
       <UserProvider>
         <JobProvider>
           <ProposalProvider>
@@ -24,6 +24,6 @@ export default function RootLayout({
           </ProposalProvider>
         </JobProvider>
       </UserProvider>
-    </>
+    </div>
   );
 }

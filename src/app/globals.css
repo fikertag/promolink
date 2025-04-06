@@ -159,6 +159,10 @@ body {
   display: none; /* Safari and Chrome */
 }
 
+.container12::-webkit-scrollbar {
+  display: none;
+}
+
 .hidewebkit::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }

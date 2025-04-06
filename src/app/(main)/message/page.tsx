@@ -8,7 +8,6 @@ import Image from "next/image";
 import {
   MessageSquare,
   Send,
-  Paperclip,
   Clipboard,
   CheckCircle,
   MessageCircle,
@@ -119,7 +118,7 @@ function MessagesAndProposals() {
   }, [activeTab]);
 
   return (
-    <div className="bg-gray-50 py-8">
+    <div className=" py-4">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Tab Navigation */}
         <div className="bg-white rounded-t-2xl shadow-sm">
@@ -289,7 +288,7 @@ function MessagesAndProposals() {
             <div className="grid lg:grid-cols-3 grid-cols-1 min-h-[500px]">
               {/* Conversation List - Always visible on desktop, conditionally on mobile */}
               <div
-                className={`col-span-1 border-r border-gray-200 bg-gray-50 ${
+                className={`col-span-1 border-r border-gray-200 bg-white ${
                   !showConversationList ? "hidden lg:block" : "block"
                 }`}
               >
@@ -312,7 +311,7 @@ function MessagesAndProposals() {
                             w-full p-3 rounded-lg transition-colors
                             ${
                               selectedConversation === convo._id
-                                ? "bg-white shadow-sm border border-gray-200"
+                                ? "bg-gray-100 shadow-sm border border-gray-200"
                                 : "hover:bg-gray-100"
                             }
                           `}
@@ -363,7 +362,7 @@ function MessagesAndProposals() {
                 {selectedConversation ? (
                   <>
                     {/* Chat Header with back button on mobile */}
-                    <div className="border-b border-gray-200 p-4 flex items-center gap-3">
+                    <div className="border-b border-gray-200 px-1 py-2 flex items-center">
                       <button
                         onClick={handleBackToConversations}
                         className="lg:hidden p-1 mr-1 text-gray-500 hover:text-gray-700"
@@ -394,7 +393,7 @@ function MessagesAndProposals() {
                         )}
                       </div>
                       <div>
-                        <h3 className="font-medium text-gray-900">
+                        <h3 className="font-medium text-gray-900 ml-2">
                           {
                             conversations.find(
                               (c) => c._id === selectedConversation
@@ -416,7 +415,7 @@ function MessagesAndProposals() {
                           <p className="text-sm">Start the conversation</p>
                         </div>
                       ) : (
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           {[...currentMessages].reverse().map((message) => (
                             <div
                               key={message._id}
@@ -427,7 +426,7 @@ function MessagesAndProposals() {
                               }`}
                             >
                               <div
-                                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg relative ${
+                                className={`max-w-xs lg:max-w-md min-w-30 px-3 py-1 rounded-lg relative ${
                                   message.senderId === user?.id
                                     ? "bg-primary text-white rounded-br-none"
                                     : "bg-white border border-gray-200 rounded-bl-none"
@@ -453,9 +452,9 @@ function MessagesAndProposals() {
                     {/* Message Input */}
                     <div className="border-t border-gray-200 p-4 bg-white">
                       <div className="flex items-center gap-2">
-                        <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                        {/* <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
                           <Paperclip size={20} />
-                        </button>
+                        </button> */}
                         <input
                           type="text"
                           value={messageInput}
@@ -471,14 +470,21 @@ function MessagesAndProposals() {
                           disabled={!messageInput.trim() || isSending}
                           className={`p-2 rounded-full ${
                             messageInput.trim()
-                              ? "bg-primary text-white hover:bg-primary-dark"
-                              : "bg-gray-100 text-gray-400"
+                              ? " text-white hover:bg-primary-dark"
+                              : " text-gray-400"
                           } transition-colors min-w-[40px] flex items-center justify-center`}
                         >
                           {isSending ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
                           ) : (
-                            <Send size={20} />
+                            <Send
+                              size={20}
+                              className={`${
+                                messageInput.trim()
+                                  ? "text-primary"
+                                  : " text-gray-400"
+                              }`}
+                            />
                           )}
                         </button>
                       </div>

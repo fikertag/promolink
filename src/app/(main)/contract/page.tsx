@@ -64,7 +64,7 @@ export default function ContractsPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
         <Clipboard size={24} />
         Contract Management
@@ -77,7 +77,7 @@ export default function ContractsPage() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 font-medium text-sm ${
+              className={`px-2 min-[340px]:px-3  md:px-4 py-2 font-medium text-sm ${
                 activeTab === tab
                   ? "border-b-2 border-primary text-primary"
                   : "text-gray-500"
@@ -126,7 +126,11 @@ export default function ContractsPage() {
 
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-semibold text-sm mb-2">Deliverables</h4>
+                    <h4 className="font-semibold text-sm mb-1">Job Title</h4>
+                    <p className="text-sm">{contract.proposalId.jobId.title}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm mb-1">Deliverables</h4>
                     <ul className="space-y-1">
                       {contract.socialMediaActions.map((action, index) => (
                         <li key={index} className="text-sm">
@@ -138,7 +142,7 @@ export default function ContractsPage() {
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-sm mb-2">Financials</h4>
+                    <h4 className="font-semibold text-sm mb-1">Financials</h4>
                     <p className="text-lg font-bold">${contract.price}</p>
                     <p className="text-xs text-gray-500 mt-1">
                       Created: {formatDate(contract.createdAt)}

@@ -8,12 +8,11 @@ import ImageUpload from "../../../components/ImageUpload";
 import {
   Edit2,
   MapPin,
-  Star,
-  DollarSign,
-  Users,
+  BadgeCheck,
   X,
   Camera,
   Loader2,
+  BadgeX,
 } from "lucide-react";
 
 // Type definitions
@@ -49,7 +48,6 @@ function ProfilePage() {
 
   // User profile state with default empty values
   const [pricePerCampaign, setPricePerCampaign] = useState<number>(0);
-  const [rating, setRating] = useState(0);
   const [socialMedia, setSocialMedia] = useState<SocialMediaState>({
     instagram: { username: "", followers: "0" },
     tiktok: { username: "", followers: "0" },
@@ -60,6 +58,7 @@ function ProfilePage() {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [image, setImage] = useState("");
+  const [Verified, setVerified] = useState(false);
 
   // Location options
   const locationOptions = ["Tecno", "Main Agri", "Addis Ababa"];
@@ -78,6 +77,7 @@ function ProfilePage() {
       setUsername(session.user.name || "");
       setBio(session.user.bio || "");
       setImage(session.user.image || "");
+      setVerified(session.user.verified || false);
 
       try {
         const userSocialMedia = session.user.socialMedia
@@ -102,7 +102,6 @@ function ProfilePage() {
       }
 
       setPricePerCampaign(session.user.price || 0);
-      setRating(session.user.rating || 0);
     }
   }, [session]);
 
@@ -134,6 +133,7 @@ function ProfilePage() {
         location: location,
         socialMedia: socialMediaData,
         price: pricePerCampaign,
+        verified: false,
       });
 
       await refetch();
@@ -165,18 +165,18 @@ function ProfilePage() {
 
   if (isSessionLoading) {
     return (
-      <div className=" flex items-center justify-center">
+      <div className=" flex items-center justify-center h-[80vh]">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className=" bg-gray-50">
+    <div className=" ">
       {/* Edit Profile Modal */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto container12 ">
             <div className="flex justify-between items-center border-b p-4 sticky top-0 bg-white z-10">
               <h2 className="text-xl font-semibold">Edit Profile</h2>
               <button
@@ -187,7 +187,7 @@ function ProfilePage() {
                 <X size={24} />
               </button>
             </div>
-            <form onSubmit={handleSave} className="p-6">
+            <form onSubmit={handleSave} className="px-4 pt-6 md:px-6">
               {error && (
                 <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
                   {error}
@@ -230,7 +230,6 @@ function ProfilePage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   disabled={isLoading}
                 >
-                  <option value="">Select location</option>
                   {locationOptions.map((loc) => (
                     <option key={loc} value={loc}>
                       {loc}
@@ -343,8 +342,8 @@ function ProfilePage() {
           </div>
         </div>
       )}
-      <div className="max-w-3xl mx-auto  px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-6 relative">
+      <div className="max-w-3xl mx-auto mt-2  px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-2xl shadow-sm py-6 px-2 min-[400px]:px-6 md:p-8  relative">
           <button
             className="text-gray-400 hover:text-white transition-all hover:bg-primary rounded-full p-2 absolute top-3 right-4"
             onClick={() => setIsEditModalOpen(true)}
@@ -393,7 +392,7 @@ function ProfilePage() {
             )}
           </div>
 
-          <div className="text-center mb-4 flex flex-col gap-1">
+          <div className="text-center mb-2 md:mb-4 flex flex-col gap-1">
             <div className="flex items-center justify-center gap-2">
               <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
                 {username || "No username set"}
@@ -444,34 +443,39 @@ function ProfilePage() {
           </div>
 
           <div className="grid grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
-            <div className="text-center">
+            <div className="text-center flex flex-col justify-between">
               <div className="flex items-center justify-center gap-1 md:gap-2 text-primary mb-1">
-                <Users size={16} className="md:w-5 md:h-5" />
-                <span className="text-xl md:text-2xl font-bold">
-                  {totalFollowers.toFixed(1)}K
+                <span className="text-base min-[350px]:text-xl md:text-2xl font-bold">
+                  {totalFollowers}
                 </span>
               </div>
               <p className="text-gray-600 text-xs md:text-sm">
                 Total Followers
               </p>
             </div>
-            <div className="text-center">
+            <div className="text-center flex flex-col justify-between">
               <div className="flex items-center justify-center gap-1 md:gap-2 text-primary mb-1">
-                <DollarSign size={16} className="md:w-5 md:h-5" />
-                <span className="text-xl md:text-2xl font-bold">
-                  {pricePerCampaign === 0 ? "0" : pricePerCampaign}
+                <span className="text-base min-[350px]:text-xl md:text-2xl font-bold">
+                  {pricePerCampaign === 0 ? "0" : pricePerCampaign} Birr
                 </span>
               </div>
               <p className="text-gray-600 text-xs md:text-sm">Price/Campaign</p>
             </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-1 md:gap-2 text-primary mb-1">
-                <Star size={16} className="md:w-5 md:h-5" />
-                <span className="text-xl md:text-2xl font-bold">
-                  {rating === 0 ? "0" : rating}
-                </span>
+            <div className="text-center flex flex-col justify-between">
+              <div className="flex flex-col items-center justify-between gap-1 md:gap-2 text-primary mb-1">
+                <div className="text-base min-[350px]:text-xl md:text-2xl font-bold mt-1">
+                  {Verified ? (
+                    <BadgeCheck className="text-primary w-3 h-3 min-[450px]:w-5 min-[450px]:h-5" />
+                  ) : (
+                    <BadgeX
+                      // size={25}
+                      strokeWidth={2}
+                      className="text-red-600 w-5 h-5 min-[450px]:w-6 min-[450px]:h-6"
+                    />
+                  )}
+                </div>
               </div>
-              <p className="text-gray-600 text-xs md:text-sm">Rating</p>
+              <p className="text-gray-600 text-xs md:text-sm">Verified</p>
             </div>
           </div>
         </div>

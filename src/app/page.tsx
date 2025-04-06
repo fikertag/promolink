@@ -113,11 +113,9 @@ const LandingPage = () => {
             <div className="flex justify-between h-20">
               <div className="flex items-center">
                 <div className="flex-shrink-0 flex items-center">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center mr-3 shadow-lg">
-                    <Camera />{" "}
-                  </div>
-                  <span className="font-extrabold text-2xl text-gradient">
-                    PromoLink
+                  <span className="font-extrabold text-3xl text-gradient">
+                    Promo<span className="text-[#e92865]">L</span>in
+                    <span className="text-[#e92865]">K</span>
                   </span>
                 </div>
               </div>
@@ -334,7 +332,7 @@ const LandingPage = () => {
                   </div>
 
                   {/* Duplicated content for seamless looping */}
-                  <div className="flex py-2 animate-marquee2 whitespace-nowrap">
+                  <div className="flex py-2 md:pt-4 animate-marquee2 whitespace-nowrap">
                     {[
                       "smart tech",
                       "lekecoffe",
