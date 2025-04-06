@@ -3,6 +3,8 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import SocialIcon from "../../../components/SocialIcons";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation"; // Note: different import for App Router
+
 import toast from "react-hot-toast";
 import ImageUpload from "../../../components/ImageUpload";
 import {
@@ -13,6 +15,7 @@ import {
   Camera,
   Loader2,
   BadgeX,
+  LogOut,
 } from "lucide-react";
 
 // Type definitions
@@ -44,6 +47,7 @@ function ProfilePage() {
 
   // State for loading and errors
   const [isLoading, setIsLoading] = useState(false);
+  const [isLogoutLoading, setIsLogoutLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // User profile state with default empty values
@@ -54,6 +58,7 @@ function ProfilePage() {
     telegram: { username: "", followers: "0" },
   });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [location, setLocation] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
@@ -163,6 +168,26 @@ function ProfilePage() {
     }));
   };
 
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    setIsLogoutLoading(true);
+    try {
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push("/signup"); // redirect to login page
+            router.refresh();
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+      setIsLoading(false);
+      setShowConfirm(false);
+    }
+  };
+
   if (isSessionLoading) {
     return (
       <div className=" flex items-center justify-center h-[80vh]">
@@ -174,6 +199,39 @@ function ProfilePage() {
   return (
     <div className=" ">
       {/* Edit Profile Modal */}
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className=" mt-2 w-72 bg-white rounded-md shadow-lg p-4 border border-gray-200 z-50">
+            <p className="text-gray-700 mb-4">
+              Are you sure you want to logout?
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1 px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors cursor-pointer"
+              >
+                {isLogoutLoading ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="animate-spin h-4 w-4" />
+                    Logging out...
+                  </div>
+                ) : (
+                  <>
+                    <LogOut size={15} />
+                    <div>Logout</div>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto container12 ">
@@ -343,7 +401,7 @@ function ProfilePage() {
         </div>
       )}
       <div className="max-w-3xl mx-auto mt-2  px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl shadow-sm py-6 px-2 min-[400px]:px-6 md:p-8  relative">
+        <div className=" bg-white rounded-2xl shadow-sm py-6 px-2 min-[400px]:px-6 md:p-8 pb-10 md:pb-6  relative">
           <button
             className="text-gray-400 hover:text-white transition-all hover:bg-primary rounded-full p-2 absolute top-3 right-4"
             onClick={() => setIsEditModalOpen(true)}
@@ -478,7 +536,15 @@ function ProfilePage() {
               <p className="text-gray-600 text-xs md:text-sm">Verified</p>
             </div>
           </div>
-        </div>
+          <button
+            onClick={() => setShowConfirm(true)}
+            className="flex absolute bottom-3 text-sm right-3 items-center gap-2 px-4 py-1 text-red-600 hover:text-red-800 transition-colors cursor-pointer rounded-sm border border-red-900"
+          >
+            <LogOut size={15} />
+            <span>Logout</span>
+          </button>
+          {/* Confirmation Dialog */}
+        </div>{" "}
       </div>
     </div>
   );

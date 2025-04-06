@@ -21,6 +21,7 @@ export async function middleware(request: NextRequest) {
     (pathname === "/profile" ||
       pathname === "/dashboard" ||
       pathname === "/main" ||
+      pathname === "/contract" ||
       pathname === "/message")
   ) {
     return NextResponse.redirect(new URL("/signup", request.url));

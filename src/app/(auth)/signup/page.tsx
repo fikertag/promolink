@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, EyeOff, Lock, Mail, AlertCircle, Loader2 } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  AlertCircle,
+  Loader2,
+  Meh,
+} from "lucide-react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { authClient } from "@/lib/auth-client"; //import the auth client
 
@@ -12,7 +20,7 @@ const AuthForm = () => {
   const [mode, setMode] = useState<AuthMode>("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("fikir");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -101,7 +109,7 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-400 flex items-center justify-center p-4">
+    <div className="h-screen bg-gray-400 flex items-center justify-center p-4">
       <div
         className="bg-white rounded-lg shadow-xl w-full max-w-md min-w-[380px] p-5 transition-all duration-300 "
         style={{
@@ -137,6 +145,25 @@ const AuthForm = () => {
               />
             </div>
           </div>
+
+          {mode === "signup" && (
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Full Name
+              </label>
+              <div className="relative">
+                <Meh className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 focus:border-primary focus:ring-primary focus:outline-none rounded-sm transition-colors"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium mb-2">Password</label>
