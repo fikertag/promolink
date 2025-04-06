@@ -6,7 +6,7 @@ export interface IEarnings extends Document {
   status: "paid" | "unpaid"; // Explicit status (no redundant "total")
   paymentDate?: Date; // Only set when status=paid
   source: string; // E.g., "promo_campaign", "referral", etc.
-  metadata?: Record<string, any>; // Additional context (optional)
+  metadata: string; // Additional context (optional)
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,8 +40,8 @@ const EarningsSchema = new Schema<IEarnings>(
       required: true,
     },
     metadata: {
-      type: Schema.Types.Mixed, // Flexible storage for additional data
-      default: {},
+      type: String, // Flexible storage for additional data
+      default: "",
     },
   },
   { timestamps: true } // Auto-add createdAt/updatedAt
