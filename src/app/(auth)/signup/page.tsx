@@ -9,12 +9,13 @@ import {
   AlertCircle,
   Loader2,
   Meh,
+  Building2,
 } from "lucide-react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { authClient } from "@/lib/auth-client"; //import the auth client
 
 type AuthMode = "signin" | "signup";
-
+type UserType = "influencer" | "business";
 const AuthForm = () => {
   const router = useRouter(); // Initialize router
   const [mode, setMode] = useState<AuthMode>("signin");
@@ -26,6 +27,7 @@ const AuthForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [userType, setUserType] = useState<UserType>("influencer");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,6 +89,7 @@ const AuthForm = () => {
         email: email,
         password: password,
         name: name,
+        role: userType,
         callbackURL: "/main",
       },
       {
@@ -148,17 +151,56 @@ const AuthForm = () => {
 
           {mode === "signup" && (
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Full Name
+              <div className="">
+                <label className="block text-sm font-medium mb-2">
+                  I am signing up as:
+                </label>
+                <div className="grid grid-cols-2 gap-3 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => setUserType("influencer")}
+                    className={`py-2 px-4 border rounded-sm transition-colors ${
+                      userType === "influencer"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    Influencer
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUserType("business")}
+                    className={`py-2 px-4 border rounded-sm transition-colors ${
+                      userType === "business"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    Business Owner
+                  </button>
+                </div>
+              </div>
+              <label className="block text-sm font-medium my-2">
+                {userType === "influencer"
+                  ? "Influencer Name"
+                  : "Business Name"}
               </label>
               <div className="relative">
-                <Meh className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                {userType === "business" ? (
+                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                ) : (
+                  <Meh className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                )}
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 focus:border-primary focus:ring-primary focus:outline-none rounded-sm transition-colors"
-                  placeholder="Enter your full name"
+                  placeholder={
+                    userType === "influencer"
+                      ? "Enter your full name"
+                      : "Enter your business name"
+                  }
                   required
                 />
               </div>

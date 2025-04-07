@@ -30,7 +30,6 @@ export const auth = betterAuth({
         type: "string",
         required: false,
         defaultValue: "influencer",
-        input: false,
       },
 
       location: {
@@ -67,6 +66,34 @@ export const auth = betterAuth({
         type: "number",
         required: false,
         defaultValue: 0,
+      },
+      companyName: {
+        type: "string",
+        required: false, // Not strictly required since we can't do conditional logic
+      },
+      industry: {
+        type: "string",
+        required: false,
+      },
+      businessPhone: {
+        type: "string",
+        required: false,
+        pattern: "^\\+?[0-9\\s-]{10,}$",
+      },
+      businessSize: {
+        type: "string",
+        required: false,
+        enum: ["startup", "small", "medium", "large"],
+      },
+      businessVerified: {
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+      },
+      onboarded: {
+        type: "boolean",
+        required: false,
+        defaultValue: false,
       },
     },
   },

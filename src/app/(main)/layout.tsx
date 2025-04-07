@@ -5,6 +5,7 @@ import { MessageProvider } from "@/context/Message";
 import { ContractProvider } from "@/context/Contract";
 import { UserProvider } from "@/context/User";
 import { EarningProvider } from "@/context/Earning";
+import { InfluencerProvider } from "@/context/Influencer";
 
 export default function RootLayout({
   children,
@@ -14,18 +15,20 @@ export default function RootLayout({
   return (
     <div className=" min-h-screen bg-gray-50 ">
       <UserProvider>
-        <JobProvider>
-          <ProposalProvider>
-            <ContractProvider>
-              <EarningProvider>
-                <MessageProvider>
-                  <Nav />
-                  {children}
-                </MessageProvider>
-              </EarningProvider>
-            </ContractProvider>
-          </ProposalProvider>
-        </JobProvider>
+        <InfluencerProvider>
+          <JobProvider>
+            <ProposalProvider>
+              <ContractProvider>
+                <EarningProvider>
+                  <MessageProvider>
+                    <Nav />
+                    {children}
+                  </MessageProvider>
+                </EarningProvider>
+              </ContractProvider>
+            </ProposalProvider>
+          </JobProvider>
+        </InfluencerProvider>
       </UserProvider>
     </div>
   );

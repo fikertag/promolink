@@ -1,0 +1,84 @@
+// contexts/InfluencerContext.tsx
+"use client";
+
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
+
+interface SocialMediaPlatform {
+  username: string;
+  followers: string | number;
+}
+
+interface SocialMedia {
+  instagram?: SocialMediaPlatform;
+  tiktok?: SocialMediaPlatform;
+  telegram?: SocialMediaPlatform;
+  [key: string]: SocialMediaPlatform | undefined;
+}
+
+interface Influencer {
+  name: string;
+  image: string;
+  bio: string;
+  price: number;
+  socialMedia: SocialMedia; // or SocialMedia interface if you parse it
+  location: string;
+  verified: boolean;
+}
+
+interface InfluencerContextType {
+  influencers: Influencer[];
+  loading: boolean;
+  error: string | null;
+  fetchInfluencers: () => Promise<void>;
+}
+
+const InfluencerContext = createContext<InfluencerContextType>({
+  influencers: [],
+  loading: false,
+  error: null,
+  fetchInfluencers: async () => {},
+});
+
+export const InfluencerProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [influencers, setInfluencers] = useState<Influencer[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchInfluencers = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get("/api/influencer");
+      setInfluencers(response.data);
+    } catch (err) {
+      setError("Failed to load influencers");
+      console.error("Error fetching influencers:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInfluencers();
+  }, []);
+
+  return (
+    <InfluencerContext.Provider
+      value={{
+        influencers,
+        loading,
+        error,
+        fetchInfluencers,
+      }}
+    >
+      {children}
+    </InfluencerContext.Provider>
+  );
+};
+
+export const useInfluencers = () => useContext(InfluencerContext);

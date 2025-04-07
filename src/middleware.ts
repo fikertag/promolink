@@ -34,10 +34,11 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/", // Landing page
-    "/signup", // All routes under /auth
-    "/profile", // Profile route
-    "/dashboard", // Dashboard route
-    "/main", // Dashboard route
-    "/message", // Dashboard route
+    "/signup",
+    "/profile",
+    "/dashboard",
+    "/main",
+    "/message",
+    "/contract",
   ],
 };

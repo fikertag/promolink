@@ -24,12 +24,18 @@ interface User {
   image: string;
   createdAt: Date;
   updatedAt: Date;
-  role: string;
+  role: "influencer" | "business";
   location: string;
   verified: boolean;
   socialMedia: SocialMedia;
   bio: string;
   price: number;
+  companyName?: string | null;
+  industry?: string | null;
+  businessPhone?: string | null;
+  businessSize?: "startup" | "small" | "medium" | "large" | null;
+  businessVerified: boolean;
+  onboarded: boolean;
 }
 
 interface UserContextType {
@@ -75,12 +81,24 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
           image: session.user.image || "",
           createdAt: session.user.createdAt,
           updatedAt: session.user.updatedAt,
-          role: session.user.role || "influencer",
+          role: session.user.role === "business" ? "business" : "influencer",
           location: session.user.location || "Tecno, Ethiopia",
           verified: session.user.verified || false,
           socialMedia: parseSocialMedia(session.user.socialMedia || "{}"),
           bio: session.user.bio || "",
           price: session.user.price || 0,
+          companyName: session.user.companyName ?? undefined,
+          industry: session.user.industry ?? undefined,
+          businessPhone: session.user.businessPhone ?? undefined,
+          businessSize: session.user.businessSize
+            ? (session.user.businessSize as
+                | "startup"
+                | "small"
+                | "medium"
+                | "large")
+            : undefined,
+          businessVerified: session.user.businessVerified || false,
+          onboarded: session.user.onboarded || false,
         });
       } else {
         setUser(null);
@@ -106,23 +124,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       // Prepare updates for API
       const apiUpdates = {
         ...updates,
-        // Stringify social media if it's being updated
         ...(updates.socialMedia
-          ? {
-              socialMedia: JSON.stringify(updates.socialMedia),
-            }
+          ? { socialMedia: JSON.stringify(updates.socialMedia) }
           : {}),
       };
 
       await axios.patch("/api/user/profile", apiUpdates);
     } catch (error) {
       console.error("Error updating user:", error);
-      // Revert changes on error
       await refreshUser();
     }
   };
 
-  // Initialize user on mount
   useEffect(() => {
     refreshUser();
   }, []);
