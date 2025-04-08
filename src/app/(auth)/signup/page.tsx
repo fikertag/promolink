@@ -64,7 +64,7 @@ const AuthForm = () => {
       {
         email: email,
         password: password,
-        callbackURL: "/main",
+        callbackURL: `/${userType}`,
       },
       {
         onRequest: () => {
@@ -90,7 +90,7 @@ const AuthForm = () => {
         password: password,
         name: name,
         role: userType,
-        callbackURL: "/main",
+        callbackURL: `/${userType}`,
       },
       {
         onRequest: () => {

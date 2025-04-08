@@ -1,3 +1,4 @@
+"use client";
 import JobPreview from "@/components/JobPreview";
 import { useJobs } from "@/context/Job";
 import { Skeleton } from "@/components/ui/skeleton";
