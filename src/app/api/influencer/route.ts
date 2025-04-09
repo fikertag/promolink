@@ -16,7 +16,7 @@ export async function GET() {
         socialMedia: 1,
         location: 1,
         verified: 1,
-        _id: 0,
+        _id: 1,
       }
     );
 

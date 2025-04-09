@@ -1,4 +1,3 @@
-// contexts/InfluencerContext.tsx
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
@@ -17,6 +16,7 @@ interface SocialMedia {
 }
 
 interface Influencer {
+  _id: string;
   name: string;
   image: string;
   bio: string;
@@ -31,6 +31,7 @@ interface InfluencerContextType {
   loading: boolean;
   error: string | null;
   fetchInfluencers: () => Promise<void>;
+  Influencer: Influencer | null; // Add this line to define the Influencer type
 }
 
 const InfluencerContext = createContext<InfluencerContextType>({
@@ -38,6 +39,7 @@ const InfluencerContext = createContext<InfluencerContextType>({
   loading: false,
   error: null,
   fetchInfluencers: async () => {},
+  Influencer: null, // Initialize Influencer as null
 });
 
 export const InfluencerProvider = ({
@@ -67,6 +69,10 @@ export const InfluencerProvider = ({
     fetchInfluencers();
   }, []);
 
+  useEffect(() => {
+    console.log("Influencers fetched:", influencers);
+  }, [influencers]);
+
   return (
     <InfluencerContext.Provider
       value={{
@@ -74,6 +80,7 @@ export const InfluencerProvider = ({
         loading,
         error,
         fetchInfluencers,
+        Influencer: null, // Set this to the influencer you want to provide
       }}
     >
       {children}

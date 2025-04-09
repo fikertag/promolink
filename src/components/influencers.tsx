@@ -1,180 +1,121 @@
+"use client"; // Ensure this is at the very top of the file
+
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Star } from "lucide-react";
+import { CheckCircle, MapPin } from "lucide-react";
+import { useInfluencers } from "@/context/Influencer";
+import Link from "next/link";
+import { InfluencerDetailPopup } from "@/components/drawer";
+import { useState } from "react";
 
-export const influencers = [
-  {
-    id: 1,
-    name: "Emma Rodriguez",
-    avatar: "/placeholder.svg",
-    specialty: "Social Media Marketing",
-    rating: 4.9,
-    reviews: 78,
-    verified: true,
-    tags: ["Instagram", "TikTok", "Content Creation"],
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    avatar: "/placeholder.svg",
-    specialty: "SEO & Content Strategy",
-    rating: 4.8,
-    reviews: 124,
-    verified: true,
-    tags: ["SEO", "Content Marketing", "Analytics"],
-  },
-  {
-    id: 3,
-    name: "Sarah Johnson",
-    avatar: "/placeholder.svg",
-    specialty: "Video Marketing",
-    rating: 4.7,
-    reviews: 56,
-    verified: true,
-    tags: ["YouTube", "Video Production", "Storytelling"],
-  },
-  {
-    id: 4,
-    name: "David Williams",
-    avatar: "/placeholder.svg",
-    specialty: "Paid Advertising",
-    rating: 4.9,
-    reviews: 93,
-    verified: true,
-    tags: ["Google Ads", "Facebook Ads", "PPC"],
-  },
-  {
-    id: 5,
-    name: "Sarah Johnson",
-    avatar: "/placeholder.svg",
-    specialty: "Video Marketing",
-    rating: 4.7,
-    reviews: 56,
-    verified: true,
-    tags: ["YouTube", "Video Production", "Storytelling"],
-  },
-  {
-    id: 6,
-    name: "David Williams",
-    avatar: "/placeholder.svg",
-    specialty: "Paid Advertising",
-    rating: 4.9,
-    reviews: 93,
-    verified: true,
-    tags: ["Google Ads", "Facebook Ads", "PPC"],
-  },
-  {
-    id: 7,
-    name: "Sarah Johnson",
-    avatar: "/placeholder.svg",
-    specialty: "Video Marketing",
-    rating: 4.7,
-    reviews: 56,
-    verified: true,
-    tags: ["YouTube", "Video Production", "Storytelling"],
-  },
-  {
-    id: 8,
-    name: "David Williams",
-    avatar: "/placeholder.svg",
-    specialty: "Paid Advertising",
-    rating: 4.9,
-    reviews: 93,
-    verified: true,
-    tags: ["Google Ads", "Facebook Ads", "PPC"],
-  },
-  {
-    id: 9,
-    name: "Sarah Johnson",
-    avatar: "/placeholder.svg",
-    specialty: "Video Marketing",
-    rating: 4.7,
-    reviews: 56,
-    verified: true,
-    tags: ["YouTube", "Video Production", "Storytelling"],
-  },
-  {
-    id: 10,
-    name: "David Williams",
-    avatar: "/placeholder.svg",
-    specialty: "Paid Advertising",
-    rating: 4.9,
-    reviews: 93,
-    verified: true,
-    tags: ["Google Ads", "Facebook Ads", "PPC"],
-  },
-  {
-    id: 11,
-    name: "Sarah Johnson",
-    avatar: "/placeholder.svg",
-    specialty: "Video Marketing",
-    rating: 4.7,
-    reviews: 56,
-    verified: true,
-    tags: ["YouTube", "Video Production", "Storytelling"],
-  },
-  {
-    id: 12,
-    name: "David Williams",
-    avatar: "/placeholder.svg",
-    specialty: "Paid Advertising",
-    rating: 4.9,
-    reviews: 93,
-    verified: true,
-    tags: ["Google Ads", "Facebook Ads", "PPC"],
-  },
-];
+interface SocialMediaPlatform {
+  username: string;
+  followers: string | number;
+}
 
-export const InfluencerCard = ({
-  influencer,
-}: {
-  influencer: (typeof influencers)[0];
-}) => {
+interface SocialMedia {
+  instagram?: SocialMediaPlatform;
+  tiktok?: SocialMediaPlatform;
+  telegram?: SocialMediaPlatform;
+  [key: string]: SocialMediaPlatform | undefined;
+}
+
+interface Influencerm {
+  _id: string;
+  name: string;
+  image: string;
+  bio: string;
+  location: string;
+  price: number;
+  socialMedia: SocialMedia;
+  verified: boolean;
+}
+
+export const InfluencerCard = ({ influencer }: { influencer: Influencerm }) => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const socialMedia: SocialMedia =
+    typeof influencer.socialMedia === "string"
+      ? JSON.parse(influencer.socialMedia)
+      : influencer.socialMedia;
+
+  // Type-safe follower calculation
+  const totalFollowers = Object.values(socialMedia).reduce(
+    (total: number, platform?: SocialMediaPlatform) => {
+      if (!platform?.followers) return total;
+
+      const followers =
+        typeof platform.followers === "string"
+          ? parseInt(platform.followers.replace(/\D/g, "")) // Remove non-digits
+          : platform.followers;
+
+      return total + (isNaN(followers) ? 0 : followers);
+    },
+    0
+  );
+
   return (
-    <Card className="h-full hover:shadow-md transition-shadow">
-      <CardContent className="pt-6">
-        <div className="flex flex-col items-center text-center mb-4">
-          <Avatar className="h-20 w-20 mb-4">
-            <AvatarImage src={influencer.avatar} alt={influencer.name} />
-            <AvatarFallback>{influencer.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div className="space-y-1">
-            <div className="flex items-center justify-center">
-              <h3 className="font-semibold text-lg">{influencer.name}</h3>
-              {influencer.verified && (
-                <CheckCircle className="h-4 w-4 ml-1 text-blue-500" />
-              )}
+    <>
+      <InfluencerDetailPopup
+        influencer={influencer}
+        open={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
+      <Card className="h-full hover:shadow-md transition-shadow">
+        <CardContent className="pt-6">
+          <div className="flex flex-col items-center text-center mb-4">
+            <Avatar className="h-20 w-20 mb-4">
+              <AvatarImage src={influencer.image} alt={influencer.name} />
+              <AvatarFallback>{influencer.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <div className="flex items-center justify-center">
+                <h3 className="font-semibold text-lg">{influencer.name}</h3>
+                {influencer.verified && (
+                  <CheckCircle className="h-4 w-4 ml-1 text-blue-500" />
+                )}
+              </div>
+              <div className="flex items-center justify-center text-sm">
+                <MapPin className="h-4 w-4 mr-1 text-muted-foreground" />
+                <span>
+                  {influencer.location ? influencer.location : "no location"}
+                </span>
+              </div>
+              <p className="text-muted-foreground text-sm line-clamp-1">
+                {influencer.bio?.trim() ? influencer.bio : "No bio available"}
+              </p>
             </div>
-            <p className="text-muted-foreground">{influencer.specialty}</p>
-            <div className="flex items-center justify-center">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-              <span className="font-medium">{influencer.rating}</span>
-              <span className="text-muted-foreground text-sm ml-1">
-                ({influencer.reviews} reviews)
+          </div>
+
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm text-muted-foreground">Price:</span>
+              <span className="font-medium">{influencer.price} Birr</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Followers:</span>
+              <span className="font-medium">
+                {totalFollowers.toLocaleString()}
               </span>
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-wrap gap-2 justify-center mb-6">
-          {influencer.tags.map((tag, index) => (
-            <Badge key={index} variant="secondary" className="font-normal">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-
-        <Button variant="outline" className="w-full">
-          View Profile
-        </Button>
-      </CardContent>
-    </Card>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => setIsPopupOpen(true)}
+          >
+            View Profile
+          </Button>
+        </CardContent>{" "}
+      </Card>
+    </>
   );
 };
 
 const InfluencerSection = () => {
+  const { influencers } = useInfluencers();
+
   return (
     <section className="py-16 bg-white" id="influencers">
       <div className="container mx-auto px-4">
@@ -187,13 +128,18 @@ const InfluencerSection = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {influencers.map((influencer) => (
-            <InfluencerCard key={influencer.id} influencer={influencer} />
+          {influencers.slice(0, 8).map((influencer) => (
+            <InfluencerCard key={influencer._id} influencer={influencer} />
           ))}
         </div>
 
         <div className="text-center mt-10">
-          <Button size="lg">View All Influencers</Button>
+          <Link
+            href="/business/influencers"
+            className="bg-accent px-5 py-3 rounded-md text-white font-semibold hover:bg-accent/80 transition-colors"
+          >
+            View All Influencers
+          </Link>
         </div>
       </div>
     </section>

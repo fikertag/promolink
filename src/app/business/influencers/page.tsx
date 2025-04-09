@@ -1,3 +1,5 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -8,9 +10,11 @@ import {
 } from "@/components/ui/select";
 import { Search, X } from "lucide-react";
 import { InfluencerCard } from "@/components/influencers";
-import { influencers } from "@/components/influencers"; // Your mock data
+import { useInfluencers } from "@/context/Influencer";
 
 export default function InfluencerSearchPage() {
+  const { influencers } = useInfluencers();
+
   return (
     <div className="mx-auto container p-8">
       <div className="mb-8">
@@ -27,7 +31,7 @@ export default function InfluencerSearchPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-4 mb-8 flex-wrap">
           <Select>
             <SelectTrigger>
               <SelectValue placeholder="Platform" />
@@ -71,7 +75,7 @@ export default function InfluencerSearchPage() {
       {/* Results */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {influencers.map((influencer) => (
-          <InfluencerCard key={influencer.id} influencer={influencer} />
+          <InfluencerCard key={influencer._id} influencer={influencer} />
         ))}
       </div>
     </div>
