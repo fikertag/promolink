@@ -43,7 +43,7 @@ export function InfluencerDetailPopup({
         <div className="max-h-[100vh] overflow-y-auto">
           <DrawerHeader>
             <DrawerTitle className="text-xl">
-              {influencer.name}'s Profile
+              {influencer.name}&apos;s Profile
             </DrawerTitle>
           </DrawerHeader>
           <div className="p-6">
@@ -93,7 +93,7 @@ export function InfluencerDetailPopup({
                   typeof influencer.socialMedia === "string"
                     ? JSON.parse(influencer.socialMedia)
                     : influencer.socialMedia
-                ).map(([platform, data]) => (
+                ).map(([platform]) => (
                   <div
                     key={platform}
                     className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
