@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Star } from "lucide-react";
 
-const influencers = [
+export const influencers = [
   {
     id: 1,
     name: "Emma Rodriguez",
@@ -45,9 +45,89 @@ const influencers = [
     verified: true,
     tags: ["Google Ads", "Facebook Ads", "PPC"],
   },
+  {
+    id: 5,
+    name: "Sarah Johnson",
+    avatar: "/placeholder.svg",
+    specialty: "Video Marketing",
+    rating: 4.7,
+    reviews: 56,
+    verified: true,
+    tags: ["YouTube", "Video Production", "Storytelling"],
+  },
+  {
+    id: 6,
+    name: "David Williams",
+    avatar: "/placeholder.svg",
+    specialty: "Paid Advertising",
+    rating: 4.9,
+    reviews: 93,
+    verified: true,
+    tags: ["Google Ads", "Facebook Ads", "PPC"],
+  },
+  {
+    id: 7,
+    name: "Sarah Johnson",
+    avatar: "/placeholder.svg",
+    specialty: "Video Marketing",
+    rating: 4.7,
+    reviews: 56,
+    verified: true,
+    tags: ["YouTube", "Video Production", "Storytelling"],
+  },
+  {
+    id: 8,
+    name: "David Williams",
+    avatar: "/placeholder.svg",
+    specialty: "Paid Advertising",
+    rating: 4.9,
+    reviews: 93,
+    verified: true,
+    tags: ["Google Ads", "Facebook Ads", "PPC"],
+  },
+  {
+    id: 9,
+    name: "Sarah Johnson",
+    avatar: "/placeholder.svg",
+    specialty: "Video Marketing",
+    rating: 4.7,
+    reviews: 56,
+    verified: true,
+    tags: ["YouTube", "Video Production", "Storytelling"],
+  },
+  {
+    id: 10,
+    name: "David Williams",
+    avatar: "/placeholder.svg",
+    specialty: "Paid Advertising",
+    rating: 4.9,
+    reviews: 93,
+    verified: true,
+    tags: ["Google Ads", "Facebook Ads", "PPC"],
+  },
+  {
+    id: 11,
+    name: "Sarah Johnson",
+    avatar: "/placeholder.svg",
+    specialty: "Video Marketing",
+    rating: 4.7,
+    reviews: 56,
+    verified: true,
+    tags: ["YouTube", "Video Production", "Storytelling"],
+  },
+  {
+    id: 12,
+    name: "David Williams",
+    avatar: "/placeholder.svg",
+    specialty: "Paid Advertising",
+    rating: 4.9,
+    reviews: 93,
+    verified: true,
+    tags: ["Google Ads", "Facebook Ads", "PPC"],
+  },
 ];
 
-const InfluencerCard = ({
+export const InfluencerCard = ({
   influencer,
 }: {
   influencer: (typeof influencers)[0];
