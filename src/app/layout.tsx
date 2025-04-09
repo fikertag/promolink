@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; // ✅ Import Inter and keep Geist_Mono
-import "../app/globals.css"; // ✅ Import global styles
-// import Nav from "@/layouts/Nav";
-import { JobProvider } from "@/context/Job";
+import { Inter } from "next/font/google";
+import "../app/globals.css";
 
-// ✅ Instantiate Inter font (replacing Geist)
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -22,15 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <JobProvider>
-        <body
-          className={`${inter.variable} antialiased bg-black `} //  Apply Inter and Geist_Mono
-        >
-          {/* <Nav /> */}
-
-          {children}
-        </body>
-      </JobProvider>
+      <body className={`${inter.variable} antialiased bg-black `}>
+        {children}
+      </body>
     </html>
   );
 }
