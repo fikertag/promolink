@@ -1,13 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useProposals } from "@/context/Proposal";
-import { useMessages } from "@/context/Message";
-import { useUser } from "@/context/User";
-import Image from "next/image";
 import {
-  MessageSquare,
-  Send,
   Clipboard,
   CheckCircle,
   MessageCircle,
@@ -17,8 +12,6 @@ import {
   MapPin,
   Calendar,
   FileText,
-  User,
-  ChevronLeft,
 } from "lucide-react";
 import {
   Accordion,
@@ -27,25 +20,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-type TabType = "sent" | "received" | "messages";
 type ProposalStatus = "pending" | "accepted" | "rejected";
 
 function MessagesAndProposals() {
-  const [activeTab, setActiveTab] = useState<TabType>("received");
-  const [messageInput, setMessageInput] = useState("");
-  const [isSending, setIsSending] = useState(false);
-  const [showConversationList, setShowConversationList] = useState(true);
+  const showConversationList = useState(true);
   const { specificProposal: proposals } = useProposals();
-  const {
-    conversations,
-    currentMessages,
-    selectedConversation,
-    fetchMessages,
-    sendMessage,
-    fetchConversations,
-  } = useMessages();
 
-  const { user } = useUser();
+  console.log("isSending", showConversationList);
 
   const getStatusColor = (status: ProposalStatus) => {
     switch (status) {
@@ -69,17 +50,17 @@ function MessagesAndProposals() {
     }
   };
 
-  const handleSendMessage = async () => {
-    if (messageInput.trim() && selectedConversation) {
-      setIsSending(true);
-      try {
-        await sendMessage(messageInput);
-        setMessageInput("");
-      } finally {
-        setIsSending(false);
-      }
-    }
-  };
+  // const handleSendMessage = async () => {
+  //   if (messageInput.trim() && selectedConversation) {
+  //     setIsSending(true);
+  //     try {
+  //       await sendMessage(messageInput);
+  //       setMessageInput("");
+  //     } finally {
+  //       setIsSending(false);
+  //     }
+  //   }
+  // };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -92,30 +73,22 @@ function MessagesAndProposals() {
     });
   };
 
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  // const formatTime = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleTimeString("en-US", {
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //   });
+  // };
 
-  const handleSelectConversation = (convoId: string) => {
-    fetchMessages(convoId);
-    setShowConversationList(false);
-  };
+  // const handleSelectConversation = (convoId: string) => {
+  //   fetchMessages(convoId);
+  //   setShowConversationList(false);
+  // };
 
-  const handleBackToConversations = () => {
-    setShowConversationList(true);
-  };
-
-  useEffect(() => {
-    if (activeTab === "messages") {
-      fetchConversations();
-      // Reset conversation view on tab change
-      setShowConversationList(true);
-    }
-  }, [activeTab]);
+  // const handleBackToConversations = () => {
+  //   setShowConversationList(true);
+  // };
 
   return (
     <div className=" py-4">

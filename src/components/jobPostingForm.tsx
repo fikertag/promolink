@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,7 +11,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useJobs } from "@/context/Job";
 
 const JobPostingForm = () => {
-  const router = useRouter();
   // const { toast } = useToast();
   const { addJob } = useJobs();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,6 +62,7 @@ const JobPostingForm = () => {
 
       await addJob(jobData);
     } catch (error) {
+      console.error("Error posting job:", error);
     } finally {
       setIsSubmitting(false);
     }

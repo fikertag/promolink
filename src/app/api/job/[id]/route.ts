@@ -88,7 +88,7 @@ export async function DELETE(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   await dbConnect();
   try {
@@ -100,7 +100,12 @@ export async function GET(
       return NextResponse.json({ message: "Invalid user ID" }, { status: 400 });
     }
 
-    let query: any = { postedBy: new mongoose.Types.ObjectId(id) };
+    const query: {
+      postedBy: mongoose.Types.ObjectId;
+      status?: { $ne: string };
+    } = {
+      postedBy: new mongoose.Types.ObjectId(id),
+    };
 
     if (excludeCompleted === "true") {
       query.status = { $ne: "completed" };
