@@ -30,8 +30,10 @@ interface Proposal {
 }
 
 interface ProposalContextType {
-  proposals: Proposal[]; // Fixed variable name (was 'proposal')
+  proposals: Proposal[];
+  specificProposal: Proposal[]; // Changed from string to Proposal interface
   fetchProposals: () => Promise<void>;
+  fetchProposalByBUsinessId: () => Promise<void>;
   addProposal: (
     proposal: Omit<
       Proposal,
@@ -48,7 +50,9 @@ interface ProposalContextType {
 
 const ProposalContext = createContext<ProposalContextType>({
   proposals: [],
+  specificProposal: [],
   fetchProposals: async () => {},
+  fetchProposalByBUsinessId: async () => {},
   addProposal: async () => {},
   updateProposalStatus: () => {},
 });
@@ -58,6 +62,7 @@ export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { user } = useUser();
   const [proposals, setProposals] = useState<Proposal[]>([]); // Fixed variable name
+  const [specificProposal, setSpecificProposal] = useState<Proposal[]>([]);
 
   const fetchProposals = async () => {
     if (!user) return; // Ensure user is defined before making the request
@@ -66,6 +71,17 @@ export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
         `/api/proposal?influencerId=${user?.id}`
       );
       setProposals(response.data);
+    } catch (error) {
+      console.error("Error fetching proposals:", error);
+    }
+  };
+
+  const fetchProposalByBUsinessId = async () => {
+    try {
+      const response = await axios.get(
+        `/api/proposal/postedBy/${"67f41045f765a5c4f529af7b"}`
+      );
+      setSpecificProposal(response.data);
     } catch (error) {
       console.error("Error fetching proposals:", error);
     }
@@ -81,7 +97,7 @@ export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
   ) => {
     try {
       const response = await axios.post("/api/proposals", proposal);
-      setProposals((prev) => [...prev, response.data]);
+      setSpecificProposal((prev) => [...prev, response.data]);
     } catch (error) {
       console.error("Error adding proposal:", error);
     }
@@ -104,14 +120,21 @@ export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
+    console.log("Specific Proposal", specificProposal);
+  }, [specificProposal]);
+
+  useEffect(() => {
     fetchProposals();
+    fetchProposalByBUsinessId();
   }, [user?.id]);
 
   return (
     <ProposalContext.Provider
       value={{
-        proposals, // Fixed variable name
+        proposals, // Fixed variable name]
+        specificProposal,
         fetchProposals,
+        fetchProposalByBUsinessId,
         addProposal,
         updateProposalStatus,
       }}
