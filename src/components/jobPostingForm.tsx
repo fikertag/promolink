@@ -1,31 +1,75 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+// import { useToast } from "@/components/ui/use-toast";
+import { useJobs } from "@/context/Job";
 
 const JobPostingForm = () => {
-  const [jobTitle, setJobTitle] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const router = useRouter();
+  // const { toast } = useToast();
+  const { addJob } = useJobs();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setJobTitle(newTitle);
+  // Form state
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    price: 0,
+    location: "",
+    socialMedia: [] as Array<{
+      platform: "instagram" | "youtube" | "tiktok" | "telegram";
+    }>,
+  });
+
+  const [selectedPlatforms, setSelectedPlatforms] = useState<
+    Array<"instagram" | "youtube" | "tiktok" | "telegram">
+  >([]);
+
+  const handlePlatformToggle = (
+    platform: "instagram" | "youtube" | "tiktok" | "telegram"
+  ) => {
+    setSelectedPlatforms((prev) =>
+      prev.includes(platform)
+        ? prev.filter((p) => p !== platform)
+        : [...prev, platform]
+    );
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      // Prepare job data with string types only
+      const jobData = {
+        title: formData.title,
+        description: formData.description,
+        price: formData.price.toString(), // Convert to string if needed
+        location: formData.location,
+        socialMedia: selectedPlatforms.map((platform) => ({ platform })), // Array of {platform: string}
+      };
+
+      await addJob(jobData);
+    } catch (error) {
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    // Added the return statement here
     <section className="py-10 bg-brand-gray" id="post-job">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
@@ -34,108 +78,87 @@ const JobPostingForm = () => {
               <CardTitle>Job Details</CardTitle>
             </CardHeader>
             <CardContent>
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="space-y-2">
-                  <Label htmlFor="title">Job Title</Label>
+                  <Label htmlFor="title">Job Title *</Label>
                   <Input
                     id="title"
+                    name="title"
                     placeholder="e.g. Instagram Marketing Expert Needed"
-                    value={jobTitle}
-                    onChange={handleTitleChange}
+                    value={formData.title}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Job Description</Label>
+                  <Label htmlFor="description">Job Description *</Label>
                   <Textarea
                     id="description"
+                    name="description"
                     placeholder="Describe your job requirements in detail..."
                     className="min-h-[120px]"
-                    value={jobDescription}
-                    onChange={(e) => setJobDescription(e.target.value)}
+                    value={formData.description}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Select
-                      value={selectedCategory}
-                      onValueChange={setSelectedCategory}
-                    >
-                      <SelectTrigger id="category">
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Social Media Marketing">
-                          Social Media Marketing
-                        </SelectItem>
-                        <SelectItem value="Content Creation">
-                          Content Creation
-                        </SelectItem>
-                        <SelectItem value="SEO">SEO</SelectItem>
-                        <SelectItem value="PPC Advertising">
-                          PPC Advertising
-                        </SelectItem>
-                        <SelectItem value="Email Marketing">
-                          Email Marketing
-                        </SelectItem>
-                        <SelectItem value="Influencer Marketing">
-                          Influencer Marketing
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="budget">Budget Range</Label>
-                    <Select>
-                      <SelectTrigger id="budget">
-                        <SelectValue placeholder="Select budget range" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="under1k">Under $1,000</SelectItem>
-                        <SelectItem value="1k-5k">$1,000 - $5,000</SelectItem>
-                        <SelectItem value="5k-10k">$5,000 - $10,000</SelectItem>
-                        <SelectItem value="10k-plus">$10,000+</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="duration">Duration</Label>
-                    <Select>
-                      <SelectTrigger id="duration">
-                        <SelectValue placeholder="Select duration" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="less-week">
-                          Less than a week
-                        </SelectItem>
-                        <SelectItem value="1-2-weeks">1-2 weeks</SelectItem>
-                        <SelectItem value="1-month">1 month</SelectItem>
-                        <SelectItem value="1-3-months">1-3 months</SelectItem>
-                        <SelectItem value="3-plus-months">3+ months</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="skills">Required Skills</Label>
+                    <Label htmlFor="price">Budget (Birr) *</Label>
                     <Input
-                      id="skills"
-                      placeholder="e.g. Social Media, Content Creation, SEO"
+                      id="price"
+                      name="price"
+                      type="number"
+                      min="0"
+                      placeholder="e.g. 1000"
+                      value={formData.price}
+                      onChange={handleChange}
+                      required
                     />
-                    <p className="text-sm text-gray-500">
-                      Separate skills with commas
-                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      name="location"
+                      placeholder="e.g. Addis Ababa, Ethiopia"
+                      value={formData.location}
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full">
-                  Post Job
+                <div className="space-y-2">
+                  <Label>Required Social Media Platforms *</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {(
+                      ["instagram", "youtube", "tiktok", "telegram"] as const
+                    ).map((platform) => (
+                      <Button
+                        key={platform}
+                        type="button"
+                        variant={
+                          selectedPlatforms.includes(platform)
+                            ? "default"
+                            : "outline"
+                        }
+                        onClick={() => handlePlatformToggle(platform)}
+                      >
+                        {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting || selectedPlatforms.length === 0}
+                >
+                  {isSubmitting ? "Posting..." : "Post Job"}
                 </Button>
               </form>
             </CardContent>

@@ -86,6 +86,38 @@ export async function DELETE(
   }
 }
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+): Promise<NextResponse> {
+  await dbConnect();
+  try {
+    const url = new URL(request.url);
+    const excludeCompleted = url.searchParams.get("excludeCompleted");
+    const { id } = await params; // Get the ID from route params
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ message: "Invalid user ID" }, { status: 400 });
+    }
+
+    let query: any = { postedBy: new mongoose.Types.ObjectId(id) };
+
+    if (excludeCompleted === "true") {
+      query.status = { $ne: "completed" };
+    }
+
+    const jobs = await Job.find(query).sort({ createdAt: -1 }); // Sort by newest first
+
+    return NextResponse.json(jobs, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return NextResponse.json(
+      { message: "Failed to fetch jobs", error },
+      { status: 500 }
+    );
+  }
+}
+
 /**
 * API Documentation:
 *

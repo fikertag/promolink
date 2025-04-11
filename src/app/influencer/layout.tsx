@@ -19,7 +19,7 @@ export default function RootLayout({
             <ContractProvider>
               <EarningProvider>
                 <MessageProvider>
-                  <Nav />
+                  <Nav path="influencer" />
                   {children}
                 </MessageProvider>
               </EarningProvider>

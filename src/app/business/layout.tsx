@@ -1,5 +1,6 @@
 import Nav from "@/layouts/Nav";
 import { UserProvider } from "@/context/User";
+import { JobProvider } from "@/context/Job";
 import { InfluencerProvider } from "@/context/Influencer";
 
 export default function RootLayout({
@@ -11,8 +12,10 @@ export default function RootLayout({
     <div className=" min-h-screen bg-gray-50 ">
       <UserProvider>
         <InfluencerProvider>
-          <Nav />
-          {children}
+          <JobProvider>
+            <Nav path="business" />
+            {children}
+          </JobProvider>
         </InfluencerProvider>
       </UserProvider>
     </div>

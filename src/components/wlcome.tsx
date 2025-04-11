@@ -1,7 +1,7 @@
 const Welcome = () => {
   return (
     <div className="h-96 bg-blue-600 text-white flex flex-col items-center justify-center  ">
-      <h1 className="text-5xl font-semibold">
+      <h1 className="text-5xl font-semibold text-center">
         Hire Marketers & Influencers for Your Business
       </h1>
       <p className="text-lg mt-2 text-center">

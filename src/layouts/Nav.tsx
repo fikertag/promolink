@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
-export default function Nav() {
+export default function Nav({ path }: { path: string }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -24,7 +24,7 @@ export default function Nav() {
       {/* Desktop Navigation */}
       <div className="grid grid-cols-3 items-center px-4 xl:px-[70px] sticky top-0 z-20 border-b h-16 shadow-xs bg-white">
         <div className="flex items-center">
-          <Link href="/influencer/" className="flex items-center">
+          <Link href={`/${path}/`} className="flex items-center">
             <span className="text-2xl font-bold text-black">
               Promo<span className="text-blue-600">Link</span>
             </span>
@@ -35,7 +35,7 @@ export default function Nav() {
         <div className="flex justify-end items-center col-span-2">
           <nav className="hidden sm:flex justify-center text-gray-600">
             <Link
-              href="/influencer/dashboard"
+              href={`/${path}/dashboard`}
               className={`hover:text-primary transition px-5 py-2  ${
                 isActive("/dashboard")
                   ? "text-primary underline-offset-8 underline"
@@ -47,7 +47,7 @@ export default function Nav() {
             </Link>
 
             <Link
-              href="/influencer/message"
+              href={`/${path}/message`}
               className={`hover:text-primary transition px-5 py-2 ${
                 isActive("/message")
                   ? "text-primary underline-offset-8 underline"
@@ -59,7 +59,7 @@ export default function Nav() {
             </Link>
 
             <Link
-              href="/influencer/contract"
+              href={`/${path}/contract`}
               className={`hover:text-primary transition px-5 py-2 ${
                 isActive("/contract")
                   ? "text-primary underline-offset-8 underline"
@@ -70,7 +70,7 @@ export default function Nav() {
               Contract
             </Link>
             <Link
-              href="/influencer/profile"
+              href={`/${path}/profile`}
               className={`hover:text-primary transition px-5 py-2 ${
                 isActive("/profile")
                   ? "text-primary underline-offset-8 underline"
@@ -98,7 +98,7 @@ export default function Nav() {
         <div className="sm:hidden fixed inset-0 z-10 bg-white pt-20 px-4">
           <div className="flex flex-col space-y-4">
             <Link
-              href="/influencer/dashboard"
+              href={`/${path}/dashboard`}
               className={`text-lg px-4 py-3 rounded-lg ${
                 isActive("/dashboard")
                   ? "bg-blue-50 text-primary font-medium"
@@ -110,7 +110,7 @@ export default function Nav() {
             </Link>
 
             <Link
-              href="/influencer/profile"
+              href={`/${path}/profile`}
               className={`text-lg px-4 py-3 rounded-lg ${
                 isActive("/profile")
                   ? "bg-blue-50 text-primary font-medium"
@@ -122,7 +122,7 @@ export default function Nav() {
             </Link>
 
             <Link
-              href="/influencer/message"
+              href={`/${path}/message`}
               className={`text-lg px-4 py-3 rounded-lg ${
                 isActive("/message")
                   ? "bg-blue-50 text-primary font-medium"
@@ -134,7 +134,7 @@ export default function Nav() {
             </Link>
 
             <Link
-              href="/influencer/contract"
+              href={`/${path}/contract`}
               className={`text-lg px-4 py-3 rounded-lg ${
                 isActive("/contract")
                   ? "bg-blue-50 text-primary font-medium"

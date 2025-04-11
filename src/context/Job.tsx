@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { useUser } from "@/context/User";
 
 interface Job {
   _id: string;
@@ -10,7 +11,7 @@ interface Job {
   price: number;
   location?: string;
   socialMedia: {
-    platform: "instagram" | "youtube" | "tiktok" | "twitter";
+    platform: "instagram" | "youtube" | "tiktok" | "telegram";
   }[];
   postedBy: string;
   status: "open" | "in-progress" | "completed" | "cancelled";
@@ -26,7 +27,14 @@ interface Job {
 interface JobContextType {
   jobs: Job[];
   fetchJobs: () => Promise<void>;
-  addJob: (job: Omit<Job, "_id" | "createdAt" | "updatedAt">) => Promise<void>;
+  fetchJobByInfluncerId: () => Promise<void>;
+  addJob: (job: {
+    title: string;
+    description: string;
+    price: string | number;
+    location?: string;
+    socialMedia: Array<{ platform: string }>;
+  }) => Promise<void>;
   addProposalToJob: (
     jobId: string,
     proposal: { _id: string; influencerId: string }
@@ -36,6 +44,7 @@ interface JobContextType {
 const JobContext = createContext<JobContextType>({
   jobs: [],
   fetchJobs: async () => {},
+  fetchJobByInfluncerId: async () => {},
   addJob: async () => {},
   addProposalToJob: () => {},
 });
@@ -44,6 +53,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [specificJob, setSpecificJob] = useState<Job[]>([]);
 
   // Fetch jobs from the API
   const fetchJobs = async () => {
@@ -56,12 +66,35 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Add a new job
-  const addJob = async (job: Omit<Job, "_id" | "createdAt" | "updatedAt">) => {
+  const addJob = async (job: {
+    title: string;
+    description: string;
+    price: string | number;
+    location?: string;
+    socialMedia: Array<{ platform: string }>;
+  }) => {
+    console.log("world");
+
     try {
-      const response = await axios.post("/api/jobs", job);
-      setJobs((prevJobs) => [...prevJobs, response.data]); // Add the new job to the state
+      const response = await axios.post("/api/job", {
+        ...job,
+        postedBy: "67f41045f765a5c4f529af7b",
+      });
+      setJobs((prevJobs) => [...prevJobs, response.data]);
     } catch (error) {
       console.error("Error adding job:", error);
+      throw error;
+    }
+  };
+
+  const fetchJobByInfluncerId = async () => {
+    try {
+      const response = await axios.get(
+        `/api/job/${"67f41045f765a5c4f529af7b"}`
+      );
+      setSpecificJob(response.data);
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
     }
   };
 
@@ -81,11 +114,16 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
       )
     );
   };
+  // fetchJobByInfluncerId();
 
   // Fetch jobs on component mount
   useEffect(() => {
     fetchJobs();
   }, []);
+
+  useEffect(() => {
+    console.log("specificJob", specificJob);
+  }, [specificJob]);
 
   return (
     <JobContext.Provider
@@ -94,6 +132,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchJobs,
         addJob,
         addProposalToJob,
+        fetchJobByInfluncerId,
       }}
     >
       {children}
