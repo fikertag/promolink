@@ -25,6 +25,7 @@ interface Job {
 
 interface JobContextType {
   jobs: Job[];
+  specificJob: Job[];
   fetchJobs: () => Promise<void>;
   fetchJobByInfluncerId: () => Promise<void>;
   addJob: (job: {
@@ -42,6 +43,7 @@ interface JobContextType {
 
 const JobContext = createContext<JobContextType>({
   jobs: [],
+  specificJob: [],
   fetchJobs: async () => {},
   fetchJobByInfluncerId: async () => {},
   addJob: async () => {},
@@ -118,16 +120,14 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch jobs on component mount
   useEffect(() => {
     fetchJobs();
+    fetchJobByInfluncerId();
   }, []);
-
-  useEffect(() => {
-    console.log("specificJob", specificJob);
-  }, [specificJob]);
 
   return (
     <JobContext.Provider
       value={{
         jobs,
+        specificJob,
         fetchJobs,
         addJob,
         addProposalToJob,
