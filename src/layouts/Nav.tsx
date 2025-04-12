@@ -34,8 +34,21 @@ export default function Nav({ path }: { path: string }) {
         {/* Desktop Nav Links */}
         <div className="flex justify-end items-center col-span-2">
           <nav className="hidden sm:flex justify-center text-gray-600">
+            {path === "business" && (
+              <Link
+                href={"/business/influencers"}
+                className={`hover:text-primary transition px-5 py-2  ${
+                  isActive("/dashboard")
+                    ? "text-primary underline-offset-8 underline"
+                    : ""
+                }`}
+                onClick={closeMobileMenu}
+              >
+                Influencers
+              </Link>
+            )}
             <Link
-              href={`/${path}/dashboard`}
+              href={`/${path}/${path === "business" ? "myjobs" : "dashboard"}`}
               className={`hover:text-primary transition px-5 py-2  ${
                 isActive("/dashboard")
                   ? "text-primary underline-offset-8 underline"
@@ -43,7 +56,7 @@ export default function Nav({ path }: { path: string }) {
               }`}
               onClick={closeMobileMenu}
             >
-              Dashboard
+              {path === "business" ? "My jobs" : "Dashboard"}
             </Link>
 
             <Link
