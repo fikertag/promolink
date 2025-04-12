@@ -9,7 +9,7 @@ export default function Nav({ path }: { path: string }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => pathname === "/business" + path;
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
