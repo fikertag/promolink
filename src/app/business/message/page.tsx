@@ -319,7 +319,7 @@ function MessagesAndProposals() {
                           <div className="flex items-center gap-3">
                             <div className="relative">
                               <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                                {convo.otherUser.image ? (
+                                {convo.otherUser?.image ? (
                                   <Image
                                     src={convo.otherUser.image}
                                     alt={convo.otherUser.name}
@@ -335,7 +335,7 @@ function MessagesAndProposals() {
                             <div className="flex-1 min-w-0 text-left">
                               <div className="flex items-center justify-between">
                                 <h3 className="font-medium text-gray-900 truncate">
-                                  {convo.otherUser.name}
+                                  {convo.otherUser?.name}
                                 </h3>
                                 <span className="text-xs text-gray-500 whitespace-nowrap">
                                   {formatTime(convo.updatedAt)}
@@ -372,7 +372,7 @@ function MessagesAndProposals() {
                       <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                         {conversations.find(
                           (c) => c._id === selectedConversation
-                        )?.otherUser.image ? (
+                        )?.otherUser?.image ? (
                           <Image
                             src={
                               conversations.find(
@@ -382,7 +382,7 @@ function MessagesAndProposals() {
                             alt={
                               conversations.find(
                                 (c) => c._id === selectedConversation
-                              )!.otherUser.name
+                              )!.otherUser?.name
                             }
                             width={40}
                             height={40}

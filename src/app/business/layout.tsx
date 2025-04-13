@@ -3,6 +3,7 @@ import { UserProvider } from "@/context/User";
 import { JobProvider } from "@/context/Job";
 import { InfluencerProvider } from "@/context/Influencer";
 import { ProposalProvider } from "@/context/Proposal";
+import { MessageProvider } from "@/context/Message";
 
 export default function RootLayout({
   children,
@@ -15,8 +16,10 @@ export default function RootLayout({
         <InfluencerProvider>
           <JobProvider>
             <ProposalProvider>
-              <Nav path="business" />
-              {children}
+              <MessageProvider>
+                <Nav path="business" />
+                {children}
+              </MessageProvider>
             </ProposalProvider>
           </JobProvider>
         </InfluencerProvider>

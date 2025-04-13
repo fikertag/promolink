@@ -35,7 +35,7 @@ interface MessageContextType {
   fetchMessages: (conversationId: string) => Promise<void>;
   sendMessage: (content: string, conversationId?: string) => Promise<void>;
   markAsRead: (messageId: string) => void;
-  startNewConversation: (participantId: string) => Promise<void>;
+  startNewConversation: (participantId: string) => Promise<Conversation>;
 }
 
 const MessageContext = createContext<MessageContextType>({
@@ -46,7 +46,9 @@ const MessageContext = createContext<MessageContextType>({
   fetchMessages: async () => {},
   sendMessage: async () => {},
   markAsRead: () => {},
-  startNewConversation: async () => {},
+  startNewConversation: async () => {
+    return Promise.reject("startNewConversation is not implemented");
+  },
 });
 
 export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -109,16 +111,23 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const startNewConversation = async (participantId: string) => {
+  const startNewConversation = async (
+    participantId: string
+  ): Promise<Conversation> => {
     try {
       const response = await axios.post("/api/conversation", {
         participantIds: [user?.id, participantId],
       });
 
-      setConversations((prev) => [response.data, ...prev]);
-      await fetchMessages(response.data._id);
+      const newConversation: Conversation = response.data;
+
+      setConversations((prev) => [newConversation, ...prev]);
+      await fetchMessages(newConversation._id);
+
+      return newConversation; // Explicitly return the new conversation
     } catch (error) {
       console.error("Error starting conversation:", error);
+      throw error; // Re-throw the error to handle it in the calling function
     }
   };
 
