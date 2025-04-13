@@ -8,6 +8,7 @@ import { useInfluencers } from "@/context/Influencer";
 import Link from "next/link";
 import { InfluencerDetailPopup } from "@/components/drawer";
 import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface SocialMediaPlatform {
   username: string;
@@ -107,14 +108,44 @@ export const InfluencerCard = ({ influencer }: { influencer: Influencerm }) => {
           >
             View Profile
           </Button>
-        </CardContent>{" "}
+        </CardContent>
       </Card>
     </>
   );
 };
 
+const InfluencerCardSkeleton = () => {
+  return (
+    <Card className="h-full">
+      <CardContent className="pt-6">
+        <div className="flex flex-col items-center text-center mb-4">
+          <Skeleton className="h-20 w-20 rounded-full mb-4" />
+          <div className="space-y-2 w-full">
+            <Skeleton className="h-5 w-3/4 mx-auto" />
+            <Skeleton className="h-4 w-1/2 mx-auto" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+        </div>
+
+        <div className="mb-4 space-y-3">
+          <div className="flex justify-between items-center">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-4 w-1/4" />
+          </div>
+          <div className="flex justify-between items-center">
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-4 w-1/4" />
+          </div>
+        </div>
+
+        <Skeleton className="h-10 w-full rounded-md" />
+      </CardContent>
+    </Card>
+  );
+};
+
 const InfluencerSection = () => {
-  const { influencers } = useInfluencers();
+  const { influencers, loading } = useInfluencers();
 
   return (
     <section className="py-16 bg-white" id="influencers">
@@ -128,9 +159,18 @@ const InfluencerSection = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {influencers.slice(0, 8).map((influencer) => (
-            <InfluencerCard key={influencer._id} influencer={influencer} />
-          ))}
+          {loading
+            ? Array(8)
+                .fill(0)
+                .map((_, index) => <InfluencerCardSkeleton key={index} />)
+            : influencers
+                .slice(0, 8)
+                .map((influencer) => (
+                  <InfluencerCard
+                    key={influencer._id}
+                    influencer={influencer}
+                  />
+                ))}
         </div>
 
         <div className="text-center mt-10">
