@@ -103,7 +103,7 @@ export function InfluencerDetailPopup({
         <div className="overflow-y-auto max-h-[90vh]">
           <DrawerHeader className="px-4 sm:px-6">
             <DrawerTitle className="text-lg sm:text-xl">
-              {influencer.name}'s Profile
+              {influencer.name}&apos;s Profile
             </DrawerTitle>
           </DrawerHeader>
 
