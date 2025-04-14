@@ -4,25 +4,42 @@ import dbConnect from "@/lib/mongoose";
 import Contract from "@/models/ContractSchema";
 import Job from "@/models/JobSchema";
 import Proposal from "@/models/ProposalSchema";
+import mongoose from "mongoose";
 
 export async function POST(request: Request) {
   await dbConnect();
 
   try {
-    const { proposalId, price, socialMediaActions, deadline } =
+    const { senderId, reciverId, price, socialMediaActions, deadline } =
       await request.json();
 
     // Validate proposal exists and get required data
-    const proposal = await Proposal.findById(proposalId);
 
-    if (!proposal) {
+    if (!senderId || !reciverId) {
       return NextResponse.json(
-        { error: "Proposal not found" },
-        { status: 404 }
+        { error: "Both senderId and reciverId are required" },
+        { status: 400 }
       );
     }
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(senderId)) {
+      return NextResponse.json(
+        { error: "Invalid senderId format" },
+        { status: 400 }
+      );
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(reciverId)) {
+      return NextResponse.json(
+        { error: "Invalid reciverId format" },
+        { status: 400 }
+      );
+    }
+
     const newContract = await Contract.create({
-      proposalId,
+      senderId,
+      reciverId,
       price,
       socialMediaActions,
       deadline,
@@ -118,7 +135,8 @@ export async function GET(request: Request) {
  * - Description: Creates a new contract based on a proposal.
  * - Request Body:
  *   {
- *     "proposalId": "ProposalObjectId",
+ *     "senderId": "senderObjectId",
+ *     "reciver": "reciverObjectId",
  *     "price": 1000,
  *     "socialMediaActions": [
  *       {
@@ -138,7 +156,9 @@ export async function GET(request: Request) {
  *   - 201: Returns the newly created contract document.
  *     {
  *       "_id": "ContractObjectId",
- *       "proposalId": "ProposalObjectId",
+ *       "senderId": "senderObjectId",
+ *  *     "reciver": "reciverObjectId",
+
  *       "price": 1000,
  *       "socialMediaActions": [
  *         {

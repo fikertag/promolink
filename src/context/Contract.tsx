@@ -10,25 +10,10 @@ interface SocialMediaAction {
   quantity: number;
 }
 
-interface Job {
-  _id: string;
-  title: string;
-  description: string;
-}
-
-interface Proposal {
-  _id: string;
-  influencerId: string;
-  jobId: Job;
-  status: "pending" | "approved" | "rejected";
-  message: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 interface Contract {
   _id: string;
-  proposalId: Proposal;
+  senderId: string; // Influencer ID
+  reciverId: string; // Job Poster ID,
   price: number;
   socialMediaActions: SocialMediaAction[];
   deadline: string;
@@ -42,7 +27,13 @@ interface Contract {
 interface ContractContextType {
   contracts: Contract[];
   fetchContracts: () => Promise<void>;
-  createContract: (proposalId: string) => Promise<Contract | null>;
+  createContract: (contractData: {
+    senderId: string;
+    reciverId: string;
+    price: number;
+    socialMediaActions: SocialMediaAction;
+    deadline: string;
+  }) => Promise<Contract | null>;
   updateContractStatus: (
     contractId: string,
     status: Contract["status"]
@@ -78,14 +69,31 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Create new contract from proposal
-  const createContract = async (proposalId: string) => {
+  // Create new contract from proposal
+  const createContract = async (contractData: {
+    senderId: string;
+    reciverId: string;
+    price: number;
+    socialMediaActions: SocialMediaAction;
+    deadline: string;
+  }) => {
     try {
-      const response = await axios.post("/api/contract", { proposalId });
+      const response = await axios.post("/api/contract", {
+        senderId: contractData.senderId,
+        reciverId: contractData.reciverId,
+        price: contractData.price,
+        socialMediaActions: contractData.socialMediaActions,
+        deadline: contractData.deadline,
+      });
+
+      // Update local state with new contract
       setContracts((prev) => [...prev, response.data]);
+
+      // Return the created contract data
       return response.data;
     } catch (error) {
       console.error("Error creating contract:", error);
-      return null;
+      throw new Error("Failed to create contract");
     }
   };
 

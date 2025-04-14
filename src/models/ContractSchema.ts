@@ -20,7 +20,12 @@ const SocialMediaActionSchema = new mongoose.Schema({
 const ContractSchema = new mongoose.Schema(
   {
     // Core References
-    proposalId: {
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Proposal",
+      required: true,
+    },
+    reciverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Proposal",
       required: true,
