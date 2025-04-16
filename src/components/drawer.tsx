@@ -22,11 +22,11 @@ interface SocialMediaPlatform {
   followers: string | number;
 }
 
-interface SocialMediaAction {
-  platform: "instagram" | "tiktok" | "telegram";
-  actionType: "post" | "story";
-  quantity: number;
-}
+// interface SocialMediaAction {
+//   platform: "instagram" | "tiktok" | "telegram";
+//   actionType: "post" | "story";
+//   quantity: number;
+// }
 
 interface SocialMedia {
   instagram?: SocialMediaPlatform;
