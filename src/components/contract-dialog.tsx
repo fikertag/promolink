@@ -113,6 +113,7 @@ export function ContractDialog({
       setActions([]);
     } catch (err) {
       setError("Failed to create contract. Please try again.");
+      console.log(err);
     } finally {
       setLoading(false);
     }

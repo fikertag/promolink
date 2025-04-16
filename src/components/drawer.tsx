@@ -103,21 +103,21 @@ export function InfluencerDetailPopup({
     }
   };
 
-  const handleCreateContract = async (contractData: {
-    senderId: string;
-    reciverId: string;
-    price: number;
-    socialMediaActions: SocialMediaAction[];
-    deadline: string;
-  }) => {
-    console.log("Creating contract with:", contractData);
-    // Here you would call your API to create the contract
-    // After successful creation, you might want to:
-    // 1. Close the contract dialog
-    // 2. Show a success message
-    // 3. Optionally close the influencer detail popup
-    setShowContractDialog(false);
-  };
+  // const handleCreateContract = async (contractData: {
+  //   senderId: string;
+  //   reciverId: string;
+  //   price: number;
+  //   socialMediaActions: SocialMediaAction[];
+  //   deadline: string;
+  // }) => {
+  //   console.log("Creating contract with:", contractData);
+  //   // Here you would call your API to create the contract
+  //   // After successful creation, you might want to:
+  //   // 1. Close the contract dialog
+  //   // 2. Show a success message
+  //   // 3. Optionally close the influencer detail popup
+  //   setShowContractDialog(false);
+  // };
 
   const handleSendContract = () => {
     console.log("kk");
