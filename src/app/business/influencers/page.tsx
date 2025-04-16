@@ -48,7 +48,7 @@ export default function InfluencerSearchPage() {
 
   return (
     <div className="mx-auto container p-8">
-      <h1 className="text-3xl font-bold mb-6">Find Influencers</h1>
+      <h1 className="md:text-3xl text-2xl font-bold mb-6">Find Influencers</h1>
       {/* <div className="mb-8">
         
 

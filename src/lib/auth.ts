@@ -16,7 +16,7 @@ if (!db) {
 export const auth = betterAuth({
   trustedOrigins: [
     "http://localhost:3000",
-    "http://192.168.221.213:3000",
+    "http://192.168.1.4:3000",
     "https://promolink-git-feature-chat-fikiryilkal-tages-projects.vercel.app",
     "https://promolink-git-feature-business-fikiryilkal-tages-projects.vercel.app",
   ],

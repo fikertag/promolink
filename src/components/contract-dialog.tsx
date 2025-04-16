@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useContracts } from "@/context/Contract";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -19,15 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, X } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { X } from "lucide-react";
 
 interface SocialMediaAction {
   platform: "instagram" | "tiktok" | "telegram";
@@ -46,8 +40,10 @@ export function ContractDialog({
   reciverId: string;
   opened: boolean;
 }) {
-  const [price, setPrice] = useState<number>(0);
-  const [deadline, setDeadline] = useState<Date>();
+  const { createContract } = useContracts();
+  const [price, setPrice] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [deadline, setDeadline] = useState<string>("");
   const [actions, setActions] = useState<SocialMediaAction[]>([]);
   const [currentAction, setCurrentAction] = useState<
     Omit<SocialMediaAction, "quantity"> & { quantity: string }
@@ -87,37 +83,38 @@ export function ContractDialog({
   const handleRemoveAction = (index: number) => {
     setActions(actions.filter((_, i) => i !== index));
   };
-
   const handleSubmit = async () => {
-    if (!price || price <= 0) {
+    const numericPrice = Number(price);
+
+    if (!numericPrice || numericPrice <= 0) {
       setError("Price must be greater than 0");
       return;
     }
-
     if (!deadline) {
-      setError("Please select a deadline");
+      setError("Please enter a deadline");
       return;
     }
-
     if (actions.length === 0) {
       setError("Please add at least one social media action");
       return;
     }
+    setLoading(true);
 
     try {
-      // await onCreateContract({
-      //   senderId,
-      //   reciverId,
-      //   price,
-      //   socialMediaActions: actions,
-      //   deadline: deadline.toISOString(),
-      // });
-      // Reset form
-      setPrice(0);
-      setDeadline(undefined);
+      await createContract({
+        senderId,
+        reciverId,
+        price: numericPrice,
+        socialMediaActions: actions,
+        deadline,
+      });
+      setPrice("");
+      setDeadline("");
       setActions([]);
     } catch (err) {
       setError("Failed to create contract. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -141,41 +138,22 @@ export function ContractDialog({
             <Input
               id="price"
               type="number"
+              placeholder="100"
               value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
-              className="col-span-2"
+              onChange={(e) => setPrice(e.target.value)}
+              className="col-span-2 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </div>
 
           <div className="grid grid-cols-3 items-center gap-4">
-            <Label>Deadline</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "col-span-2 justify-start text-left font-normal",
-                    !deadline && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {deadline ? (
-                    format(deadline, "PPP")
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={deadline}
-                  onSelect={setDeadline}
-                  initialFocus
-                  fromDate={new Date()}
-                />
-              </PopoverContent>
-            </Popover>
+            <Label htmlFor="deadline">Deadline</Label>
+            <Input
+              id="deadline"
+              type="date"
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
+              className="col-span-2"
+            />
           </div>
 
           <div className="space-y-2">
@@ -196,8 +174,7 @@ export function ContractDialog({
                 <SelectContent>
                   <SelectItem value="instagram">Instagram</SelectItem>
                   <SelectItem value="tiktok">TikTok</SelectItem>
-                  <SelectItem value="youtube">YouTube</SelectItem>
-                  <SelectItem value="twitter">Twitter</SelectItem>
+                  <SelectItem value="telegram">Telegram</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -262,10 +239,11 @@ export function ContractDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={loading}>
             Cancel
           </Button>
-          <Button type="button" onClick={handleSubmit}>
+          <Button type="button" onClick={handleSubmit} disabled={loading}>
+            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Send Contract
           </Button>
         </DialogFooter>

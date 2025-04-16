@@ -31,7 +31,7 @@ interface ContractContextType {
     senderId: string;
     reciverId: string;
     price: number;
-    socialMediaActions: SocialMediaAction;
+    socialMediaActions: SocialMediaAction[];
     deadline: string;
   }) => Promise<Contract | null>;
   updateContractStatus: (
@@ -74,9 +74,10 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
     senderId: string;
     reciverId: string;
     price: number;
-    socialMediaActions: SocialMediaAction;
+    socialMediaActions: SocialMediaAction[];
     deadline: string;
   }) => {
+    console.log(1);
     try {
       const response = await axios.post("/api/contract", {
         senderId: contractData.senderId,

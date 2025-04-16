@@ -15,6 +15,7 @@ import { useState } from "react";
 import { /*Send*/ Mail, FileText } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { ContractDialog } from "@/components/contract-dialog"; // Import the ContractDialog
+import { useUser } from "@/context/User";
 
 interface SocialMediaPlatform {
   username: string;
@@ -65,6 +66,7 @@ export function InfluencerDetailPopup({
   open: boolean;
   onClose: () => void;
 }) {
+  const { user } = useUser();
   const router = useRouter();
   // const { user } = useUser();
   const { startNewConversation, sendMessage } = useMessages();
@@ -252,7 +254,7 @@ export function InfluencerDetailPopup({
       </Drawer>
       {showContractDialog && (
         <ContractDialog
-          senderId="current-business-id" // Replace with actual sender ID
+          senderId={user?.id || ""} // Replace with actual sender ID
           reciverId={influencer._id}
           opened={showContractDialog}
           onClose={() => setShowContractDialog(false)}

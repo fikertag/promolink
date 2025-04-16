@@ -148,10 +148,12 @@ const InfluencerSection = () => {
   const { influencers, loading } = useInfluencers();
 
   return (
-    <section className="py-16 bg-white" id="influencers">
+    <section className="md:py-16 py-8 bg-white" id="influencers">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Browse Top Influencers</h2>
+          <h2 className="md:text-3xl text-2xl font-bold mb-4">
+            Browse Top Influencers
+          </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Connect with verified marketing professionals and influencers who
             can help take your brand to the next level

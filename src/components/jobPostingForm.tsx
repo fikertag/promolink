@@ -19,19 +19,19 @@ const JobPostingForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    price: 0,
-    location: "",
+    price: "",
+    location: "Tecno",
     socialMedia: [] as Array<{
-      platform: "instagram" | "youtube" | "tiktok" | "telegram";
+      platform: "instagram" | "tiktok" | "telegram";
     }>,
   });
 
   const [selectedPlatforms, setSelectedPlatforms] = useState<
-    Array<"instagram" | "youtube" | "tiktok" | "telegram">
+    Array<"instagram" | "tiktok" | "telegram">
   >([]);
 
   const handlePlatformToggle = (
-    platform: "instagram" | "youtube" | "tiktok" | "telegram"
+    platform: "instagram" | "tiktok" | "telegram"
   ) => {
     setSelectedPlatforms((prev) =>
       prev.includes(platform)
@@ -83,7 +83,7 @@ const JobPostingForm = () => {
                   <Input
                     id="title"
                     name="title"
-                    placeholder="e.g. Instagram Marketing Expert Needed"
+                    placeholder="Instagram Marketing for our shop"
                     value={formData.title}
                     onChange={handleChange}
                     required
@@ -111,7 +111,7 @@ const JobPostingForm = () => {
                       name="price"
                       type="number"
                       min="0"
-                      placeholder="e.g. 1000"
+                      placeholder="100"
                       value={formData.price}
                       onChange={handleChange}
                       required
@@ -123,7 +123,8 @@ const JobPostingForm = () => {
                     <Input
                       id="location"
                       name="location"
-                      placeholder="e.g. Addis Ababa, Ethiopia"
+                      disabled
+                      placeholder="Addis Ababa, Ethiopia"
                       value={formData.location}
                       onChange={handleChange}
                     />
@@ -133,22 +134,23 @@ const JobPostingForm = () => {
                 <div className="space-y-2">
                   <Label>Required Social Media Platforms *</Label>
                   <div className="flex flex-wrap gap-2">
-                    {(
-                      ["instagram", "youtube", "tiktok", "telegram"] as const
-                    ).map((platform) => (
-                      <Button
-                        key={platform}
-                        type="button"
-                        variant={
-                          selectedPlatforms.includes(platform)
-                            ? "default"
-                            : "outline"
-                        }
-                        onClick={() => handlePlatformToggle(platform)}
-                      >
-                        {platform.charAt(0).toUpperCase() + platform.slice(1)}
-                      </Button>
-                    ))}
+                    {(["instagram", "tiktok", "telegram"] as const).map(
+                      (platform) => (
+                        <Button
+                          className="text-xs sm:text-base px-1.5"
+                          key={platform}
+                          type="button"
+                          variant={
+                            selectedPlatforms.includes(platform)
+                              ? "default"
+                              : "outline"
+                          }
+                          onClick={() => handlePlatformToggle(platform)}
+                        >
+                          {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                        </Button>
+                      )
+                    )}
                   </div>
                 </div>
 
