@@ -126,10 +126,6 @@ export default function ContractsPage() {
 
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-semibold text-sm mb-1">Job Title</h4>
-                    <p className="text-sm">{contract.proposalId.jobId.title}</p>
-                  </div>
-                  <div>
                     <h4 className="font-semibold text-sm mb-1">Deliverables</h4>
                     <ul className="space-y-1">
                       {contract.socialMediaActions.map((action, index) => (
