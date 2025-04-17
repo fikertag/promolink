@@ -30,6 +30,7 @@ const ContractSchema = new mongoose.Schema(
       ref: "Proposal",
       required: true,
     },
+
     // Contract Terms
     price: {
       type: Number,
@@ -40,20 +41,32 @@ const ContractSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+
+    // Status Logic
     status: {
       type: String,
       enum: ["draft", "active", "completed", "terminated"],
       default: "draft",
     },
+    influencerConfirmed: {
+      type: Boolean,
+      default: false,
+    },
+    ownerConfirmed: {
+      type: Boolean,
+      default: false,
+    },
 
     activatedAt: Date,
     completedAt: Date,
+    terminatedAt: Date,
   },
   { timestamps: true }
 );
 
-// Auto-update timestamps
+// Middleware for updating status
 ContractSchema.pre("save", function (next) {
+  // Set activation date only when influencer sets to active
   if (
     this.isModified("status") &&
     this.status === "active" &&
@@ -61,10 +74,29 @@ ContractSchema.pre("save", function (next) {
   ) {
     this.activatedAt = new Date();
   }
-  if (this.isModified("status") && this.status === "completed") {
+
+  // Set completed only when both confirm
+  if (
+    (this.isModified("influencerConfirmed") ||
+      this.isModified("ownerConfirmed")) &&
+    this.influencerConfirmed &&
+    this.ownerConfirmed
+  ) {
+    this.status = "completed";
     this.completedAt = new Date();
   }
+
+  // Allow termination by either party
+  if (
+    this.isModified("status") &&
+    this.status === "terminated" &&
+    !this.terminatedAt
+  ) {
+    this.terminatedAt = new Date();
+  }
+
   next();
 });
+
 export default mongoose.models.Contract ||
   mongoose.model("Contract", ContractSchema);

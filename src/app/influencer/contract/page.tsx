@@ -1,14 +1,21 @@
 "use client";
 
 import { useContracts } from "@/context/Contract";
+import { useUser } from "@/context/User";
 import { useState } from "react";
 import { Clipboard, CheckCircle, XCircle, Clock, FileText } from "lucide-react";
 
+const Spinner = () => (
+  <span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+);
+
 export default function ContractsPage() {
+  const { user } = useUser();
   const { contracts, updateContractStatus } = useContracts();
   const [activeTab, setActiveTab] = useState<
     "draft" | "active" | "completed" | "terminated"
   >("active");
+
   const [loadingStates, setLoadingStates] = useState<
     Record<
       string,
@@ -35,8 +42,11 @@ export default function ContractsPage() {
 
   const handleStatusUpdate = async (
     contractId: string,
-    newStatus: typeof activeTab,
-    actionType: "activate" | "terminate" | "complete"
+    actionType:
+      | "active"
+      | "terminated"
+      | "influencerConfirmed"
+      | "ownerConfirmed"
   ) => {
     setLoadingStates((prev) => ({
       ...prev,
@@ -44,7 +54,11 @@ export default function ContractsPage() {
     }));
 
     try {
-      await updateContractStatus(contractId, newStatus);
+      await updateContractStatus(
+        contractId,
+        actionType,
+        user?.role || "influencer"
+      );
     } catch (error) {
       console.error("Failed to update contract status:", error);
     } finally {
@@ -64,72 +78,70 @@ export default function ContractsPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
+    <div className="container max-w-5xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
         <Clipboard size={24} />
         Contract Management
       </h1>
 
       {/* Status Tabs */}
-      <div className="flex border-b mb-6">
+      <div className="flex flex-wrap gap-2 border-b pb-2 mb-6">
         {(["active", "draft", "completed", "terminated"] as const).map(
           (tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-2 min-[340px]:px-3  md:px-4 py-2 font-medium text-sm ${
+              className={`px-3 py-1 text-sm rounded-md font-medium capitalize transition-all duration-150 ${
                 activeTab === tab
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-gray-500"
+                  ? "bg-primary text-white shadow"
+                  : "text-gray-600 hover:text-primary"
               }`}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab}
             </button>
           )
         )}
       </div>
 
       {/* Empty State */}
-      {filteredContracts.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+      {filteredContracts.length === 0 ? (
+        <div className="text-center py-20 text-gray-500">
           <FileText size={48} className="mx-auto mb-4 opacity-50" />
-          <p>No {activeTab} contracts found</p>
+          <p className="text-lg">No {activeTab} contracts found</p>
         </div>
-      )}
-
-      {/* Contract List */}
-      {filteredContracts.length > 0 && (
-        <div className="grid gap-4">
+      ) : (
+        <div className="grid gap-6">
           {filteredContracts.map((contract) => {
             const contractLoading = loadingStates[contract._id] || {};
+
             return (
               <div
                 key={contract._id}
-                className="border rounded-lg p-4 bg-white shadow-sm"
+                className="border rounded-xl p-5 bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between flex-wrap gap-4 items-start mb-4">
                   <div>
-                    <h3 className="font-bold">
+                    <h3 className="text-lg font-semibold">
                       Contract #{contract._id.slice(-6)}
                     </h3>
                     <p className="text-sm text-gray-500">
                       Deadline: {formatDate(contract.deadline)}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-sm font-medium">
                     {getStatusIcon(contract.status)}
-                    <span className="text-sm capitalize">
-                      {contract.status}
-                    </span>
+                    <span className="capitalize">{contract.status}</span>
                   </div>
                 </div>
 
-                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid sm:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <h4 className="font-semibold text-sm mb-1">Deliverables</h4>
-                    <ul className="space-y-1">
+                    <h4 className="text-sm font-semibold mb-1 text-gray-700">
+                      Deliverables
+                    </h4>
+                    <ul className="space-y-1 text-sm text-gray-600">
                       {contract.socialMediaActions.map((action, index) => (
-                        <li key={index} className="text-sm">
+                        <li key={index}>
                           {action.quantity}x {action.platform}{" "}
                           {action.actionType}
                         </li>
@@ -138,8 +150,12 @@ export default function ContractsPage() {
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-sm mb-1">Financials</h4>
-                    <p className="text-lg font-bold">${contract.price}</p>
+                    <h4 className="text-sm font-semibold mb-1 text-gray-700">
+                      Financials
+                    </h4>
+                    <p className="text-lg font-bold text-gray-900">
+                      ${contract.price}
+                    </p>
                     <p className="text-xs text-gray-500 mt-1">
                       Created: {formatDate(contract.createdAt)}
                     </p>
@@ -147,12 +163,12 @@ export default function ContractsPage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="mt-4 flex gap-2">
+                <div className="flex flex-wrap gap-3">
                   {contract.status === "draft" && (
                     <>
                       <button
                         onClick={() =>
-                          handleStatusUpdate(contract._id, "active", "activate")
+                          handleStatusUpdate(contract._id, "active")
                         }
                         disabled={
                           contractLoading.activate || contractLoading.terminate
@@ -161,20 +177,17 @@ export default function ContractsPage() {
                       >
                         {contractLoading.activate ? (
                           <>
-                            <span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
+                            <Spinner />
                             Processing...
                           </>
                         ) : (
                           "Activate"
                         )}
                       </button>
+
                       <button
                         onClick={() =>
-                          handleStatusUpdate(
-                            contract._id,
-                            "terminated",
-                            "terminate"
-                          )
+                          handleStatusUpdate(contract._id, "terminated")
                         }
                         disabled={
                           contractLoading.terminate || contractLoading.activate
@@ -183,8 +196,8 @@ export default function ContractsPage() {
                       >
                         {contractLoading.terminate ? (
                           <>
-                            <span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
-                            Processing...
+                            <Spinner />
+                            Terminating...
                           </>
                         ) : (
                           "Terminate"
@@ -196,18 +209,14 @@ export default function ContractsPage() {
                   {contract.status === "active" && (
                     <button
                       onClick={() =>
-                        handleStatusUpdate(
-                          contract._id,
-                          "completed",
-                          "complete"
-                        )
+                        handleStatusUpdate(contract._id, "influencerConfirmed")
                       }
                       disabled={contractLoading.complete}
                       className="px-3 py-1 bg-blue-500 text-white text-sm rounded flex items-center gap-1 disabled:opacity-70"
                     >
                       {contractLoading.complete ? (
                         <>
-                          <span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
+                          <Spinner />
                           Processing...
                         </>
                       ) : (

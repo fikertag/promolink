@@ -2,8 +2,6 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongoose";
 import Contract from "@/models/ContractSchema";
-import Job from "@/models/JobSchema";
-import Proposal from "@/models/ProposalSchema";
 import mongoose from "mongoose";
 
 export async function POST(request: Request) {
@@ -85,38 +83,27 @@ export async function GET(request: Request) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get("status");
-    const proposalId = searchParams.get("proposalId");
-    const userId = searchParams.get("userId"); // The job poster's ID
-    const influencerId = searchParams.get("influencerId");
+    const influencerId = searchParams.get("influencerId"); // The influencerId to match against senderinfluencerId or reciverinfluencerId
 
-    const query: Record<string, unknown> = {};
-
-    if (status) query.status = status;
-    if (proposalId) {
-      query.proposalId = proposalId;
-    } else if (userId || influencerId) {
-      // Build a proposal query to find relevant proposals
-      const proposalQuery: Record<string, unknown> = {};
-      if (userId) proposalQuery["jobId.userId"] = userId;
-      if (influencerId) proposalQuery.influencerId = influencerId;
-
-      // Find matching proposals
-      const proposals = await Proposal.find(proposalQuery).select("_id").lean();
-      const proposalIds = proposals.map((p) => p._id);
-
-      query.proposalId = { $in: proposalIds };
+    if (!influencerId) {
+      return NextResponse.json(
+        { error: "An 'id' query parameter is required" },
+        { status: 400 }
+      );
     }
 
-    const contracts = await Contract.find(query)
-      .sort({ createdAt: -1 })
-      .populate({
-        path: "proposalId",
-        populate: [
-          { path: "jobId", select: "title description userId", model: Job },
-        ],
-      })
-      .lean();
+    const query = {
+      $or: [{ senderId: influencerId }, { reciverId: influencerId }], // Match id in either senderId or reciverId
+    };
+
+    const contracts = await Contract.find(query).sort({ createdAt: -1 });
+    // .populate({
+    //   path: "proposalId",
+    //   populate: [
+    //     { path: "jobId", select: "title description userId", model: Job },
+    //   ],
+    // })
+    // .lean();
 
     return NextResponse.json(contracts, { status: 200 });
   } catch (error) {

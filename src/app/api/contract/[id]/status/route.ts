@@ -1,7 +1,6 @@
-// app/api/contracts/[id]/status/route.ts
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/mongoose";
 import Contract from "@/models/ContractSchema";
+import dbConnect from "@/lib/mongoose";
 
 export async function PATCH(
   request: Request,
@@ -10,34 +9,69 @@ export async function PATCH(
   await dbConnect();
 
   try {
-    const { status } = await request.json();
+    const { id } = await params;
+    const body = await request.json();
 
-    const { id } = await params; // Access URL params
+    const { status, role } = body; // Expecting role: "influencer" | "owner"
 
-    if (!["draft", "active", "completed", "terminated"].includes(status)) {
-      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    if (
+      ![
+        "active",
+        "terminated",
+        "influencerConfirmed",
+        "ownerConfirmed",
+      ].includes(status)
+    ) {
+      return NextResponse.json(
+        { error: "Invalid status update" },
+        { status: 400 }
+      );
     }
 
-    const updatedContract = await Contract.findByIdAndUpdate(
-      id,
-      {
-        status,
-        ...(status === "active" && { activatedAt: new Date() }),
-        ...(status === "completed" && { completedAt: new Date() }),
-      },
-      { new: true }
-    );
-
-    if (!updatedContract) {
+    const contract = await Contract.findById(id);
+    if (!contract) {
       return NextResponse.json(
         { error: "Contract not found" },
         { status: 404 }
       );
     }
 
+    // Handle activation (only influencer allowed)
+    if (status === "active") {
+      if (role !== "influencer") {
+        return NextResponse.json(
+          { error: "Only influencer can activate the contract" },
+          { status: 403 }
+        );
+      }
+
+      contract.status = "active";
+      contract.activatedAt = new Date();
+    }
+
+    // Handle confirmation (for completion)
+    if (status === "influencerConfirmed" && role === "influencer") {
+      contract.influencerConfirmed = true;
+    } else if (status === "ownerConfirmed" && role === "owner") {
+      contract.ownerConfirmed = true;
+    }
+
+    // If both confirmed, mark completed
+    if (contract.influencerConfirmed && contract.ownerConfirmed) {
+      contract.status = "completed";
+      contract.completedAt = new Date();
+    }
+
+    // Handle termination (either role)
+    if (status === "terminated") {
+      contract.status = "terminated";
+      contract.terminatedAt = new Date();
+    }
+
+    const updatedContract = await contract.save();
     return NextResponse.json(updatedContract);
   } catch (error) {
-    console.error("Error updating contract:", error); // Log the error for debugging
+    console.error("Error updating contract:", error);
     return NextResponse.json(
       { error: "Failed to update contract" },
       { status: 500 }
@@ -49,50 +83,66 @@ export async function PATCH(
  * API Documentation:
  *
  * PATCH /api/contract/[id]/status
- * - Description: Updates the status of a specific contract and sets custom timestamps (`activatedAt` or `completedAt`) based on the new status.
+ * - Description: Updates the status of a specific contract or registers confirmation actions from either the influencer or the business owner.
+ *   - Influencer can activate the contract.
+ *   - Both influencer and owner must confirm to complete the contract.
+ *   - Either party can terminate the contract.
+ *
  * - Path Parameters:
  *   - id (required): The ID of the contract to update.
+ *
  * - Request Body:
  *   {
- *     "status": "active" | "completed" | "draft" | "terminated"
+ *     "status": "active" | "terminated" | "influencerConfirmed" | "ownerConfirmed",
+ *     "role": "influencer" | "owner"
  *   }
+ *
  * - Response:
  *   - 200: Returns the updated contract document.
  *     {
  *       "_id": "ContractObjectId",
- *       "status": "active",
- *       "activatedAt": "2025-03-30T12:00:00.000Z",
- *       "completedAt": null,
+ *       "status": "completed" | "active" | "terminated",
+ *       "activatedAt": "2025-03-30T12:00:00.000Z" | null,
+ *       "completedAt": "2025-03-31T12:00:00.000Z" | null,
+ *       "terminatedAt": "2025-03-31T12:30:00.000Z" | null,
+ *       "influencerConfirmed": true | false,
+ *       "ownerConfirmed": true | false,
  *       "createdAt": "2025-03-29T10:00:00.000Z",
- *       "updatedAt": "2025-03-30T12:00:00.000Z"
+ *       "updatedAt": "2025-03-31T12:00:00.000Z"
  *     }
- *   - 400: Returns an error message if the status is invalid.
+ *
+ *   - 400: Returns an error message if:
+ *     - The status is invalid.
+ *     - The role is not allowed to perform the action.
  *     {
- *       "error": "Invalid status"
+ *       "error": "Invalid status update" | "Only influencer can activate the contract"
  *     }
+ *
  *   - 404: Returns an error message if the contract is not found.
  *     {
  *       "error": "Contract not found"
  *     }
+ *
  *   - 500: Returns an error message if there is a server error.
  *     {
  *       "error": "Failed to update contract"
  *     }
  *
  * Detailed Behavior:
- * - Validates the `status` field to ensure it is one of the allowed values: `"draft"`, `"active"`, `"completed"`, `"terminated"`.
- * - Updates the `status` field of the specified contract.
- * - If the `status` is `"active"`, sets the `activatedAt` field to the current date and time.
- * - If the `status` is `"completed"`, sets the `completedAt` field to the current date and time.
- * - Returns a `404` error if the contract is not found.
- * - Returns a `500` error if there is a server error during the update.
+ * - Validates the `status` field to ensure it is one of: `"active"`, `"terminated"`, `"influencerConfirmed"`, `"ownerConfirmed"`.
+ * - **Only the influencer** can change the status to `"active"`, setting the `activatedAt` timestamp.
+ * - `"influencerConfirmed"` and `"ownerConfirmed"` track individual confirmation flags for completion.
+ *   - When **both** are true, status is automatically set to `"completed"` and `completedAt` is set.
+ * - `"terminated"` status can be set by either role and sets the `terminatedAt` timestamp.
+ * - Role is required in the request body to verify permissions.
  *
  * Example Requests:
  *
  * PATCH /api/contract/64f8c0e2b5d6c9a1f8e7b123/status
  * Request Body:
  *   {
- *     "status": "active"
+ *     "status": "active",
+ *     "role": "influencer"
  *   }
  * Response (200):
  *   {
@@ -100,14 +150,16 @@ export async function PATCH(
  *     "status": "active",
  *     "activatedAt": "2025-03-30T12:00:00.000Z",
  *     "completedAt": null,
- *     "createdAt": "2025-03-29T10:00:00.000Z",
- *     "updatedAt": "2025-03-30T12:00:00.000Z"
+ *     "influencerConfirmed": false,
+ *     "ownerConfirmed": false,
+ *     ...
  *   }
  *
  * PATCH /api/contract/64f8c0e2b5d6c9a1f8e7b123/status
  * Request Body:
  *   {
- *     "status": "completed"
+ *     "status": "ownerConfirmed",
+ *     "role": "owner"
  *   }
  * Response (200):
  *   {
@@ -115,22 +167,22 @@ export async function PATCH(
  *     "status": "completed",
  *     "activatedAt": "2025-03-30T12:00:00.000Z",
  *     "completedAt": "2025-03-31T12:00:00.000Z",
- *     "createdAt": "2025-03-29T10:00:00.000Z",
- *     "updatedAt": "2025-03-31T12:00:00.000Z"
+ *     "influencerConfirmed": true,
+ *     "ownerConfirmed": true,
+ *     ...
  *   }
  *
- * Response (400):
+ * PATCH /api/contract/64f8c0e2b5d6c9a1f8e7b123/status
+ * Request Body:
  *   {
- *     "error": "Invalid status"
+ *     "status": "terminated",
+ *     "role": "influencer"
  *   }
- *
- * Response (404):
+ * Response (200):
  *   {
- *     "error": "Contract not found"
- *   }
- *
- * Response (500):
- *   {
- *     "error": "Failed to update contract"
+ *     "_id": "64f8c0e2b5d6c9a1f8e7b123",
+ *     "status": "terminated",
+ *     "terminatedAt": "2025-03-31T13:00:00.000Z",
+ *     ...
  *   }
  */

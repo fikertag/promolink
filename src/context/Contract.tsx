@@ -10,16 +10,21 @@ interface SocialMediaAction {
   quantity: number;
 }
 
+type ContractStatus = "draft" | "active" | "completed" | "terminated";
+
 interface Contract {
   _id: string;
   senderId: string; // Influencer ID
-  reciverId: string; // Job Poster ID,
+  reciverId: string; // Job Poster ID
   price: number;
   socialMediaActions: SocialMediaAction[];
   deadline: string;
-  status: "draft" | "active" | "completed" | "terminated";
-  activatedAt?: string; // Optional field for when the contract is activated
-  completedAt?: string; // Optional field for when the contract is completed
+  status: ContractStatus;
+  activatedAt?: string;
+  completedAt?: string;
+  terminatedAt?: string;
+  influencerConfirmed?: boolean;
+  ownerConfirmed?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -36,7 +41,8 @@ interface ContractContextType {
   }) => Promise<Contract | null>;
   updateContractStatus: (
     contractId: string,
-    status: Contract["status"]
+    status: "active" | "terminated" | "influencerConfirmed" | "ownerConfirmed",
+    role: "influencer" | "business"
   ) => Promise<void>;
   getContract: (contractId: string) => Contract | undefined;
 }
@@ -68,8 +74,7 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Create new contract from proposal
-  // Create new contract from proposal
+  // Create new contract
   const createContract = async (contractData: {
     senderId: string;
     reciverId: string;
@@ -77,20 +82,9 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
     socialMediaActions: SocialMediaAction[];
     deadline: string;
   }) => {
-    console.log(1);
     try {
-      const response = await axios.post("/api/contract", {
-        senderId: contractData.senderId,
-        reciverId: contractData.reciverId,
-        price: contractData.price,
-        socialMediaActions: contractData.socialMediaActions,
-        deadline: contractData.deadline,
-      });
-
-      // Update local state with new contract
+      const response = await axios.post("/api/contract", contractData);
       setContracts((prev) => [...prev, response.data]);
-
-      // Return the created contract data
       return response.data;
     } catch (error) {
       console.error("Error creating contract:", error);
@@ -101,15 +95,19 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
   // Update contract status
   const updateContractStatus = async (
     contractId: string,
-    status: Contract["status"]
+    status: "active" | "terminated" | "influencerConfirmed" | "ownerConfirmed",
+    role: "influencer" | "business"
   ) => {
     try {
-      await axios.patch(`/api/contract/${contractId}/status`, { status });
+      const response = await axios.patch(`/api/contract/${contractId}/status`, {
+        status,
+        role,
+      });
+      const updated = response.data;
+
       setContracts((prev) =>
         prev.map((contract) =>
-          contract._id === contractId
-            ? { ...contract, status, updatedAt: new Date().toISOString() }
-            : contract
+          contract._id === contractId ? { ...contract, ...updated } : contract
         )
       );
     } catch (error) {
@@ -117,19 +115,14 @@ export const ContractProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Get single contract by ID
+  // Get a single contract by ID
   const getContract = (contractId: string) => {
     return contracts.find((contract) => contract._id === contractId);
   };
 
-  // Initial fetch
   useEffect(() => {
     fetchContracts();
   }, [user?.id]);
-
-  // useEffect(() => {
-  //   console.log(contracts);
-  // }, [contracts]);
 
   return (
     <ContractContext.Provider
