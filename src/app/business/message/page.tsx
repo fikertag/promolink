@@ -1,9 +1,12 @@
 "use client";
-
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
+import { ContractDialog } from "@/components/contract-dialog"; // Import the ContractDialog
 import { useProposals } from "@/context/Proposal";
 import { useMessages } from "@/context/Message";
 import { useUser } from "@/context/User";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   MessageSquare,
@@ -29,6 +32,16 @@ import {
 
 type TabType = "sent" | "received" | "messages";
 type ProposalStatus = "pending" | "accepted" | "rejected";
+interface Conversation {
+  _id: string;
+  lastMessage: string;
+  updatedAt: string;
+  unreadCount: string;
+  otherUser: {
+    name: string;
+    image: string;
+  };
+}
 
 function MessagesAndProposals() {
   const [activeTab, setActiveTab] = useState<TabType>("received");
@@ -36,10 +49,15 @@ function MessagesAndProposals() {
   const [isSending, setIsSending] = useState(false);
   const [showConversationList, setShowConversationList] = useState(true);
   const { specificProposal: proposals } = useProposals();
+  const [showMessageInput, setShowMessageInput] = useState(false);
+  const [showContractDialog, setShowContractDialog] = useState(false);
+  const router = useRouter();
+
   const {
     conversations,
     currentMessages,
     selectedConversation,
+    startNewConversation,
     fetchMessages,
     sendMessage,
     fetchConversations,
@@ -116,6 +134,42 @@ function MessagesAndProposals() {
       setShowConversationList(true);
     }
   }, [activeTab]);
+
+  const handleCancel = () => {
+    // cancel logic here
+  };
+
+  const handleMessage = () => {
+    setShowMessageInput(true);
+  };
+
+  const handleSendContract = () => {
+    setShowContractDialog(true);
+  };
+
+  const handleSendInitialMessage = async (id: string) => {
+    if (!messageInput.trim()) return;
+
+    setIsSending(true);
+    try {
+      // 1. Create new conversation
+      const newConversation: Conversation = await startNewConversation(id);
+
+      // 2. Send initial message
+      await sendMessage(messageInput, newConversation._id);
+
+      // 3. Redirect to messages page
+      router.push("/business/message");
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log(proposals);
+  }, [proposals]);
 
   return (
     <div className=" py-4">
@@ -261,7 +315,7 @@ function MessagesAndProposals() {
                               </div>
 
                               {/* Your proposal message */}
-                              <div>
+                              <div className="mb-4">
                                 <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
                                   <MessageCircle
                                     size={16}
@@ -273,10 +327,75 @@ function MessagesAndProposals() {
                                   {proposal.message}
                                 </p>
                               </div>
+                              {showMessageInput && (
+                                <div className="space-y-2">
+                                  <Textarea
+                                    value={messageInput}
+                                    onChange={(e) =>
+                                      setMessageInput(e.target.value)
+                                    }
+                                    placeholder={`Write your message to ${proposal.influencerId.name}...`}
+                                    className="min-h-[100px]"
+                                  />
+                                  <div className="flex gap-2">
+                                    <Button
+                                      variant="outline"
+                                      onClick={() => setShowMessageInput(false)}
+                                    >
+                                      Cancel
+                                    </Button>
+                                    <Button
+                                      onClick={() =>
+                                        handleSendInitialMessage(
+                                          proposal.influencerId._id
+                                        )
+                                      }
+                                      disabled={
+                                        isSending || !messageInput.trim()
+                                      }
+                                    >
+                                      {isSending
+                                        ? "Sending..."
+                                        : "Send Message"}
+                                    </Button>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Action Buttons */}
+                              <div className="flex flex-wrap gap-3 justify-end mt-4">
+                                <button
+                                  className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100 transition"
+                                  onClick={() => handleCancel()}
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 transition"
+                                  onClick={() => handleMessage()}
+                                >
+                                  Message
+                                </button>
+                                <button
+                                  className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition"
+                                  onClick={() => handleSendContract()}
+                                >
+                                  Send Contract
+                                </button>
+                              </div>
                             </AccordionContent>
                           </AccordionItem>
                         </Accordion>
                       </div>
+
+                      {showContractDialog && (
+                        <ContractDialog
+                          senderId={user?.id || ""} // Replace with actual sender ID
+                          reciverId={proposal.influencerId._id}
+                          opened={showContractDialog}
+                          onClose={() => setShowContractDialog(false)}
+                        />
+                      )}
                     </div>
                   ))}
                 </div>

@@ -21,7 +21,11 @@ interface Job {
 interface Proposal {
   _id: string;
   jobId: Job; // Changed from string to Job interface
-  influencerId: string;
+  influencerId: {
+    _id: string;
+    name: string;
+    image: string;
+  };
   message: string;
   status: "pending" | "accepted" | "rejected";
   createdAt: string;

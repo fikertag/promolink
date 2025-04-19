@@ -120,7 +120,6 @@ export function InfluencerDetailPopup({
   // };
 
   const handleSendContract = () => {
-    console.log("kk");
     setShowContractDialog(true);
   };
 
