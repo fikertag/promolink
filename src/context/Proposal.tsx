@@ -112,7 +112,7 @@ export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
     status: "accepted" | "rejected"
   ) => {
     try {
-      const response = await axios.patch(`/api/proposals/${proposalId}`, {
+      const response = await axios.patch(`/api/proposal/${proposalId}`, {
         status,
       });
       setProposals((prev) =>

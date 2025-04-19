@@ -1,13 +1,13 @@
 import { NextResponse, NextRequest } from "next/server";
 import Proposal from "@/models/ProposalSchema"; // Import the Proposal model
+import Job from "@/models/JobSchema";
 import dbConnect from "@/lib/mongoose"; // Utility to connect to MongoDB
 import { z } from "zod"; // For input validation
 import mongoose from "mongoose"; // For ObjectId validation
 
 // Define validation schema for PATCH request
 const UpdateProposalSchema = z.object({
-  status: z.enum(["pending", "accepted", "rejected"]).optional(), // Allowed statuses
-  message: z.string().optional(), // Optional message update
+  status: z.enum(["pending", "accepted", "rejected"]), // Allowed statuses
 });
 
 // PATCH: Update a proposal (e.g., status or message)
@@ -39,16 +39,20 @@ export async function PATCH(
       );
     }
 
-    const { status, message } = validation.data;
+    const { status } = validation.data;
 
     // Update the proposal
     const updatedProposal = await Proposal.findByIdAndUpdate(
       proposalId,
-      { ...(status && { status }), ...(message && { message }) }, // Update only provided fields
+      { ...(status && { status }) }, // Update only provided fields
       { new: true } // Return the updated document
-    );
-    // .populate("jobId", "title description") // Populate job details
-    // .populate("influencerId", "name email"); // Populate influencer details
+    )
+      .populate({
+        path: "jobId",
+        select: "title description price location socialMedia status",
+        model: Job,
+      })
+      .lean();
 
     if (!updatedProposal) {
       return NextResponse.json(

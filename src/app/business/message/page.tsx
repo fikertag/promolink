@@ -7,6 +7,8 @@ import { useProposals } from "@/context/Proposal";
 import { useMessages } from "@/context/Message";
 import { useUser } from "@/context/User";
 import { useRouter } from "next/navigation";
+import { InfluencerDetailPopup } from "@/components/drawer";
+import { useInfluencers } from "@/context/Influencer";
 import Image from "next/image";
 import {
   MessageSquare,
@@ -48,10 +50,12 @@ function MessagesAndProposals() {
   const [messageInput, setMessageInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [showConversationList, setShowConversationList] = useState(true);
-  const { specificProposal: proposals } = useProposals();
+  const { specificProposal: proposals, updateProposalStatus } = useProposals();
   const [showMessageInput, setShowMessageInput] = useState(false);
   const [showContractDialog, setShowContractDialog] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const router = useRouter();
+  const { influencers } = useInfluencers();
 
   const {
     conversations,
@@ -135,8 +139,8 @@ function MessagesAndProposals() {
     }
   }, [activeTab]);
 
-  const handleCancel = () => {
-    // cancel logic here
+  const handleCancel = (id: string) => {
+    updateProposalStatus(id, "rejected");
   };
 
   const handleMessage = () => {
@@ -219,6 +223,15 @@ function MessagesAndProposals() {
                       key={proposal._id}
                       className="px-2 sm:px-6 rounded-lg border border-gray-400 hover:shadow-sm transition-all"
                     >
+                      <InfluencerDetailPopup
+                        influencer={
+                          influencers.filter(
+                            (i) => i._id === proposal.influencerId._id
+                          )[0]
+                        } // Replace with actual influencer ID
+                        open={isPopupOpen}
+                        onClose={() => setIsPopupOpen(false)}
+                      />
                       <div className="flex flex-col">
                         <Accordion type="single" collapsible>
                           <AccordionItem value="item-1">
@@ -300,88 +313,124 @@ function MessagesAndProposals() {
                               </div>
                             </AccordionTrigger>
                             <AccordionContent>
-                              {/* Job description */}
-                              <div className="mb-4">
-                                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                  <FileText
-                                    size={16}
-                                    className="mr-2 text-gray-400"
-                                  />
-                                  Job Description
-                                </h4>
-                                <p className="text-sm text-gray-600 pl-6">
-                                  {proposal.jobId.description}
-                                </p>
-                              </div>
-
-                              {/* Your proposal message */}
-                              <div className="mb-4">
-                                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                  <MessageCircle
-                                    size={16}
-                                    className="mr-2 text-gray-400"
-                                  />
-                                  Your Proposal
-                                </h4>
-                                <p className="text-sm text-gray-600 pl-6">
-                                  {proposal.message}
-                                </p>
-                              </div>
-                              {showMessageInput && (
-                                <div className="space-y-2">
-                                  <Textarea
-                                    value={messageInput}
-                                    onChange={(e) =>
-                                      setMessageInput(e.target.value)
-                                    }
-                                    placeholder={`Write your message to ${proposal.influencerId.name}...`}
-                                    className="min-h-[100px]"
-                                  />
-                                  <div className="flex gap-2">
-                                    <Button
-                                      variant="outline"
-                                      onClick={() => setShowMessageInput(false)}
-                                    >
-                                      Cancel
-                                    </Button>
-                                    <Button
-                                      onClick={() =>
-                                        handleSendInitialMessage(
-                                          proposal.influencerId._id
-                                        )
-                                      }
-                                      disabled={
-                                        isSending || !messageInput.trim()
-                                      }
-                                    >
-                                      {isSending
-                                        ? "Sending..."
-                                        : "Send Message"}
-                                    </Button>
+                              <div className="space-y-6">
+                                {/* Influencer Info */}
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-700 flex items-center mb-2">
+                                    <User
+                                      size={16}
+                                      className="mr-2 text-gray-400"
+                                    />
+                                    Influencer
+                                  </h4>
+                                  <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                                      {proposal.influencerId.image ? (
+                                        <Image
+                                          src={proposal.influencerId.image}
+                                          alt={proposal.influencerId.name}
+                                          width={48}
+                                          height={48}
+                                          className="object-cover w-full h-full"
+                                        />
+                                      ) : (
+                                        <User
+                                          size={20}
+                                          className="text-gray-500"
+                                        />
+                                      )}
+                                    </div>
+                                    <div className=" flex items-center gap-5">
+                                      <h3 className="font-medium text-gray-900">
+                                        {proposal.influencerId.name}
+                                      </h3>
+                                      <Button
+                                        variant="outline"
+                                        className="mt-1 w-fit text-sm"
+                                        onClick={() => setIsPopupOpen(true)}
+                                      >
+                                        View Profile
+                                      </Button>
+                                    </div>
                                   </div>
                                 </div>
-                              )}
 
-                              {/* Action Buttons */}
-                              <div className="flex flex-wrap gap-3 justify-end mt-4">
-                                <button
-                                  className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100 transition"
-                                  onClick={() => handleCancel()}
-                                >
-                                  Cancel
-                                </button>
-                                <button
-                                  className="px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 transition"
-                                  onClick={() => handleMessage()}
-                                >
-                                  Message
-                                </button>
-                                <button
-                                  className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition"
-                                  onClick={() => handleSendContract()}
-                                >
-                                  Send Contract
-                                </button>
+                                {/* Proposal Message */}
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-700 flex items-center mb-2">
+                                    <MessageCircle
+                                      size={16}
+                                      className="mr-2 text-gray-400"
+                                    />
+                                    Proposal message
+                                  </h4>
+                                  <p className="text-sm text-gray-600 pl-6">
+                                    {proposal.message}
+                                  </p>
+                                </div>
+
+                                {/* Optional Message Input */}
+                                {showMessageInput && (
+                                  <div className="space-y-3">
+                                    <Textarea
+                                      value={messageInput}
+                                      onChange={(e) =>
+                                        setMessageInput(e.target.value)
+                                      }
+                                      placeholder={`Write your message to ${proposal.influencerId.name}...`}
+                                      className="min-h-[100px]"
+                                    />
+                                    <div className="flex gap-2 justify-end">
+                                      <Button
+                                        variant="outline"
+                                        onClick={() =>
+                                          setShowMessageInput(false)
+                                        }
+                                      >
+                                        Cancel
+                                      </Button>
+                                      <Button
+                                        onClick={() =>
+                                          handleSendInitialMessage(
+                                            proposal.influencerId._id
+                                          )
+                                        }
+                                        disabled={
+                                          isSending || !messageInput.trim()
+                                        }
+                                      >
+                                        {isSending
+                                          ? "Sending..."
+                                          : "Send Message"}
+                                      </Button>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Action Buttons */}
+                                <div className="flex flex-wrap justify-end gap-3 border-t border-gray-200 mt-4 pt-4">
+                                  <Button
+                                    variant="outline"
+                                    className="text-sm border-red-500
+                                    "
+                                    onClick={() => handleCancel(proposal._id)}
+                                  >
+                                    Reject
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    className="text-sm text-blue-600 border-blue-600 hover:bg-blue-50"
+                                    onClick={handleMessage}
+                                  >
+                                    Message
+                                  </Button>
+                                  <Button
+                                    className="text-sm bg-green-600 text-white hover:bg-green-700"
+                                    onClick={handleSendContract}
+                                  >
+                                    Send Contract
+                                  </Button>
+                                </div>
                               </div>
                             </AccordionContent>
                           </AccordionItem>
