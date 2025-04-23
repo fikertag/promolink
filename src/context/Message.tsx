@@ -91,7 +91,8 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
         content,
       };
 
-      const response = await axios.post("/api/message", newMessage);
+      // const response =
+      await axios.post("/api/message", newMessage);
       // setCurrentMessages((prev) => [response.data, ...prev]);
       await fetchConversations();
     } catch (error) {
