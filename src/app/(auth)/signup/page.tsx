@@ -75,9 +75,9 @@ const AuthForm = () => {
         },
         onError: (ctx) => {
           setError(ctx.error.message || "sign-in failed");
-          if (ctx.error.status === 403) {
-            router.push(`/verify-email?email=${encodeURIComponent(email)}`);
-          }
+          // if (ctx.error.status === 403) {
+          //   router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+          // }
         },
       }
     );
@@ -102,7 +102,7 @@ const AuthForm = () => {
           setPassword("");
           setName("");
           setConfirmPassword("");
-          router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+          router.push(`/${userType}`);
         },
         onError: (ctx) => {
           setError(ctx.error.message || "sign-up failed");

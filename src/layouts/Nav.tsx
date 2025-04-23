@@ -9,7 +9,7 @@ export default function Nav({ path }: { path: string }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isActive = (path: string) => pathname === "/business" + path;
+  const isActive = (paths: string) => pathname === `/${path}` + paths;
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -38,7 +38,7 @@ export default function Nav({ path }: { path: string }) {
               <Link
                 href={"/business/influencers"}
                 className={`hover:text-primary transition px-5 py-2  ${
-                  isActive("/dashboard")
+                  isActive("/influencers")
                     ? "text-primary underline-offset-8 underline"
                     : ""
                 }`}
@@ -50,7 +50,7 @@ export default function Nav({ path }: { path: string }) {
             <Link
               href={`/${path}/${path === "business" ? "myjobs" : "dashboard"}`}
               className={`hover:text-primary transition px-5 py-2  ${
-                isActive("/dashboard")
+                isActive(`/${path === "business" ? "myjobs" : "dashboard"}`)
                   ? "text-primary underline-offset-8 underline"
                   : ""
               }`}
@@ -68,7 +68,7 @@ export default function Nav({ path }: { path: string }) {
               }`}
               onClick={closeMobileMenu}
             >
-              Message
+              Messages
             </Link>
 
             <Link
@@ -110,28 +110,30 @@ export default function Nav({ path }: { path: string }) {
       {mobileMenuOpen && (
         <div className="sm:hidden fixed inset-0 z-10 bg-white pt-20 px-4">
           <div className="flex flex-col space-y-4">
+            {path === "business" && (
+              <Link
+                href={"/business/influencers"}
+                className={`hover:text-primary transition px-5 py-2  ${
+                  isActive("/influencers")
+                    ? "text-primary underline-offset-8 underline"
+                    : ""
+                }`}
+                onClick={closeMobileMenu}
+              >
+                Influencers
+              </Link>
+            )}
+
             <Link
-              href={`/${path}/dashboard`}
-              className={`text-lg px-4 py-3 rounded-lg ${
+              href={`/${path}/${path === "business" ? "myjobs" : "dashboard"}`}
+              className={`hover:text-primary transition px-5 py-2  ${
                 isActive("/dashboard")
                   ? "bg-blue-50 text-primary font-medium"
                   : "text-gray-700 hover:bg-gray-50"
               }`}
               onClick={closeMobileMenu}
             >
-              Dashboard
-            </Link>
-
-            <Link
-              href={`/${path}/profile`}
-              className={`text-lg px-4 py-3 rounded-lg ${
-                isActive("/profile")
-                  ? "bg-blue-50 text-primary font-medium"
-                  : "text-gray-700 hover:bg-gray-50"
-              }`}
-              onClick={closeMobileMenu}
-            >
-              Profile
+              {path === "business" ? "My jobs" : "Dashboard"}
             </Link>
 
             <Link
@@ -156,6 +158,17 @@ export default function Nav({ path }: { path: string }) {
               onClick={closeMobileMenu}
             >
               Contract
+            </Link>
+            <Link
+              href={`/${path}/profile`}
+              className={`text-lg px-4 py-3 rounded-lg ${
+                isActive("/profile")
+                  ? "bg-blue-50 text-primary font-medium"
+                  : "text-gray-700 hover:bg-gray-50"
+              }`}
+              onClick={closeMobileMenu}
+            >
+              Profile
             </Link>
           </div>
         </div>
