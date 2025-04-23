@@ -124,10 +124,6 @@ export const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    console.log("Specific Proposal", specificProposal);
-  }, [specificProposal]);
-
-  useEffect(() => {
     fetchProposals();
     fetchProposalByBUsinessId();
   }, [user?.id]);

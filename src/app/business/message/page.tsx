@@ -38,7 +38,6 @@ interface Conversation {
   _id: string;
   lastMessage: string;
   updatedAt: string;
-  unreadCount: string;
   otherUser: {
     name: string;
     image: string;
@@ -170,10 +169,6 @@ function MessagesAndProposals() {
       setIsSending(false);
     }
   };
-
-  useEffect(() => {
-    console.log(proposals);
-  }, [proposals]);
 
   return (
     <div className=" py-4">

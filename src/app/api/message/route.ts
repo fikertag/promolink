@@ -4,6 +4,7 @@ import dbConnect from "@/lib/mongoose";
 import Message from "@/models/MessageSchema";
 import Conversation from "@/models/ConversationSchema";
 import mongoose from "mongoose";
+import { pusherServer } from "@/lib/pusher";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -41,6 +42,49 @@ export async function POST(request: Request) {
     });
 
     const savedMessage = await newMessage.save();
+    // Get conversation participants
+    const conversation = await Conversation.findById(conversationId);
+    const participants = conversation?.participants || [];
+
+    // Trigger message event
+    await pusherServer
+      .trigger(`conversation-${conversationId}`, "new-message", savedMessage)
+      .catch(console.error);
+
+    // Trigger conversation updates
+    await Promise.all(
+      participants.map(async (participantId: string) => {
+        const updatedConv = await Conversation.findById(
+          conversationId
+        ).populate("participants");
+
+        await pusherServer
+          .trigger(`user-${participantId}`, "conversation-updated", {
+            _id: conversationId,
+            lastMessage:
+              content.length > 50 ? `${content.substring(0, 47)}...` : content,
+            updatedAt: new Date(),
+            otherUser: {
+              name: updatedConv?.participants.find(
+                (p: {
+                  _id: mongoose.Types.ObjectId;
+                  name: string;
+                  image: string;
+                }) => p._id.toString() !== participantId
+              )?.name,
+              image: updatedConv?.participants.find(
+                (p: {
+                  _id: mongoose.Types.ObjectId;
+                  name: string;
+                  image: string;
+                }) => p._id.toString() !== participantId
+              )?.image,
+            },
+          })
+          .catch(console.error);
+      })
+    );
+
     return NextResponse.json(savedMessage, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });

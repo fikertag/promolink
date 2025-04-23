@@ -2,25 +2,21 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { pusherClient } from "@/lib/pusher";
 import { useUser } from "@/context/User";
+
 interface Message {
   _id: string;
   conversationId: string;
   senderId: string;
   content: string;
-  status: {
-    delivered: boolean;
-    read: boolean;
-  };
   createdAt: string;
-  updatedAt: string;
 }
 
 interface Conversation {
   _id: string;
   lastMessage: string;
   updatedAt: string;
-  unreadCount: string;
   otherUser: {
     name: string;
     image: string;
@@ -34,7 +30,6 @@ interface MessageContextType {
   fetchConversations: () => Promise<void>;
   fetchMessages: (conversationId: string) => Promise<void>;
   sendMessage: (content: string, conversationId?: string) => Promise<void>;
-  markAsRead: (messageId: string) => void;
   startNewConversation: (participantId: string) => Promise<Conversation>;
 }
 
@@ -45,7 +40,6 @@ const MessageContext = createContext<MessageContextType>({
   fetchConversations: async () => {},
   fetchMessages: async () => {},
   sendMessage: async () => {},
-  markAsRead: () => {},
   startNewConversation: async () => {
     return Promise.reject("startNewConversation is not implemented");
   },
@@ -63,10 +57,8 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchConversations = async () => {
     try {
-      if (!user) {
-        return;
-      }
-      const response = await axios.get(`/api/conversation?userId=${user?.id}`);
+      if (!user) return;
+      const response = await axios.get(`/api/conversation?userId=${user.id}`);
       setConversations(response.data);
     } catch (error) {
       console.error("Error fetching conversations:", error);
@@ -91,10 +83,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
   ) => {
     try {
       const conversationId = existingConversationId || selectedConversation;
-
-      if (!conversationId || !user?.id) {
-        throw new Error("No active conversation");
-      }
+      if (!conversationId || !user?.id) return;
 
       const newMessage = {
         conversationId,
@@ -103,48 +92,61 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
       };
 
       const response = await axios.post("/api/message", newMessage);
-
-      setCurrentMessages((prev) => [response.data, ...prev]);
-      await fetchConversations(); // Refresh conversation list
+      // setCurrentMessages((prev) => [response.data, ...prev]);
+      await fetchConversations();
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
 
-  const startNewConversation = async (
-    participantId: string
-  ): Promise<Conversation> => {
+  const startNewConversation = async (participantId: string) => {
     try {
       const response = await axios.post("/api/conversation", {
         participantIds: [user?.id, participantId],
       });
-
-      const newConversation: Conversation = response.data;
-
+      const newConversation = response.data;
       setConversations((prev) => [newConversation, ...prev]);
       await fetchMessages(newConversation._id);
-
-      return newConversation; // Explicitly return the new conversation
+      return newConversation;
     } catch (error) {
       console.error("Error starting conversation:", error);
-      throw error; // Re-throw the error to handle it in the calling function
+      throw error;
     }
   };
 
-  const markAsRead = async (messageId: string) => {
-    try {
-      await axios.patch(`/api/message/${messageId}`, { status: "read" });
-      setCurrentMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === messageId
-            ? { ...msg, status: { ...msg.status, read: true } }
-            : msg
-        )
-      );
-    } catch (error) {
-      console.error("Error marking message as read:", error);
-    }
-  };
+  // Handle new messages in real-time
+  useEffect(() => {
+    if (!selectedConversation) return;
+
+    const channel = pusherClient.subscribe(
+      `conversation-${selectedConversation}`
+    );
+    channel.bind("new-message", (newMessage: Message) => {
+      if (newMessage.conversationId === selectedConversation) {
+        setCurrentMessages((prev) => [newMessage, ...prev]);
+      }
+    });
+
+    return () => {
+      channel.unbind("new-message");
+      pusherClient.unsubscribe(`conversation-${selectedConversation}`);
+    };
+  }, [selectedConversation]);
+
+  // Handle new conversations in real-time
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = pusherClient.subscribe(`user-${user.id}`);
+    channel.bind("new-conversation", (newConversation: Conversation) => {
+      setConversations((prev) => [newConversation, ...prev]);
+    });
+
+    return () => {
+      channel.unbind("new-conversation");
+      pusherClient.unsubscribe(`user-${user.id}`);
+    };
+  }, [user?.id]);
 
   useEffect(() => {
     if (user?.id) {
@@ -161,7 +163,6 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchConversations,
         fetchMessages,
         sendMessage,
-        markAsRead,
         startNewConversation,
       }}
     >

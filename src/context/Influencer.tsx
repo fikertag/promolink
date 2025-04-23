@@ -69,10 +69,6 @@ export const InfluencerProvider = ({
     fetchInfluencers();
   }, []);
 
-  useEffect(() => {
-    console.log("Influencers fetched:", influencers);
-  }, [influencers]);
-
   return (
     <InfluencerContext.Provider
       value={{

@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import Conversation from "@/models/ConversationSchema";
 import dbConnect from "@/lib/mongoose";
 import mongoose from "mongoose";
+import { pusherServer } from "@/lib/pusher";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -34,6 +35,14 @@ export async function POST(request: Request) {
     });
 
     const savedConversation = await newConversation.save();
+    // Trigger Pusher event to both participants
+    participantIds.forEach(async (userId: string) => {
+      await pusherServer.trigger(
+        `user-${userId}`,
+        "new-conversation", // Changed from 'new-chat'
+        savedConversation
+      );
+    });
     return NextResponse.json(savedConversation, { status: 201 });
   } catch (error) {
     console.log(error);
