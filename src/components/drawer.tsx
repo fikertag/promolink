@@ -39,7 +39,6 @@ interface Conversation {
   _id: string;
   lastMessage: string;
   updatedAt: string;
-  unreadCount: string;
   otherUser: {
     name: string;
     image: string;
