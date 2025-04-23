@@ -52,7 +52,7 @@ export async function PATCH(
     // Handle confirmation (for completion)
     if (status === "influencerConfirmed" && role === "influencer") {
       contract.influencerConfirmed = true;
-    } else if (status === "ownerConfirmed" && role === "owner") {
+    } else if (status === "ownerConfirmed" && role === "business") {
       contract.ownerConfirmed = true;
     }
 

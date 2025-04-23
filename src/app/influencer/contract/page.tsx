@@ -2,7 +2,7 @@
 
 import { useContracts } from "@/context/Contract";
 import { useUser } from "@/context/User";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Clipboard, CheckCircle, XCircle, Clock, FileText } from "lucide-react";
 
 const Spinner = () => (
@@ -48,9 +48,17 @@ export default function ContractsPage() {
       | "influencerConfirmed"
       | "ownerConfirmed"
   ) => {
+    // Map action types to loading state keys
+    const loadingKey = {
+      active: "activate",
+      terminated: "terminate",
+      influencerConfirmed: "complete",
+      ownerConfirmed: "complete",
+    }[actionType];
+
     setLoadingStates((prev) => ({
       ...prev,
-      [contractId]: { ...prev[contractId], [actionType]: true },
+      [contractId]: { ...prev[contractId], [loadingKey]: true },
     }));
 
     try {
@@ -64,7 +72,7 @@ export default function ContractsPage() {
     } finally {
       setLoadingStates((prev) => ({
         ...prev,
-        [contractId]: { ...prev[contractId], [actionType]: false },
+        [contractId]: { ...prev[contractId], [loadingKey]: false },
       }));
     }
   };
@@ -211,7 +219,9 @@ export default function ContractsPage() {
                       onClick={() =>
                         handleStatusUpdate(contract._id, "influencerConfirmed")
                       }
-                      disabled={contractLoading.complete}
+                      disabled={
+                        contractLoading.complete || contract.influencerConfirmed
+                      }
                       className="px-3 py-1 bg-blue-500 text-white text-sm rounded flex items-center gap-1 disabled:opacity-70"
                     >
                       {contractLoading.complete ? (
@@ -219,6 +229,8 @@ export default function ContractsPage() {
                           <Spinner />
                           Processing...
                         </>
+                      ) : contract.influencerConfirmed ? (
+                        "waiting for approval"
                       ) : (
                         "Mark Completed"
                       )}

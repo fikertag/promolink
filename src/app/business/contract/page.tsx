@@ -48,9 +48,17 @@ export default function ContractsPage() {
       | "influencerConfirmed"
       | "ownerConfirmed"
   ) => {
+    // Map action types to loading state keys
+    const loadingKey = {
+      active: "activate",
+      terminated: "terminate",
+      influencerConfirmed: "complete",
+      ownerConfirmed: "complete",
+    }[actionType];
+
     setLoadingStates((prev) => ({
       ...prev,
-      [contractId]: { ...prev[contractId], [actionType]: true },
+      [contractId]: { ...prev[contractId], [loadingKey]: true },
     }));
 
     try {
@@ -64,7 +72,7 @@ export default function ContractsPage() {
     } finally {
       setLoadingStates((prev) => ({
         ...prev,
-        [contractId]: { ...prev[contractId], [actionType]: false },
+        [contractId]: { ...prev[contractId], [loadingKey]: false },
       }));
     }
   };
@@ -216,6 +224,8 @@ export default function ContractsPage() {
                           <Spinner />
                           Processing...
                         </>
+                      ) : contract.ownerConfirmed ? (
+                        "waiting to approve"
                       ) : (
                         "Mark Completed"
                       )}
