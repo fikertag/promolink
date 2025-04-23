@@ -2,7 +2,7 @@
 
 import { useContracts } from "@/context/Contract";
 import { useUser } from "@/context/User";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Clipboard, CheckCircle, XCircle, Clock, FileText } from "lucide-react";
 
 const Spinner = () => (
