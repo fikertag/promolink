@@ -167,7 +167,7 @@ body {
   display: none; /* Safari and Chrome */
 }
 .text-gradient {
-  background: linear-gradient(to right, #5d5cde, #a855f7);
+  background: linear-gradient(to right, #2b2bdc, #96b4e6);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

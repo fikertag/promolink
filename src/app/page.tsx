@@ -114,14 +114,15 @@ const LandingPage = () => {
             <div className="flex justify-between h-20">
               <div className="flex items-center">
                 <div className="flex-shrink-0 flex items-center">
-                  <span className="font-extrabold text-3xl text-gradient cursor-pointer">
-                    Promo<span className="text-blue-600">L</span>in
-                    <span className="text-blue-600">k</span>
+                  <span className="font-extrabold text-3xl text-gradient cursor-pointer text-blue-600">
+                    {/* Promo<span className="text-blue-600">L</span>in */}
+                    Promolink
+                    {/* <span className="text-blue-600">k</span> */}
                   </span>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block cursor-pointer">
+                {/* <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block cursor-pointer">
                   About
                 </button>
                 <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block cursor-pointer">
@@ -129,7 +130,7 @@ const LandingPage = () => {
                 </button>
                 <button className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium hidden md:block cursor-pointer">
                   Support
-                </button>
+                </button> */}
                 <Link
                   href={"/signup"}
                   className="py-1.5 ml-3 px-4 text-sm bg-primary hover:bg-secondary text-white rounded-lg transition-colors hidden md:block"
@@ -156,7 +157,7 @@ const LandingPage = () => {
                     <span className="block">To Revenue</span>
                   </h1>
                   <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 md:mb-8">
-                    The first platform that bridges the gap between{" "}
+                    platform that bridges the gap between{" "}
                     <span className="font-semibold">businesses</span>,{" "}
                     <span className="font-semibold">influencers</span>, and{" "}
                     <span className="font-semibold">customers</span> in a
@@ -165,18 +166,18 @@ const LandingPage = () => {
                   <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                     <Link
                       href={"/signup"}
-                      className="py-3 px-8 bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-white rounded-lg transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold"
+                      className="py-3 px-8 bg-gradient-to-r from-primary to-blue-400 hover:from-blue-400 hover:to-primary text-white rounded-lg transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl font-semibold"
                     >
                       Get Started
                       <i className="fas fa-arrow-right ml-2"></i>
                     </Link>
-                    <Link
+                    {/* <Link
                       href={"/signup"}
                       className="py-3 px-8 border border-gray-300 dark:border-gray-700 hover:border-primary dark:hover:border-primary text-gray-800 dark:text-gray-200 rounded-lg transition-colors flex items-center justify-center font-medium"
                     >
                       <i className="fas fa-play text-primary mr-2"></i>
                       Watch Demo
-                    </Link>
+                    </Link> */}
                   </div>
                   <div className="flex items-center mt-6 md:mt-10">
                     <div className="flex -space-x-2">
@@ -307,21 +308,21 @@ const LandingPage = () => {
                 <div className="flex overflow-x-hidden">
                   <div className="flex py-2 md:pt-4 animate-marquee whitespace-nowrap">
                     {[
-                      "smart tech",
-                      "lekecoffe",
-                      "TechPro",
-                      "StyleX",
-                      "mks",
-                      "smart tech",
-                      "lekecoffe",
-                      "TechPro",
-                      "StyleX",
-                      "mks",
-                      "smart tech",
-                      "lekecoffe",
-                      "TechPro",
-                      "StyleX",
-                      "mks",
+                      "Peak craft",
+                      "LHC",
+                      "ABC solutions",
+                      "Hawassa university",
+                      "YEEP",
+                      "Eco Grow",
+                      "Peak craft",
+                      "LHC",
+                      "ABC solutions",
+                      "Hawassa university",
+                      "YEEP",
+                      "Eco Grow",
+                      "Peak craft",
+                      "LHC",
+                      "ABC solutions",
                     ].map((brand, index) => (
                       <div
                         key={index}
@@ -398,7 +399,7 @@ const LandingPage = () => {
               <div className="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
                 <div
                   className="text-primary text-5xl font-extrabold mb-2 counter"
-                  data-target="125"
+                  data-target="25"
                 >
                   0
                 </div>
@@ -410,7 +411,7 @@ const LandingPage = () => {
               <div className="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
                 <div
                   className="text-primary text-5xl font-extrabold mb-2 counter"
-                  data-target="51"
+                  data-target="15"
                 >
                   0
                 </div>
@@ -422,7 +423,7 @@ const LandingPage = () => {
               <div className="text-center neumorph dark:bg-gray-800 rounded-xl p-8 transform transition hover:scale-105 duration-300">
                 <div
                   className="text-primary text-5xl font-extrabold mb-2 counter"
-                  data-target="450"
+                  data-target="90"
                 >
                   0
                 </div>
@@ -581,7 +582,7 @@ const LandingPage = () => {
                     href={"/signup"}
                     className="mt-3 w-full py-3 px-4 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-lg transition-all text-center"
                   >
-                    Enter as Customer
+                    Signup
                     <i className="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all"></i>
                   </Link>
                 </div>
@@ -681,21 +682,18 @@ const LandingPage = () => {
                   <div className="flex items-center mb-4">
                     <div className="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mr-4">
                       <span className="font-bold text-blue-600 dark:text-blue-300">
-                        N
+                        P
                       </span>
                     </div>
                     <div>
-                      <h4 className="font-bold">numan</h4>
+                      <h4 className="font-bold">peak craft</h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Founder, smartTech
+                        buisness owner
                       </p>
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    &quot;PromoLink transformed how we connect with our
-                    audience. Our sales have increased by 135% since joining,
-                    and we&apos;ve built relationships with amazing creators who
-                    truly
+                    PromoLink changed how we connect with our members.
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>
@@ -721,14 +719,13 @@ const LandingPage = () => {
                     <div>
                       <h4 className="font-bold">Eden</h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Influencer, 200K followers
+                        Influencer
                       </p>
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    &quot;PromoLink is different. The analytics are incredible,
-                    and I only promote products I believe in. My audience trusts
-                    my recommendations, and I earn consistent
+                    I only promote products I believe in. My audience trusts my
+                    recommendations.
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>
@@ -754,15 +751,13 @@ const LandingPage = () => {
                     <div>
                       <h4 className="font-bold">Fiker</h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Customer
+                        Influencer
                       </p>
                     </div>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    &quot;I love finding new products through the creators I
-                    follow. The discounts are great, but what I appreciate most
-                    is knowing these are genuine recommendations, not just paid
-                    ads.&quot;
+                    what I appreciate most is knowing these are genuine
+                    recommendations, not just paid ads
                   </p>
                   <div className="flex text-yellow-400">
                     <i className="fas fa-star"></i>
@@ -797,10 +792,10 @@ const LandingPage = () => {
                     Create Your Account
                     <i className="fas fa-arrow-right ml-2"></i>
                   </Link>
-                  <button className="py-4 w-full max-w-[300px] border border-white text-white hover:bg-white/10 rounded-lg transition-colors flex items-center justify-center font-medium">
+                  {/* <button className="py-4 w-full max-w-[300px] border border-white text-white hover:bg-white/10 rounded-lg transition-colors flex items-center justify-center font-medium">
                     <i className="fas fa-headset mr-2"></i>
                     Talk to Our Team
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -823,40 +818,15 @@ const LandingPage = () => {
                 </p>
                 <div className="flex items-center space-x-4">
                   <a
-                    href="#"
+                    href="https://t.me/promolink_hu"
                     className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <SocialIcon
-                      platform={"instagram"}
-                      color="#99a1af"
-                      size={18}
-                    />
-                  </a>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-primary transition-colors"
+                    target="_blank"
                   >
                     <SocialIcon
                       platform={"telegram"}
                       color="#99a1af"
                       size={18}
                     />
-                  </a>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <SocialIcon
-                      platform={"youtube"}
-                      color="#99a1af"
-                      size={18}
-                    />
-                  </a>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-primary transition-colors"
-                  >
-                    <SocialIcon platform={"tiktok"} color="#99a1af" size={18} />
                   </a>
                 </div>
               </div>
@@ -865,7 +835,11 @@ const LandingPage = () => {
                 <h4 className="font-semibold mb-4">Resources</h4>
                 <ul className="space-y-3 text-gray-500 dark:text-gray-400">
                   <li>
-                    <a href="#" className="hover:text-primary grow-underline">
+                    <a
+                      href="https://t.me/promolink_hu"
+                      className="hover:text-primary grow-underline"
+                      target="_blank"
+                    >
                       Help Center
                     </a>
                   </li>
@@ -876,7 +850,10 @@ const LandingPage = () => {
                 <h4 className="font-semibold mb-4">Company</h4>
                 <ul className="space-y-3 text-gray-500 dark:text-gray-400">
                   <li>
-                    <a href="#" className="hover:text-primary grow-underline">
+                    <a
+                      href="https://t.me/promolink_hu"
+                      className="hover:text-primary grow-underline"
+                    >
                       About Us
                     </a>
                   </li>
@@ -889,15 +866,7 @@ const LandingPage = () => {
                 © 2023 PromoLink. All rights reserved.
               </p>
               <div className="flex space-x-6 text-sm text-gray-500 dark:text-gray-400">
-                <a href="#" className="hover:text-primary grow-underline">
-                  Terms
-                </a>
-                <a href="#" className="hover:text-primary grow-underline">
-                  Privacy
-                </a>
-                <a href="#" className="hover:text-primary grow-underline">
-                  Cookies
-                </a>
+                *
               </div>
             </div>
           </div>
