@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const SocialMediaActionSchema = new mongoose.Schema({
   platform: {
     type: String,
-    enum: ["instagram", "tiktok", "youtube", "twitter"],
+    enum: ["instagram", "tiktok", "youtube", "telegram"],
     required: true,
   },
   actionType: {
