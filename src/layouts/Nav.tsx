@@ -108,7 +108,7 @@ export default function Nav({ path }: { path: string }) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="sm:hidden fixed inset-0 z-10 bg-white pt-20 px-4">
+        <div className="sm:hidden fixed inset-x-0 top-16 bottom-auto z-10 bg-white pt-4 px-4 pb-6 rounded-b-lg shadow-md">
           <div className="flex flex-col space-y-4">
             {path === "business" && (
               <Link
