@@ -19,6 +19,7 @@ export const auth = betterAuth({
     "http://172.22.84.96:3000",
     "https://promolink-git-feature-chat-fikiryilkal-tages-projects.vercel.app",
     "https://promolink-git-feature-business-fikiryilkal-tages-projects.vercel.app",
+    "https://promolink-kgdf93dee-fikiryilkal-tages-projects.vercel.app",
   ],
   database: mongodbAdapter(db),
   emailAndPassword: {
