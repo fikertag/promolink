@@ -1,5 +1,4 @@
 import { ModeToggle } from "@/components/ui/themeTogle";
-import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 export default function Nav() {

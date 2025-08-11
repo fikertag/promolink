@@ -1,7 +1,5 @@
-import { Star, StarHalf } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowRight } from "lucide-react";
 
 export default function Hero() {

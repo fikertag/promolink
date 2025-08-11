@@ -3,9 +3,7 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-  CardFooter,
   CardDescription,
-  CardAction,
 } from "@/components/ui/card";
 
 const metrics = [
