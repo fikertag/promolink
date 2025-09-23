@@ -64,7 +64,7 @@ export default function Footer() {
 
         <div className="border-t border-border pt-3 md:pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm mb-4 md:mb-0">
-            © 2025 PromoLink. All rights reserved.
+            © 2025 My kalat. All rights reserved.
           </p>
         </div>
       </div>

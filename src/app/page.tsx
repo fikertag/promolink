@@ -7,11 +7,28 @@ import How from "@/components/landingpage/How";
 import Testimony from "@/components/landingpage/Testimony";
 import Cat from "@/components/landingpage/Cat";
 import Footer from "@/components/landingpage/Footer";
+import HeroSection from "@/components/heroSection";
+import StatsCountDemo from "@/components/ui/statusCount";
+import FeaturesSection from "@/components/features";
+import FeatureSteps from "@/components/ui/feature-2";
+import { Marquee } from "@/components/ui/marquee";
+import Testimonials from "@/components/ui/testimonials-marquee";
+import CTA1 from "@/components/ui/contactus";
+import LandingFooter from "@/components/landingFooter";
 
 const LandingPage = () => {
   return (
     <div className="overflow-x-hidden bg-background">
+      <HeroSection />
+      <StatsCountDemo />
+      <FeaturesSection />
+      <FeatureSteps />
+      <Testimonials />
+      <Cat />
+      <CTA1 />
+      <LandingFooter />
       <Nav />
+      {/* 
       <Hero />
       <Metrics />
       <Trusted />
@@ -19,8 +36,8 @@ const LandingPage = () => {
       <Roles />
       <How />
       <Testimony />
-      <Cat />
-      <Footer />
+      <Cat />   <Footer />
+       */}
     </div>
   );
 };

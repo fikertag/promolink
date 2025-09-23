@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           <div>
-            <h3 className="text-lg font-semibold mb-4">Promolink</h3>
+            <h3 className="text-lg font-semibold mb-4">My kalat</h3>
             <p className="text-gray-600 mb-4">
               Connecting businesses with top marketers and influencers to help
               brands grow.
@@ -38,7 +38,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-200 pt-8">
           <p className="text-center text-gray-500 text-sm">
-            © {new Date().getFullYear()} Promolink. All rights reserved.
+            © {new Date().getFullYear()} My Kalat. All rights reserved.
           </p>
         </div>
       </div>

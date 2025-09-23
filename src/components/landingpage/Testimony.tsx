@@ -7,7 +7,7 @@ const testimonies = [
     initial: "P",
     color: "text-primary",
     bg: "bg-primary/10",
-    text: "PromoLink changed how we connect with our members.",
+    text: "My kalat  changed how we connect with our members.",
     stars: 5,
   },
   {
@@ -38,8 +38,8 @@ export default function Testimony() {
           What Our Users Say
         </h2>
         <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-          Real stories from businesses, influencers, and customers using
-          PromoLink.
+          Real stories from businesses, influencers, and customers using My
+          kalat .
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 place-items-stretch gap-10 mx-5">

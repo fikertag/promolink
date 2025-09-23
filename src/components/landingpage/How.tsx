@@ -40,7 +40,7 @@ export default function How() {
     <section className="max-w-7xl mx-auto mt-18 md:mt-30 px-4">
       <div className="text-center mb-10">
         <h2 className="text-2xl sm:text-3xl md:text-4xl text-foreground mb-8 text-center font-semibold">
-          How PromoLink Works
+          How My kalat Works
         </h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">

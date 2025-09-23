@@ -4,7 +4,6 @@ import { sendEmail } from "./email-service";
 import { passkey } from "better-auth/plugins/passkey";
 import dbConnect from "@/lib/mongoose";
 import mongoose from "mongoose";
-
 await dbConnect();
 
 const db = mongoose.connection.db;

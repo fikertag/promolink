@@ -10,7 +10,7 @@ export default function Nav() {
             <div className="flex-shrink-0 flex items-center">
               <span className="font-extrabold text-3xl text-gradient cursor-pointer text-primary">
                 {/* Promo<span className="text-[var(--primary)]">L</span>in */}
-                Promolink
+                My kalat
                 {/* <span className="text-[var(--primary)]">k</span> */}
               </span>
             </div>

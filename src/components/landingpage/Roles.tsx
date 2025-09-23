@@ -50,7 +50,7 @@ export default function Roles() {
     <section className="max-w-7xl mx-auto px-4 mt-18 md:mt-30">
       <div className="text-center mb-10 ">
         <h2 className="text-2xl sm:text-3xl md:text-4xl text-foreground mb-8 text-center font-semibold">
-          Who Benefits from PromoLink?
+          Who Benefits from My kalat ?
         </h2>
         <p className="text-muted-foreground max-w-3xl mx-auto">
           Our platform creates a seamless ecosystem that benefits everyone
