@@ -3,16 +3,58 @@ import Job, { IJob } from "@/models/JobSchema"; // Adjust the path as needed
 import dbConnect from "@/lib/mongoose"; // Utility to connect to MongoDB
 import mongoose from "mongoose"; // For ObjectId validation
 import Proposal from "@/models/ProposalSchema"; // Adjust the path as needed
+import { completeJob } from "@/lib/jobService";
 
 export async function POST(request: NextRequest) {
   await dbConnect();
 
   try {
-    const { title, description, price, location, socialMedia, postedBy } =
-      await request.json();
+    const {
+      title,
+      description,
+      price,
+      location,
+      socialMedia,
+      postedBy,
+      statusInPercent,
+      goalId,
+      goalContributionPercent,
+    } = await request.json();
 
     if (!postedBy || !mongoose.Types.ObjectId.isValid(postedBy)) {
-      return NextResponse.json({ message: "Invalid Job ID" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Invalid postedBy" },
+        { status: 400 }
+      );
+    }
+
+    // validate optional numeric fields
+    if (statusInPercent !== undefined) {
+      const n = Number(statusInPercent);
+      if (!Number.isFinite(n) || n < 0 || n > 100) {
+        return NextResponse.json(
+          { message: "Invalid statusInPercent" },
+          { status: 400 }
+        );
+      }
+    }
+
+    if (goalContributionPercent !== undefined) {
+      const g = Number(goalContributionPercent);
+      if (!Number.isFinite(g) || g < 0 || g > 100) {
+        return NextResponse.json(
+          { message: "Invalid goalContributionPercent" },
+          { status: 400 }
+        );
+      }
+    }
+
+    if (
+      goalId !== undefined &&
+      goalId !== null &&
+      !mongoose.Types.ObjectId.isValid(goalId)
+    ) {
+      return NextResponse.json({ message: "Invalid goalId" }, { status: 400 });
     }
 
     const newJob: IJob = new Job({
@@ -21,7 +63,14 @@ export async function POST(request: NextRequest) {
       price,
       location,
       socialMedia,
-      postedBy,
+      postedBy: new mongoose.Types.ObjectId(postedBy),
+      ...(statusInPercent !== undefined
+        ? { statusInPercent: Number(statusInPercent) }
+        : {}),
+      ...(goalId ? { goalId: new mongoose.Types.ObjectId(goalId) } : {}),
+      ...(goalContributionPercent !== undefined
+        ? { goalContributionPercent: Number(goalContributionPercent) }
+        : {}),
     });
 
     const savedJob = await newJob.save();
@@ -77,15 +126,43 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    // Update the job
-    const updatedJob = await Job.findByIdAndUpdate(
-      jobId,
-      { ...(status && { status }) },
-      { new: true } // Return the updated document
-    ); // Populate not working
-
-    if (!updatedJob) {
+    // Load existing job to know previous status
+    const existingJob = await Job.findById(jobId);
+    if (!existingJob) {
       return NextResponse.json({ message: "Job not found" }, { status: 404 });
+    }
+
+    const previousStatus = existingJob.status;
+
+    // Update status if provided
+    let updatedJob = existingJob;
+    if (status) {
+      updatedJob = await Job.findByIdAndUpdate(
+        jobId,
+        { status },
+        { new: true }
+      );
+    }
+
+    // If the new status is completed and it wasn't completed before, run completeJob
+    if (status === "completed" && previousStatus !== "completed") {
+      try {
+        const completed = await completeJob(jobId);
+        console.log(
+          "Job completed and post-completion tasks executed:",
+          completed._id
+        );
+        return NextResponse.json(completed, { status: 200 });
+      } catch (err) {
+        console.error("Error during completeJob:", err);
+        return NextResponse.json(
+          {
+            message: "Job updated but post-completion processing failed",
+            error: String(err),
+          },
+          { status: 500 }
+        );
+      }
     }
 
     console.log("Updated job:", updatedJob); // Log the updated job for debugging

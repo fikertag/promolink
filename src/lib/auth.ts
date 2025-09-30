@@ -72,6 +72,11 @@ export const auth = betterAuth({
         type: "string",
         required: false, // Not strictly required since we can't do conditional logic
       },
+      goal: {
+        type: "number",
+        required: false,
+        defaultValue: 0,
+      },
       industry: {
         type: "string",
         required: false,

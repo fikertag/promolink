@@ -11,6 +11,9 @@ export interface IJob extends Document {
   }[];
   postedBy: mongoose.Types.ObjectId;
   status: "open" | "in-progress" | "completed" | "cancelled";
+  statusInPercent?: number; // Percentage of job completion
+  goalId: mongoose.Types.ObjectId; // Reference to associated goal
+  goalContributionPercent?: number; // Percentage contribution to the goal
   hiredInfluencers: mongoose.Types.ObjectId[]; // Array of hired influencers
   proposalsSubmitted: mongoose.Types.ObjectId[]; // Array of hired influencers
   createdAt: Date;
@@ -42,6 +45,17 @@ const JobSchema = new Schema<IJob>(
       type: String,
       enum: ["open", "in-progress", "completed", "cancelled"], // Restrict to valid statuses
       default: "open", // Default status is "open"
+    },
+    statusInPercent: { type: Number, min: 0, max: 100, default: 0 }, // Percentage of job completion
+    goalId: {
+      type: Schema.Types.ObjectId,
+      ref: "BusinessGoal",
+    },
+    goalContributionPercent: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 100, // default means full job contributes
     },
     hiredInfluencers: [
       {

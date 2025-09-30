@@ -52,6 +52,15 @@ function ProfilePage() {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [image, setImage] = useState("");
+  // Goals state
+  const [goals, setGoals] = useState<any[]>([]);
+  const [newGoal, setNewGoal] = useState({
+    targetValue: 0,
+    unit: "dollars",
+    startDate: "",
+    estimatedEndDate: "",
+  });
+  const [isGoalsLoading, setIsGoalsLoading] = useState(false);
 
   // Location options
   const locationOptions = ["Tecno", "Main Agri", "Addis Ababa"];
@@ -71,7 +80,86 @@ function ProfilePage() {
       setBio(session.user.bio || "");
       setImage(session.user.image || "");
     }
+    // load goals when session available
+    if (session?.user?.id) {
+      fetchGoals(session.user.id);
+    }
   }, [session]);
+
+  async function fetchGoals(businessId: string) {
+    setIsGoalsLoading(true);
+    try {
+      const res = await fetch(`/api/goal?businessId=${businessId}`);
+      if (!res.ok) throw new Error("Failed to fetch goals");
+      const data = await res.json();
+      setGoals(data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsGoalsLoading(false);
+    }
+  }
+
+  async function createGoal(e: React.FormEvent) {
+    e.preventDefault();
+    if (!session?.user?.id) return;
+    try {
+      const payload = {
+        businessId: session.user.id,
+        targetValue: Number(newGoal.targetValue),
+        unit: newGoal.unit,
+        startDate: newGoal.startDate,
+        estimatedEndDate: newGoal.estimatedEndDate,
+      };
+      const res = await fetch(`/api/goal`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Failed to create goal");
+      await fetchGoals(session.user.id);
+      setNewGoal({
+        targetValue: 0,
+        unit: "dollars",
+        startDate: "",
+        estimatedEndDate: "",
+      });
+      toast.success("Goal created");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to create goal");
+    }
+  }
+
+  async function deleteGoal(goalId: string) {
+    if (!confirm("Delete this goal?")) return;
+    try {
+      const res = await fetch(`/api/goal`, {
+        method: "DELETE",
+        body: JSON.stringify({ goalId }),
+      });
+      if (!res.ok) throw new Error("Failed to delete");
+      if (session?.user?.id) await fetchGoals(session.user.id);
+      toast.success("Goal deleted");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete goal");
+    }
+  }
+
+  async function updateGoal(goalId: string, updates: any) {
+    try {
+      const res = await fetch(`/api/goal`, {
+        method: "PATCH",
+        body: JSON.stringify({ goalId, ...updates }),
+      });
+      if (!res.ok) throw new Error("Failed to update");
+      if (session?.user?.id) await fetchGoals(session.user.id);
+      toast.success("Goal updated");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update goal");
+    }
+  }
   // Save handler
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -370,6 +458,117 @@ function ProfilePage() {
             <p className="text-gray-600 max-w-lg mx-auto text-sm md:text-base font-light">
               {bio || "No business description set"}
             </p>
+          </div>
+
+          {/* Goals section */}
+          <div className="mb-6 md:mb-8">
+            <h3 className="text-lg font-semibold mb-3">Goals</h3>
+            {isGoalsLoading ? (
+              <div>Loading goals...</div>
+            ) : (
+              <div className="space-y-3">
+                {goals.length === 0 && (
+                  <div className="text-sm text-muted-foreground">
+                    No goals yet.
+                  </div>
+                )}
+                {goals.map((g) => (
+                  <div
+                    key={g._id}
+                    className="flex items-center justify-between p-3 border rounded"
+                  >
+                    <div>
+                      <div className="font-medium">
+                        Target: {g.targetValue} {g.unit}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Progress: {Math.round(g.currentValue)} / {g.targetValue}{" "}
+                        (
+                        {Math.round(
+                          (g.currentValue / g.targetValue || 0) * 100
+                        )}
+                        %)
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() =>
+                          updateGoal(g._id, {
+                            currentValue: Math.min(
+                              g.targetValue,
+                              Math.round(g.currentValue + g.targetValue * 0.05)
+                            ),
+                          })
+                        }
+                        className="px-2 py-1 bg-primary text-white rounded text-sm"
+                      >
+                        +5%
+                      </button>
+                      <button
+                        onClick={() => deleteGoal(g._id)}
+                        className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <form onSubmit={createGoal} className="mt-4 grid grid-cols-1 gap-2">
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  className="w-32 px-2 py-1 border rounded"
+                  value={newGoal.targetValue}
+                  onChange={(e) =>
+                    setNewGoal({
+                      ...newGoal,
+                      targetValue: Number(e.target.value),
+                    })
+                  }
+                  placeholder="Target"
+                />
+                <select
+                  value={newGoal.unit}
+                  onChange={(e) =>
+                    setNewGoal({ ...newGoal, unit: e.target.value })
+                  }
+                  className="px-2 py-1 border rounded"
+                >
+                  <option value="dollars">dollars</option>
+                  <option value="customers">customers</option>
+                  <option value="sales">sales</option>
+                  <option value="tickets">tickets</option>
+                  <option value="hours">hours</option>
+                </select>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="date"
+                  className="px-2 py-1 border rounded"
+                  value={newGoal.startDate}
+                  onChange={(e) =>
+                    setNewGoal({ ...newGoal, startDate: e.target.value })
+                  }
+                />
+                <input
+                  type="date"
+                  className="px-2 py-1 border rounded"
+                  value={newGoal.estimatedEndDate}
+                  onChange={(e) =>
+                    setNewGoal({ ...newGoal, estimatedEndDate: e.target.value })
+                  }
+                />
+                <button
+                  className="px-3 py-1 bg-primary text-white rounded"
+                  type="submit"
+                >
+                  Create Goal
+                </button>
+              </div>
+            </form>
           </div>
 
           <div className="grid grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
