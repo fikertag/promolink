@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const allowedUnits = ["dollars", "customers", "sales", "tickets", "hours"];
+    const allowedUnits = ["birr", "customers", "sales", "tickets", "audience"];
     if (!unit || !allowedUnits.includes(unit)) {
       return NextResponse.json({ message: "Invalid unit" }, { status: 400 });
     }
@@ -128,11 +128,11 @@ export async function PATCH(request: NextRequest) {
     }
     if (unit) {
       const allowedUnits = [
-        "dollars",
+        "birr",
         "customers",
         "sales",
         "tickets",
-        "hours",
+        "audience",
       ];
       if (!allowedUnits.includes(unit))
         return NextResponse.json({ message: "Invalid unit" }, { status: 400 });
