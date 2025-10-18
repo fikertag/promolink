@@ -2,10 +2,10 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation"; // Note: different import for App Router
-
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import ImageUpload from "../../../components/ImageUpload";
+import {ProgressGoal} from "@/components/displayGoal";
 import {
   Edit2,
   MapPin,
@@ -16,6 +16,8 @@ import {
   BadgeX,
   LogOut,
 } from "lucide-react";
+import ConfirmLogoutModal from "@/components/ConfirmLogoutModal";
+import EditProfileModal from "@/components/EditProfileModal";
 
 function ProfilePage() {
   const [isUploading, setIsUploading] = useState(false);
@@ -52,7 +54,6 @@ function ProfilePage() {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [image, setImage] = useState("");
-
   // Location options
   const locationOptions = ["Tecno", "Main Agri", "Addis Ababa"];
 
@@ -72,6 +73,7 @@ function ProfilePage() {
       setImage(session.user.image || "");
     }
   }, [session]);
+
   // Save handler
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,175 +131,33 @@ function ProfilePage() {
   return (
     <div className=" ">
       {/* Edit Profile Modal */}
-      {showConfirm && (
-        <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className=" mt-2 w-72 bg-white rounded-md shadow-lg p-4 border border-gray-200 z-50">
-            <p className="text-gray-700 mb-4">
-              Are you sure you want to logout?
-            </p>
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setShowConfirm(false)}
-                className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-1 px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors cursor-pointer"
-              >
-                {isLogoutLoading ? (
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="animate-spin h-4 w-4" />
-                    Logging out...
-                  </div>
-                ) : (
-                  <>
-                    <LogOut size={15} />
-                    <div>Logout</div>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto container12 ">
-            <div className="flex justify-between items-center border-b p-4 sticky top-0 bg-white z-10">
-              <h2 className="text-xl font-semibold">Edit Business Profile</h2>
-              <button
-                onClick={() => setIsEditModalOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
-                disabled={isLoading}
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <form onSubmit={handleSave} className="px-4 pt-6 md:px-6">
-              {error && (
-                <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
-                  {error}
-                </div>
-              )}
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Company Name
-                </label>
-                <input
-                  type="text"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Industry
-                </label>
-                <input
-                  type="text"
-                  value={industry}
-                  onChange={(e) => setIndustry(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Business Phone
-                </label>
-                <input
-                  type="tel"
-                  value={businessPhone}
-                  onChange={(e) => setBusinessPhone(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={isLoading}
-                  placeholder="+251 XXX XXX XXX"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Business Size
-                </label>
-                <select
-                  value={businessSize}
-                  onChange={(e) => setBusinessSize(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={isLoading}
-                >
-                  <option value="startup">Startup</option>
-                  <option value="small">Small</option>
-                  <option value="medium">Medium</option>
-                  <option value="large">Large</option>
-                </select>
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Location
-                </label>
-                <select
-                  value={location.split(",")[0] || ""}
-                  onChange={(e) => setLocation(`${e.target.value}, Ethiopia`)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={isLoading}
-                >
-                  {locationOptions.map((loc) => (
-                    <option key={loc} value={loc}>
-                      {loc}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  About Your Business
-                </label>
-                <textarea
-                  rows={4}
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 sticky bottom-0 bg-white py-4">
-                <button
-                  type="button"
-                  onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50"
-                  disabled={isLoading}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark flex items-center justify-center min-w-24"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                      Saving...
-                    </>
-                  ) : (
-                    "Save Changes"
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      
+      <ConfirmLogoutModal
+        open={showConfirm}
+        onCancel={() => setShowConfirm(false)}
+        onConfirm={handleLogout}
+        isLoading={isLogoutLoading}
+      />
+      <EditProfileModal
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleSave}
+        isLoading={isLoading}
+        error={error}
+        companyName={companyName}
+        setCompanyName={setCompanyName}
+        industry={industry}
+        setIndustry={setIndustry}
+        businessPhone={businessPhone}
+        setBusinessPhone={setBusinessPhone}
+        businessSize={businessSize}
+        setBusinessSize={setBusinessSize}
+        location={location}
+        setLocation={setLocation}
+        locationOptions={locationOptions}
+        bio={bio}
+        setBio={setBio}
+      />
       <div className="max-w-3xl mx-auto mt-2  px-4 sm:px-6 lg:px-8">
         <div className=" bg-white rounded-2xl shadow-sm py-6 px-2 min-[400px]:px-6 md:p-8 pb-10 md:pb-6  relative">
           <button
@@ -372,6 +232,7 @@ function ProfilePage() {
             </p>
           </div>
 
+          {/* Goals section */}
           <div className="grid grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
             <div className="text-center flex flex-col justify-between">
               <div className="flex items-center justify-center gap-1 md:gap-2 text-primary mb-1">
@@ -408,6 +269,8 @@ function ProfilePage() {
               <p className="text-gray-600 text-xs md:text-sm">Verified</p>
             </div>
           </div>
+                    <ProgressGoal businessId={session?.user?.id || ""} />
+
           <button
             onClick={() => setShowConfirm(true)}
             className="flex absolute bottom-3 text-sm right-3 items-center gap-2 px-4 py-1 text-red-600 hover:text-red-800 transition-colors cursor-pointer rounded-sm border border-red-900"

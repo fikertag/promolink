@@ -1,28 +1,25 @@
-import Nav from "@/components/landingpage/nav";
-import Hero from "@/components/landingpage/Hero";
-import Trusted from "@/components/landingpage/Trusted";
-import Metrics from "@/components/landingpage/Metrics";
-import Roles from "@/components/landingpage/Roles";
-import How from "@/components/landingpage/How";
-import Testimony from "@/components/landingpage/Testimony";
-import Cat from "@/components/landingpage/Cat";
-import Footer from "@/components/landingpage/Footer";
+import CallToAction from "@/components/call-to-action";
+import Features from "@/components/features-4";
+import Footer from "@/components/footer";
+import IntegrationsSection from "@/components/integrations-3";
+import HeroSection from "@/components/landing/hero-section";
+import Feature3 from "@/components/mvpblocks/feature-3";
+import Testimonials from "@/components/testimonials";
+import StatsCount from "@/components/ui/statscount";
 
-const LandingPage = () => {
+function page() {
   return (
-    <div className="overflow-x-hidden bg-background">
-      <Nav />
-      <Hero />
-      <Metrics />
-      <Trusted />
-
-      <Roles />
-      <How />
-      <Testimony />
-      <Cat />
+    <>
+      <HeroSection />
+      <StatsCount />
+      <Features />
+      <Feature3 />
+      <IntegrationsSection />
+      <Testimonials />
+      <CallToAction />
       <Footer />
-    </div>
+    </>
   );
-};
+}
 
-export default LandingPage;
+export default page;
