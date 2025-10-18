@@ -102,7 +102,7 @@ export default function HeroSection() {
                       <div className="bg-muted dark:bg-background/50 border-border/50 mx-auto w-80 translate-x-4 rounded-[2rem] border p-2 backdrop-blur-3xl [mask-image:linear-gradient(to_bottom,#000_50%,transparent_90%)]">
                         <div className="bg-background space-y-2 overflow-hidden rounded-[1.5rem] border p-2 shadow-xl dark:bg-white/5 dark:shadow-black dark:backdrop-blur-3xl">
                           <Image
-                            src="/social"
+                            src="/social.png"
                             alt="App Mockup"
                             width={320}
                             height={640}
