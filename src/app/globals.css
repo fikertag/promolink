@@ -26,22 +26,22 @@ body {
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --background: oklch(0.9842 0.0034 247.8575);
+  --foreground: oklch(0.2795 0.0368 260.031);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.2795 0.0368 260.031);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --popover-foreground: oklch(0.2795 0.0368 260.031);
+  --primary: oklch(0.6022 0.1233 232.8943);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.8011 0.006 264.527);
+  --secondary-foreground: oklch(0.3729 0.0306 259.7328);
+  --muted: oklch(0.967 0.0029 264.5419);
+  --muted-foreground: oklch(0.551 0.0234 264.3637);
+  --accent: oklch(0.9299 0.0334 272.7879);
+  --accent-foreground: oklch(0.3729 0.0306 259.7328);
+  --destructive: oklch(0.6368 0.2078 25.3313);
+  --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.929 0.013 255.508);
   --input: oklch(0.929 0.013 255.508);
   --ring: oklch(0.704 0.04 256.788);
@@ -135,40 +135,8 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-@theme {
-  /* --color-primary: #3cc9ab; */
-  --color-primary: #5d5cde;
-  --color-secondary: #6366f1;
-  --color-accent: #a855f7;
-  --color-accent2: #ec4899;
-  --color-light: #f9fafb;
-  --color-dark: #000000;
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-}
-
-.container1 {
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
-}
-.container1::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
-}
-
-.container12::-webkit-scrollbar {
-  display: none;
-}
-
-.hidewebkit::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
-}
-.text-gradient {
-  background: linear-gradient(to right, #5d5cde, #a855f7);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }

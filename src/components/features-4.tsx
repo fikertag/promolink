@@ -9,13 +9,13 @@ import {
 
 export default function Features() {
   return (
-    <section className="py-12 md:py-20">
+    <section className="py-12 md:py-20" id="Features">
       <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-16">
-        <div className="relative z-10 mx-auto max-w-xl space-y-6 text-center md:space-y-12">
-          <h2 className="text-balance text-4xl font-medium lg:text-5xl">
-            Why Choose PromoLink
+        <div className="relative z-10 mx-auto space-y-6 text-center md:space-y-8 flex flex-col items-center">
+          <h2 className="text-4xl md:text-6xl font-normal ">
+            Why Choose Mykalat
           </h2>
-          <p>
+          <p className=" max-w-xl">
             Connect businesses, influencers, and customers in a seamless
             platform for authentic promotions and mutual growth.
           </p>
@@ -80,7 +80,7 @@ export default function Features() {
             <div className="flex items-center gap-2">
               <Sparkles className="size-4" />
 
-              <h3 className="text-sm font-medium">Trusted Recommendations</h3>
+              <h3 className="text-sm font-medium">Recommendations</h3>
             </div>
             <p className="text-sm">
               Explore new brands through trusted recommendations. Support both

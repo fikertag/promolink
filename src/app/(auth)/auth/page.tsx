@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import {
   Eye,
   EyeOff,
@@ -11,8 +11,9 @@ import {
   Meh,
   Building2,
 } from "lucide-react";
-import { useRouter } from "next/navigation"; // Import useRouter
-import { authClient } from "@/lib/auth-client"; //import the auth client
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { useSearchParams } from "next/navigation";
 
 type AuthMode = "signin" | "signup";
 type UserType = "influencer" | "business";
@@ -28,6 +29,14 @@ const AuthForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [userType, setUserType] = useState<UserType>("influencer");
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const modeParam = searchParams.get("mode");
+    if (modeParam === "signin" || modeParam === "signup") {
+      setMode(modeParam);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -271,26 +280,6 @@ const AuthForm = () => {
             </div>
           )}
 
-          <div className="flex items-center justify-between mt-5">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-primary border-gray-300 rounded transition-colors bg-primary focus:outline-none"
-              />
-              <span className="ml-2 text-sm text-gray-600">Remember me</span>
-            </label>
-            {mode === "signin" && (
-              <button
-                type="button"
-                className="text-sm text-[#0c9578] font-medium transition-colors cursor-pointer"
-              >
-                Forgot password?
-              </button>
-            )}
-          </div>
-
           <button
             type="submit"
             className="w-full bg-primary text-white py-2.5 rounded-sm hover:bg-[#0c9578] focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors cursor-pointer flex items-center justify-center disabled:cursor-not-allowed"
@@ -342,4 +331,16 @@ const AuthForm = () => {
   );
 };
 
-export default AuthForm;
+export default function AuthPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <AuthForm />
+    </Suspense>
+  );
+}

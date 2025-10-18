@@ -6,10 +6,9 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
-  { name: "Features", href: "#link" },
-  { name: "Solution", href: "#link" },
-  { name: "Pricing", href: "#link" },
-  { name: "About", href: "#link" },
+  { name: "Features", href: "#Features" },
+  { name: "Solution", href: "#Solution" },
+  { name: "Testimonials", href: "#Testimonials" },
 ];
 
 export const HeroHeader = () => {
@@ -43,7 +42,7 @@ export const HeroHeader = () => {
                 aria-label="home"
                 className="flex items-center space-x-2"
               >
-                <span className="text-xl font-semibold">MYkalat</span>
+                <span className="text-xl font-semibold">Mykalat</span>
               </Link>
 
               <button
@@ -91,27 +90,33 @@ export const HeroHeader = () => {
                   asChild
                   variant="outline"
                   size="sm"
-                  className={cn(isScrolled && "lg:hidden")}
+                  className={cn(isScrolled ? "lg:hidden" : "hover:bg-gray-100")}
                 >
-                  <Link href="#">
+                  <Link href="/auth?mode=signin">
                     <span>Login</span>
                   </Link>
                 </Button>
                 <Button
                   asChild
                   size="sm"
-                  className={cn(isScrolled && "lg:hidden")}
+                  className={cn(
+                    isScrolled ? "lg:hidden" : "bg-green-600 hover:bg-green-700"
+                  )}
                 >
-                  <Link href="#">
+                  <Link href="/auth?mode=signup">
                     <span>Sign Up</span>
                   </Link>
                 </Button>
                 <Button
                   asChild
                   size="sm"
-                  className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
+                  className={cn(
+                    isScrolled
+                      ? "lg:inline-flex bg-green-600 hover:bg-green-700"
+                      : "hidden"
+                  )}
                 >
-                  <Link href="#">
+                  <Link href="/auth?mode=signup">
                     <span>Get Started</span>
                   </Link>
                 </Button>

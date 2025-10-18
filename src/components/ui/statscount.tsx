@@ -26,21 +26,21 @@ interface StatsCountProps {
 
 const defaultStats: StatItem[] = [
   {
-    value: 50,
-    suffix: "+",
-    label: "Handcrafted animated components",
+    value: 125,
+    suffix: "",
+    label: "Active Creators Growing every day with successful partnerships",
     duration: 5,
   },
   {
-    value: 12,
-    suffix: "K+",
-    label: "Developers building with ScrollX-UI",
+    value: 51,
+    suffix: "",
+    label: "Business Partners Brands seeing real growth through collaborations",
     duration: 6,
   },
   {
-    value: 99,
-    suffix: "%",
-    label: "Performance optimized for web",
+    value: 450,
+    suffix: "",
+    label: "Successful Sales Creating win-win scenarios for everyone involved",
     duration: 5.5,
   },
 ];
@@ -50,7 +50,6 @@ const defaultTitle = "CREATE STUNNING INTERFACES WITH SCROLLX-UI COMPONENTS";
 function AnimatedCounter({
   value,
   suffix = "",
-  duration = 1,
   delay = 0,
   label,
 }: {
@@ -113,7 +112,7 @@ function AnimatedCounter({
     >
       <motion.div
         className={cn(
-          "text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 whitespace-nowrap"
+          "text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 whitespace-nowrap"
         )}
         initial={{ scale: 0.8 }}
         animate={isInView ? { scale: 1 } : { scale: 0.8 }}
@@ -129,7 +128,7 @@ function AnimatedCounter({
       </motion.div>
       <motion.p
         className={cn(
-          "text-gray-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed px-1 sm:px-2 hyphens-auto break-words"
+          "text-gray-600 dark:text-gray-400 text-sm leading-relaxed px-1 sm:px-2 hyphens-auto break-words"
         )}
         style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
         initial={{ opacity: 0 }}
@@ -155,17 +154,17 @@ export default function StatsCount({
     <motion.section
       ref={containerRef}
       className={cn(
-        "pb-8 sm:pb-12 lg:pb-20 px-2 sm:px-4 md:px-8 w-full overflow-hidden",
+        "pb-12 lg:pb-20 px-2 sm:px-4 md:px-8 w-full overflow-hidden",
         className
       )}
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 0.8 }}
     >
-      <div className={cn("w-full max-w-6xl mx-auto")}>
+      <div className={cn("w-full max-w-6xl mx-auto flex justify-center")}>
         <div
           className={cn(
-            "flex flex-row items-stretch justify-between gap-2 sm:gap-4 lg:gap-8 w-full min-h-[120px] sm:min-h-[140px]"
+            "flex flex-col max-w-70 sm:max-w-500 items-center  sm:flex-row sm:items-stretch justify-between gap-8 w-full min-h-[120px] sm:min-h-[140px]"
           )}
         >
           {stats.map((stat, index) => (
@@ -185,7 +184,7 @@ export default function StatsCount({
               {index < stats.length - 1 && showDividers && (
                 <motion.div
                   className={cn(
-                    "absolute -right-1 sm:-right-2 lg:-right-4 top-1/2 transform -translate-y-1/2 h-12 sm:h-16 lg:h-20 w-px bg-gray-200 dark:bg-gray-700"
+                    "hidden sm:block absolute -right-1 sm:-right-2 lg:-right-4 top-1/2 transform -translate-y-1/2 h-12 sm:h-16 lg:h-20 w-px bg-gray-200 dark:bg-gray-700"
                   )}
                   initial={{ opacity: 0, scaleY: 0 }}
                   animate={
