@@ -3,11 +3,29 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Nav({ path }: { path: string }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node)
+      ) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const isActive = (paths: string) => pathname === `/${path}` + paths;
 
@@ -108,7 +126,10 @@ export default function Nav({ path }: { path: string }) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="sm:hidden fixed inset-0 z-10 bg-white pt-20 px-4">
+        <div
+          ref={mobileMenuRef}
+          className="sm:hidden fixed inset-x-0 top-16 z-20 bg-white pt-4 px-4 pb-6 rounded-b-lg shadow-md"
+        >
           <div className="flex flex-col space-y-4">
             {path === "business" && (
               <Link

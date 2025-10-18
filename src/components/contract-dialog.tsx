@@ -122,7 +122,7 @@ export function ContractDialog({
   return (
     <Dialog open={opened} onOpenChange={onClose}>
       <DialogTrigger asChild>{}</DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-w-[95vw]">
         <DialogHeader>
           <DialogTitle>Create New Contract</DialogTitle>
         </DialogHeader>
@@ -134,8 +134,10 @@ export function ContractDialog({
         )}
 
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="price">Price ($)</Label>
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+            <Label htmlFor="price" className="md:text-right">
+              Price ($)
+            </Label>
             <Input
               id="price"
               type="number"
@@ -146,8 +148,10 @@ export function ContractDialog({
             />
           </div>
 
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="deadline">Deadline</Label>
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+            <Label htmlFor="deadline" className="md:text-right">
+              Deadline
+            </Label>
             <Input
               id="deadline"
               type="date"
@@ -159,7 +163,7 @@ export function ContractDialog({
 
           <div className="space-y-2">
             <Label>Social Media Actions</Label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Select
                 value={currentAction.platform}
                 onValueChange={(value) =>
@@ -169,7 +173,7 @@ export function ContractDialog({
                   })
                 }
               >
-                <SelectTrigger className="w-[120px]">
+                <SelectTrigger className="w-full sm:w-[120px]">
                   <SelectValue placeholder="Platform" />
                 </SelectTrigger>
                 <SelectContent>
@@ -188,7 +192,7 @@ export function ContractDialog({
                   })
                 }
               >
-                <SelectTrigger className="w-[100px]">
+                <SelectTrigger className="w-full sm:w-[100px]">
                   <SelectValue placeholder="Action" />
                 </SelectTrigger>
                 <SelectContent>
@@ -206,11 +210,15 @@ export function ContractDialog({
                     quantity: e.target.value,
                   })
                 }
-                className="w-[80px]"
+                className="w-full sm:w-[80px]"
                 min="1"
               />
 
-              <Button type="button" onClick={handleAddAction}>
+              <Button
+                type="button"
+                onClick={handleAddAction}
+                className="w-full sm:w-auto"
+              >
                 Add
               </Button>
             </div>
@@ -239,11 +247,21 @@ export function ContractDialog({
           </div>
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={loading}>
+        <DialogFooter className="flex flex-col sm:flex-row gap-2">
+          <Button
+            variant="outline"
+            onClick={onClose}
+            disabled={loading}
+            className="w-full sm:w-auto"
+          >
             Cancel
           </Button>
-          <Button type="button" onClick={handleSubmit} disabled={loading}>
+          <Button
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-full sm:w-auto"
+          >
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Send Contract
           </Button>

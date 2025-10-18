@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { useUser } from "@/context/User";
 
 interface Job {
   _id: string;
@@ -55,6 +56,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [specificJob, setSpecificJob] = useState<Job[]>([]);
+  const { user } = useUser();
 
   // Fetch jobs from the API
   const fetchJobs = async () => {
@@ -79,7 +81,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await axios.post("/api/job", {
         ...job,
-        postedBy: "67f41045f765a5c4f529af7b",
+        postedBy: user?.id,
       });
       setJobs((prevJobs) => [...prevJobs, response.data]);
     } catch (error) {
@@ -90,9 +92,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchJobByInfluncerId = async () => {
     try {
-      const response = await axios.get(
-        `/api/job/${"67f41045f765a5c4f529af7b"}`
-      );
+      const response = await axios.get(`/api/job/${user?.id}`);
       setSpecificJob(response.data);
     } catch (error) {
       console.error("Error fetching jobs:", error);
