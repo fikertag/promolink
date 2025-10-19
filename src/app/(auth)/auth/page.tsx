@@ -25,7 +25,6 @@ const AuthForm = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [userType, setUserType] = useState<UserType>("influencer");
@@ -121,12 +120,12 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-400 flex items-center justify-center p-4">
+    <div className="min-h-dvh bg-gray-300 flex items-center justify-center ">
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-md min-w-[380px] p-5 transition-all duration-300 "
+        className="bg-white rounded-lg shadow-xl w-full max-w-md p-5 transition-all duration-300 "
         style={{
-          transform: "scale(0.8)", // Scale down to 80%
-          transformOrigin: "center", // Keep the scaling centered
+          transform: "scale(0.9)",
+          transformOrigin: "center",
         }}
       >
         <div className="text-center mb-6">
@@ -282,36 +281,15 @@ const AuthForm = () => {
 
           <button
             type="submit"
-            className="w-full bg-primary text-white py-2.5 rounded-sm hover:bg-[#0c9578] focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors cursor-pointer flex items-center justify-center disabled:cursor-not-allowed"
+            className={`w-full bg-primary text-white py-2.5 rounded-sm hover:bg-[#0c9578] focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors cursor-pointer flex items-center justify-center disabled:cursor-not-allowed ${
+              mode === "signin" && "mt-8"
+            }`}
             disabled={loading}
           >
             {mode === "signin" ? "Sign in" : "Create account"}{" "}
             {loading ? <Loader2 className="h-5 w-5 animate-spin ml-2" /> : null}
           </button>
         </form>
-
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-6 text-center ">
-            <button className="flex justify-center w-full  py-2.5 border border-gray-300 rounded-lg transition-colors cursor-pointer">
-              <img
-                src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
-                alt="Google"
-                className="h-5 w-auto"
-              />
-            </button>
-          </div>
-        </div>
 
         <p className="mt-3 text-center text-sm text-gray-600">
           {mode === "signin"
