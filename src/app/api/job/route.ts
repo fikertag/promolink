@@ -4,6 +4,7 @@ import dbConnect from "@/lib/mongoose"; // Utility to connect to MongoDB
 import mongoose from "mongoose"; // For ObjectId validation
 import Proposal from "@/models/ProposalSchema"; // Adjust the path as needed
 import { completeJob } from "@/lib/jobService";
+import { auth } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   await dbConnect();
@@ -86,6 +87,10 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   await dbConnect();
   try {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
     const url = new URL(request.url);
     const excludeCompleted = url.searchParams.get("excludeCompleted");
 
@@ -94,13 +99,7 @@ export async function GET(request: NextRequest) {
       query = { status: { $ne: "completed" } };
     }
 
-    const jobs = await Job.find(query)
-      .populate({
-        path: "proposalsSubmitted",
-        select: "influencerId", // Get the influencerId from proposals
-        model: Proposal, // Explicitly reference the model name as a string
-      })
-      .lean(); // Convert to plain JavaScript objects
+    const jobs = await Job.find(query).lean();
 
     return NextResponse.json(jobs, { status: 200 });
   } catch (error) {
@@ -165,8 +164,6 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
-    console.log("Updated job:", updatedJob); // Log the updated job for debugging
-
     return NextResponse.json(updatedJob, { status: 200 });
   } catch (error) {
     return NextResponse.json(
@@ -175,47 +172,3 @@ export async function PATCH(request: NextRequest) {
     );
   }
 }
-
-/**
- * API Documentation:
- *
- * POST /api/job
- * - Description: Creates a new job in the database.
- * - Request Body:
- *   {
- *     "title": "Job Title",
- *     "description": "Job Description",
- *     "price": 100,
- *     "location": "City Name",
- *     "socialMedia": [{ "platform": "tiktok" }, { "platform": "youtube" }],
- *     "postedBy": "UserObjectId"
- *   }
- * - Response:
- *   - 201: Returns the created job document.
- *   - 500: Returns an error message if the creation fails.
- *
- *
- *
- * GET /api/job
- * - Description: Fetches all jobs or filters out completed jobs based on query parameters.
- * - Query Parameters:
- *   - excludeCompleted=true (optional): Excludes jobs with the status "completed".
- * - Response:
- *   - 200: Returns an array of job documents.
- *   - 500: Returns an error message if the fetch fails.
- *
- *
- *
- * PATCH /api/job
- * - Description: Updates the status of a job in the database.
- * - Request Body:
- *   {
- *     "jobId": "JobObjectId",
- *     "status": "completed"
- *   }
- * - Response:
- *   - 200: Returns the updated job document.
- *   - 400: Returns an error message if the jobId is missing.
- *   - 404: Returns an error message if the job is not found.
- *   - 500: Returns an error message if the update fails.
- */

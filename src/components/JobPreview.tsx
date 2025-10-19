@@ -4,44 +4,18 @@ import { Star } from "lucide-react";
 import { useState } from "react";
 import SocialIcon, { SocialPlatform } from "./SocialIcons";
 import { useJobs } from "@/context/Job";
-
-interface Job {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  location?: string;
-  socialMedia: {
-    platform: SocialPlatform;
-  }[];
-  postedBy: string;
-  status: "open" | "in-progress" | "completed" | "cancelled";
-  hiredInfluencers: string[];
-  proposalsSubmitted: Array<{
-    _id: string;
-    influencerId: string;
-  }>;
-  createdAt: string;
-  updatedAt: string;
-}
+import { IJob as Job } from "@/types/api";
 
 interface JobPreviewProps {
   job: Job;
-  influencerId: string; // Add influencerId to props
 }
 
-const JobPreview: React.FC<JobPreviewProps> = ({ job, influencerId }) => {
+const JobPreview: React.FC<JobPreviewProps> = ({ job }) => {
   const { addProposalToJob } = useJobs();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const hasAppliedOrHired =
-    job.hiredInfluencers.includes(influencerId) ||
-    job.proposalsSubmitted?.some(
-      (proposal) => proposal.influencerId === influencerId
-    );
-
   const handleApplyClick = () => {
     setIsModalOpen(true);
     setSubmitError(null); // Reset error when opening modal
@@ -60,7 +34,6 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job, influencerId }) => {
         },
         body: JSON.stringify({
           jobId: job._id,
-          influencerId: influencerId,
           message: message,
         }),
       });
@@ -70,7 +43,7 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job, influencerId }) => {
         throw new Error(errorData.message || "Failed to submit proposal");
       }
       const data = await response.json();
-      addProposalToJob(job._id, { _id: data._id, influencerId });
+      // addProposalToJob(job._id, { _id: "data._id" });
       setIsModalOpen(false);
 
       setMessage("");
@@ -137,27 +110,21 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job, influencerId }) => {
                 </div>
 
                 <div
-                  className={`hidden sm:flex w-fit px-5 cursor-pointer py-2 rounded-sm text-sm ${
-                    hasAppliedOrHired
-                      ? "bg-gray-300 cursor-not-allowed text-green-800 font-semibold"
-                      : "bg-primary/10 hover:bg-primary/10 text-primary"
+                  className={`hidden sm:flex w-fit px-5 cursor-pointer py-2 rounded-sm text-sm bg-primary/10 hover:bg-primary/10 text-primary"
                   }`}
-                  onClick={!hasAppliedOrHired ? handleApplyClick : undefined}
+                  onClick={handleApplyClick}
                 >
-                  {hasAppliedOrHired ? "Already Applied" : "Apply"}
+                  Apply
                 </div>
               </div>
 
               <div className="flex sm:hidden justify-between items-center flex-shrink-0">
                 <div
-                  className={`w-full px-5 cursor-pointer mt-3 py-2 rounded-sm text-sm ${
-                    hasAppliedOrHired
-                      ? "bg-gray-300 cursor-not-allowed text-green-800 font-semibold"
-                      : "bg-primary hover:bg-primary/80"
+                  className={`w-full px-5 cursor-pointer mt-3 py-2 rounded-sm text-smbg-primary hover:bg-primary/80"
                   }`}
-                  onClick={!hasAppliedOrHired ? handleApplyClick : undefined}
+                  onClick={handleApplyClick}
                 >
-                  {hasAppliedOrHired ? "Already Applied" : "Apply"}
+                  Apply
                 </div>
               </div>
             </div>

@@ -5,6 +5,8 @@ import { MessageProvider } from "@/context/Message";
 import { ContractProvider } from "@/context/Contract";
 import { UserProvider } from "@/context/User";
 import { EarningProvider } from "@/context/Earning";
+import Footer from "@/components/footer";
+import ReactQueryProvider from "@/QueryClientProvider";
 
 export default function RootLayout({
   children,
@@ -12,21 +14,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className=" min-h-screen bg-gray-50 ">
-      <UserProvider>
-        <JobProvider>
-          <ProposalProvider>
-            <ContractProvider>
-              <EarningProvider>
-                <MessageProvider>
-                  <Nav path="influencer" />
-                  {children}
-                </MessageProvider>
-              </EarningProvider>
-            </ContractProvider>
-          </ProposalProvider>
-        </JobProvider>
-      </UserProvider>
-    </div>
+    <ReactQueryProvider>
+      <div className=" min-h-screen bg-gray-50 ">
+        <UserProvider>
+          <JobProvider>
+            <ProposalProvider>
+              <ContractProvider>
+                <EarningProvider>
+                  <MessageProvider>
+                    <Nav path="influencer" />
+                    {children}
+                    <Footer />
+                  </MessageProvider>
+                </EarningProvider>
+              </ContractProvider>
+            </ProposalProvider>
+          </JobProvider>
+        </UserProvider>
+      </div>
+    </ReactQueryProvider>
   );
 }

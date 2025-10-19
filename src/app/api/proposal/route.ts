@@ -57,7 +57,14 @@ export async function POST(request: NextRequest) {
     // Update job - make sure field name matches your schema exactly
     await Job.findByIdAndUpdate(
       jobId,
-      { $push: { proposalsSubmitted: savedProposal._id } }, // Fixed field name
+      {
+        $push: {
+          proposalsSubmitted: {
+            proposal: savedProposal._id,
+            influencer: influencerId,
+          },
+        },
+      },
       { new: true }
     );
 
@@ -116,72 +123,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
-/**
- * API Documentation:
- *
- * POST /api/proposal
- * - Description: Creates a new proposal for a job by an influencer.
- * - Request Body:
- *   {
- *     "jobId": "JobObjectId",
- *     "influencerId": "InfluencerObjectId",
- *     "message": "Proposal message"
- *   }
- * - Response:
- *   - 201: Returns the created proposal document.
- *   - 400: Returns validation errors or invalid ObjectId errors.
- *   - 500: Returns an error message if the creation fails.
- *
- * Example Request:
- * POST /api/proposal
- * Body:
- * {
- *   "jobId": "64f8c0e2b5d6c9a1f8e7b123",
- *   "influencerId": "67ddc27bac1483e290fd607b",
- *   "message": "I am interested in this job and have relevant experience."
- * }
- *
- * Example Response (201):
- * {
- *   "_id": "64f8c0e2b5d6c9a1f8e7b456",
- *   "jobId": "64f8c0e2b5d6c9a1f8e7b123",
- *   "influencerId": "67ddc27bac1483e290fd607b",
- *   "message": "I am interested in this job and have relevant experience.",
- *   "createdAt": "2023-09-01T12:00:00.000Z",
- *   "updatedAt": "2023-09-01T12:00:00.000Z"
- * }
- *
- * GET /api/proposal
- * - Description: Fetches proposals (all or filtered by jobId or influencerId).
- * - Query Parameters:
- *   - jobId: The ID of the job to filter proposals (optional).
- *   - influencerId: The ID of the influencer to filter proposals (optional).
- * - Response:
- *   - 200: Returns an array of proposal documents.
- *   - 400: Returns validation errors for invalid jobId or influencerId.
- *   - 500: Returns an error message if the fetch fails.
- *
- * Example Request:
- * GET /api/proposal?jobId=64f8c0e2b5d6c9a1f8e7b123
- *
- * Example Response (200):
- * [
- *   {
- *     "_id": "64f8c0e2b5d6c9a1f8e7b456",
- *     "jobId": {
- *       "_id": "64f8c0e2b5d6c9a1f8e7b123",
- *       "title": "Social Media Promoter Needed",
- *       "description": "Looking for someone to promote our product on TikTok and YouTube."
- *     },
- *     "influencerId": {
- *       "_id": "67ddc27bac1483e290fd607b",
- *       "name": "John Doe",
- *       "email": "john.doe@example.com"
- *     },
- *     "message": "I am interested in this job and have relevant experience.",
- *     "createdAt": "2023-09-01T12:00:00.000Z",
- *     "updatedAt": "2023-09-01T12:00:00.000Z"
- *   }
- * ]
- */

@@ -1,14 +1,14 @@
 "use client";
 import JobPreview from "@/components/JobPreview";
-import { useJobs } from "@/context/Job";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUser } from "@/context/User";
+import { useMyJobApplications } from "@/hooks/useJobs";
+import { useEffect } from "react";
 
 export default function JobLists() {
-  // Auth session
-  const { user } = useUser();
-
-  const { jobs } = useJobs(); // Fetch jobs from the JobContext
+  const { data: jobs } = useMyJobApplications();
+  useEffect(() => {
+    console.log("Jobs updated:", jobs);
+  }, [jobs]);
 
   return (
     <div className="text-center w-4xl mx-auto mb-8">
@@ -21,10 +21,8 @@ export default function JobLists() {
         </p>
       </div>
       <div className="flex flex-col gap-1">
-        {jobs.length > 0 ? (
-          jobs.map((job) => (
-            <JobPreview key={job._id} job={job} influencerId={user?.id || ""} /> // Render each job dynamically
-          ))
+        {jobs && jobs.length > 0 ? (
+          jobs.map((job) => <JobPreview key={job._id} job={job} />)
         ) : (
           <div className="flex flex-col space-y-3">
             <Skeleton className="h-[50px] w-full rounded-sm" />
