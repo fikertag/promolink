@@ -1,42 +1,29 @@
 import { NextResponse, NextRequest } from "next/server";
-import Proposal from "@/models/ProposalSchema"; // Import the Proposal model
-import Job from "@/models/JobSchema"; // Import the Job model
-import dbConnect from "@/lib/mongoose"; // Utility to connect to MongoDB
-import { z } from "zod"; // For input validation
-import mongoose from "mongoose"; // For ObjectId validation
-
-// Define validation schema for POST request
-const CreateProposalSchema = z.object({
-  jobId: z.string().min(1, "Job ID is required"),
-  influencerId: z.string().min(1, "Influencer ID is required"),
-  message: z.string().min(1, "Message is required"),
-});
+import Proposal from "@/models/ProposalSchema";
+import Job from "@/models/JobSchema";
+import dbConnect from "@/lib/mongoose";
+import { auth } from "@/lib/auth";
+import mongoose from "mongoose";
 
 // POST: Create a new proposal
 export async function POST(request: NextRequest) {
   await dbConnect();
 
   try {
-    const body = await request.json();
-    const validation = CreateProposalSchema.safeParse(body);
-
-    if (!validation.success) {
-      return NextResponse.json(
-        { message: "Validation failed", errors: validation.error.errors },
-        { status: 400 }
-      );
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { jobId, influencerId, message } = validation.data;
+    const influencerId = session.user.id;
+    const body = await request.json();
+    const { jobId, message } = body;
 
     if (
       !mongoose.Types.ObjectId.isValid(jobId) ||
       !mongoose.Types.ObjectId.isValid(influencerId)
     ) {
-      return NextResponse.json(
-        { message: "Invalid Job ID or Influencer ID" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
     }
 
     // Verify job exists first
@@ -52,7 +39,11 @@ export async function POST(request: NextRequest) {
       message,
     });
 
+    console.log({ influencerId });
+
     const savedProposal = await newProposal.save();
+
+    console.log({ influencerId });
 
     // Update job - make sure field name matches your schema exactly
     await Job.findByIdAndUpdate(

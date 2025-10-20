@@ -162,7 +162,12 @@ export async function POST(
       influencerId,
       message,
     });
-
+    console.log(
+      "Creating proposal for jobId:",
+      jobId,
+      "by influencerId:",
+      influencerId
+    );
     const savedProposal = await newProposal.save();
 
     // Update job - make sure field name matches your schema exactly
@@ -179,6 +184,14 @@ export async function POST(
       { new: true }
     );
 
+    console.log("Proposal created successfully:", savedProposal);
+
+    console.log(
+      "Creating proposal for jobId:",
+      jobId,
+      "by influencerId:",
+      influencerId
+    );
     return NextResponse.json(savedProposal, { status: 201 });
   } catch (error) {
     console.error("Error:", error);
