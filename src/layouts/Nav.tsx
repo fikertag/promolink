@@ -63,7 +63,7 @@ export default function Nav({ path }: { path: string }) {
                 Influencers
               </Link>
             )}
-            <Link
+            {/* <Link
               href={`/${path}/${path === "business" ? "myjobs" : "dashboard"}`}
               className={`hover:text-primary transition px-5 py-2  ${
                 isActive(`/${path === "business" ? "myjobs" : "dashboard"}`)
@@ -73,7 +73,7 @@ export default function Nav({ path }: { path: string }) {
               onClick={closeMobileMenu}
             >
               {path === "business" ? "My jobs" : "Dashboard"}
-            </Link>
+            </Link> */}
 
             <Link
               href={`/${path}/message`}
@@ -143,7 +143,7 @@ export default function Nav({ path }: { path: string }) {
               </Link>
             )}
 
-            <Link
+            {/* <Link
               href={`/${path}/${path === "business" ? "myjobs" : "dashboard"}`}
               className={`hover:text-primary transition px-5 py-2  ${
                 isActive("/dashboard")
@@ -153,7 +153,7 @@ export default function Nav({ path }: { path: string }) {
               onClick={closeMobileMenu}
             >
               {path === "business" ? "My jobs" : "Dashboard"}
-            </Link>
+            </Link> */}
 
             <Link
               href={`/${path}/message`}
