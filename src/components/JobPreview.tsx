@@ -5,14 +5,18 @@ import SocialIcon from "./SocialIcons";
 import { IJob as Job } from "@/types/api";
 import { formatDistanceToNow } from "date-fns";
 import Comfirm from "@/app/influencer/components/comfirm";
-import { useApplyToJob } from "@/hooks/useJobs";
+import { useApplyToJob, useSaveJob } from "@/hooks/useJobs";
+import { BookmarkButton } from "./bookmark";
 
 interface JobPreviewProps {
   job: Job;
+  isApplyed?: boolean;
+  isSaved?: boolean;
 }
 
-const JobPreview: React.FC<JobPreviewProps> = ({ job }) => {
+const JobPreview: React.FC<JobPreviewProps> = ({ job, isApplyed, isSaved }) => {
   const { mutate: applyToJob, isPending } = useApplyToJob();
+  const { mutate: saveJob } = useSaveJob();
   const handleSubmit = (proposalMessage: string) => {
     applyToJob({ jobId: job._id, message: proposalMessage });
   };
@@ -67,28 +71,39 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job }) => {
                       ))}
                   </div>
                 </div>
-
-                <Comfirm
-                  buttonText="Apply"
-                  dialogTitle="Attach your proposal"
-                  dialogDescription="Please provide any additional information to support your application."
-                  placeholder="your proposal message"
-                  finalButtonText="Submit Application"
-                  functionToRun={handleSubmit}
-                  isLoading={isPending}
-                />
+                <div className="flex items-end  gap-2">
+                  <BookmarkButton
+                    isSaved={!!isSaved}
+                    onChange={() => {
+                      saveJob({ jobId: job._id });
+                    }}
+                  />
+                  {!isApplyed && (
+                    <Comfirm
+                      buttonText="Apply"
+                      dialogTitle="Attach your proposal"
+                      dialogDescription="Please provide any additional information to support your application."
+                      placeholder="your proposal message"
+                      finalButtonText="Submit Application"
+                      functionToRun={handleSubmit}
+                      isLoading={isPending}
+                    />
+                  )}
+                </div>
               </div>
 
               <div className="flex sm:hidden justify-between items-center flex-shrink-0">
-                <Comfirm
-                  buttonText="Apply"
-                  dialogTitle="Attach your proposal"
-                  dialogDescription="Please provide any additional information to support your application."
-                  placeholder="your proposal message"
-                  finalButtonText="Submit Application"
-                  functionToRun={handleSubmit}
-                  isLoading={isPending}
-                />
+                {isApplyed && (
+                  <Comfirm
+                    buttonText="Apply"
+                    dialogTitle="Attach your proposal"
+                    dialogDescription="Please provide any additional information to support your application."
+                    placeholder="your proposal message"
+                    finalButtonText="Submit Application"
+                    functionToRun={handleSubmit}
+                    isLoading={isPending}
+                  />
+                )}
               </div>
             </div>
           </div>

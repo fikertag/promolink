@@ -24,19 +24,30 @@ export default function Comfirm({
   dialogDescription?: string;
   placeholder?: string;
   finalButtonText: string;
-  functionToRun: (message: string) => void;
+  functionToRun: (message: string) => void | Promise<unknown>;
   isLoading?: boolean;
 }) {
   const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    functionToRun(message);
-    setMessage("");
+    try {
+      const maybePromise = functionToRun(message);
+      if (maybePromise && typeof (maybePromise as any).then === "function") {
+        await (maybePromise as Promise<unknown>);
+      }
+      // Success: close dialog and reset
+      setOpen(false);
+      setMessage("");
+    } catch (err) {
+      // Keep dialog open on error; parent can show a toast
+      console.error("Confirm submit failed:", err);
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="default"

@@ -108,7 +108,7 @@ export async function GET(
       query.status = { $ne: "completed" };
     }
 
-    const jobs = await Job.find(query).sort({ createdAt: -1 }); // Sort by newest first
+    const jobs = await Job.find(query).sort({ createdAt: -1 });
 
     return NextResponse.json(jobs, { status: 200 });
   } catch (error) {

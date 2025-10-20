@@ -119,33 +119,27 @@ export async function POST(
 ) {
   await dbConnect();
 
-  console.log("Received request to create proposal");
-
   try {
     const body = await request.json();
     const { id: jobId } = await params;
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json(
+        { error: "authenticated failed" },
+        { status: 401 }
+      );
     }
 
     const influencerId = session.user.id;
     const message = body.message || "";
-
-    console.log(
-      "Creating proposal for jobId:",
-      jobId,
-      "by influencerId:",
-      influencerId
-    );
 
     if (
       !mongoose.Types.ObjectId.isValid(jobId) ||
       !mongoose.Types.ObjectId.isValid(influencerId)
     ) {
       return NextResponse.json(
-        { message: "Invalid Job ID or Influencer ID" },
+        { message: "invalid Id Try again" },
         { status: 400 }
       );
     }
@@ -156,18 +150,27 @@ export async function POST(
       return NextResponse.json({ message: "Job not found" }, { status: 404 });
     }
 
+    const influencerObjectId = new mongoose.Types.ObjectId(influencerId);
+
+    // Check if this influencer already submitted a proposal for the job
+    const alreadySubmitted = await Job.exists({
+      _id: jobId,
+      "proposalsSubmitted.influencer": influencerObjectId,
+    });
+    if (alreadySubmitted) {
+      return NextResponse.json(
+        { message: "Proposal already submitted" },
+        { status: 409 }
+      );
+    }
+
     // Create proposal
     const newProposal = new Proposal({
       jobId,
       influencerId,
       message,
     });
-    console.log(
-      "Creating proposal for jobId:",
-      jobId,
-      "by influencerId:",
-      influencerId
-    );
+
     const savedProposal = await newProposal.save();
 
     // Update job - make sure field name matches your schema exactly
@@ -177,26 +180,17 @@ export async function POST(
         $push: {
           proposalsSubmitted: {
             proposal: savedProposal._id,
-            influencer: influencerId,
+            influencer: influencerObjectId,
           },
         },
       },
       { new: true }
     );
 
-    console.log("Proposal created successfully:", savedProposal);
-
-    console.log(
-      "Creating proposal for jobId:",
-      jobId,
-      "by influencerId:",
-      influencerId
-    );
     return NextResponse.json(savedProposal, { status: 201 });
-  } catch (error) {
-    console.error("Error:", error);
+  } catch {
     return NextResponse.json(
-      { message: "Failed to create proposal", error },
+      { message: "Failed to create proposal" },
       { status: 500 }
     );
   }

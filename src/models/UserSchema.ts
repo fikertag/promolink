@@ -1,8 +1,10 @@
 // models/User.ts
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const GenericSchema = new mongoose.Schema(
-  {},
+const GenericSchema = new Schema(
+  {
+    savedJobs: [{ type: Schema.Types.ObjectId, ref: "Job" }],
+  },
   { strict: false, collection: "user" }
 );
 

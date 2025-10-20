@@ -1,7 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
-import Job, { IJob } from "@/models/JobSchema";
+import Job from "@/models/JobSchema";
 import dbConnect from "@/lib/mongoose";
 import { auth } from "@/lib/auth";
+import mongoose from "mongoose";
 
 export async function GET(request: NextRequest) {
   await dbConnect();
@@ -12,12 +13,11 @@ export async function GET(request: NextRequest) {
     }
 
     const influencer_id = session.user.id;
+    const influencerObjectId = new mongoose.Types.ObjectId(influencer_id);
 
     const jobs = await Job.find({
-      status: "open",
-      hiredInfluencers: { $nin: [influencer_id] },
       proposalsSubmitted: {
-        $not: { $elemMatch: { influencer: influencer_id } },
+        $elemMatch: { influencer: influencerObjectId },
       },
     })
       .sort({ createdAt: -1 })

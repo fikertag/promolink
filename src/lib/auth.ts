@@ -102,6 +102,7 @@ export const auth = betterAuth({
         required: false,
         defaultValue: false,
       },
+      savedJobs: { type: "string[]", required: false, defaultValue: [] },
     },
   },
 

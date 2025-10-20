@@ -1,7 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
-import Job, { IJob } from "@/models/JobSchema";
+import Job from "@/models/JobSchema";
 import dbConnect from "@/lib/mongoose";
 import { auth } from "@/lib/auth";
+import mongoose from "mongoose";
 
 export async function GET(request: NextRequest) {
   await dbConnect();
@@ -11,13 +12,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const influencer_id = session.user.id;
+    const savedJobs = session.user.savedJobs || [];
 
     const jobs = await Job.find({
-      status: "open",
-      hiredInfluencers: { $nin: [influencer_id] },
-      proposalsSubmitted: {
-        $not: { $elemMatch: { influencer: influencer_id } },
+      _id: {
+        $in: savedJobs.map((jobId) => new mongoose.Types.ObjectId(jobId)),
       },
     })
       .sort({ createdAt: -1 })
