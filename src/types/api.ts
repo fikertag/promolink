@@ -5,6 +5,11 @@ export interface ApiResponse<T> {
   data: T;
 }
 
+export interface ApiError {
+  message: string;
+  status: number;
+}
+
 export interface IJob {
   _id: string;
   title: string;

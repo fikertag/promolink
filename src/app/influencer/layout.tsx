@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <ReactQueryProvider>
-      <div className=" min-h-screen bg-gray-50 ">
+      <div className=" min-h-screen bg-gray-200 ">
         <UserProvider>
           <JobProvider>
             <ProposalProvider>

@@ -1,10 +1,28 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
-import { IJob } from "@/types/api";
+import { toast } from "sonner";
+import type { IJob, ApiError } from "@/types/api";
 
-// 4. Get all my job applications (GET /job-application)
 export const useMyJobApplications = () =>
-  useQuery<IJob[]>({
+  useQuery<IJob[], ApiError>({
     queryKey: ["new-jobs"],
     queryFn: () => apiClient<IJob[]>(`/job/new`),
   });
+
+export const useApplyToJob = () => {
+  const qc = useQueryClient();
+  return useMutation<IJob, unknown, { jobId: string; message: string }>({
+    mutationFn: (payload) =>
+      apiClient<IJob>(`/proposal/${payload.jobId}`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+    onSuccess: () => {
+      toast.success("Application submitted successfully!");
+      qc.invalidateQueries({ queryKey: ["new-jobs"] });
+    },
+    onError: () => {
+      toast.error("Failed to submit application. Please try again.");
+    },
+  });
+};

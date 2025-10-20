@@ -2,8 +2,11 @@ import { ApiResponse } from "@/types/api";
 
 // let cachedToken: string | null = null;
 
-export const apiClient = async <T>(endpoint: string): Promise<T> => {
-  const response = await fetch(`/api${endpoint}`);
+export const apiClient = async <T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> => {
+  const response = await fetch(`/api${endpoint}`, { ...options });
 
   const json: ApiResponse<T> = await response.json();
 
