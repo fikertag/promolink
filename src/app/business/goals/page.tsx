@@ -33,6 +33,17 @@ function GoalsPage() {
     );
   }
 
+  if (session?.user?.role !== "business") {
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <p className="text-red-500 mb-4">
+          Access denied. This page is for business accounts only.
+        </p>
+        <Button onClick={() => refetch()}>Try again</Button>
+      </div>
+    );
+  }
+
   if (!session?.user?.id) {
     return (
       <div className="flex flex-col items-center justify-center h-64">

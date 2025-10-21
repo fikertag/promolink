@@ -57,6 +57,17 @@ function ProfilePage() {
     );
   }
 
+  if (session?.user?.role !== "business") {
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <p className="text-red-500 mb-4">
+          Access denied. This page is for business accounts only.
+        </p>
+        <Button onClick={() => refetch()}>Try again</Button>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto mt-5 sm:mt-0 p-4 sm:px-6 max-w-5xl mb-20">
       {/* Header */}
