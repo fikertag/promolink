@@ -33,7 +33,12 @@ export const auth = betterAuth({
         required: false,
         defaultValue: "influencer",
       },
-
+      coverImage: {
+        type: "string",
+        required: false,
+        defaultValue:
+          "https://res.cloudinary.com/dzcmadjl1/image/upload/v1696224863/default-cover-image_oqv6u9.jpg",
+      },
       location: {
         type: "string",
         required: false,
