@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ImagePlusIcon, XIcon } from "lucide-react";
+import { ImagePlusIcon, XIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,22 +16,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { authClient } from "@/lib/auth-client";
 
-type SocialMediaLink = {
-  platform: "instagram" | "tiktok" | "telegram";
-  username: string;
-  followers: string;
-};
-
-export default function EditProfile({ user }: { user: any }) {
+export default function EditBuissnesProfile({ user }: { user: any }) {
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [location, setLocation] = useState("");
-  const [price, setPrice] = useState(0);
   const [image, setImage] = useState("");
   const [coverImage, setCoverImage] = useState("");
-  const [socialMedia, setSocialMedia] = useState<SocialMediaLink[]>([]);
+  const [companyName, setCompanyName] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [businessPhone, setBusinessPhone] = useState("");
+  const [businessSize, setBusinessSize] = useState("");
+  const [onboarded, setOnboarded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -39,34 +43,15 @@ export default function EditProfile({ user }: { user: any }) {
       setName(user.name || "");
       setBio(user.bio || "");
       setLocation(user.location || "");
-      setPrice(user.price || 0);
       setImage(user.image || "");
       setCoverImage(user.coverImage || "");
-      setSocialMedia(user.socialMedia ? JSON.parse(user.socialMedia) : []);
+      setCompanyName(user.companyName || "");
+      setIndustry(user.industry || "");
+      setBusinessPhone(user.businessPhone || "");
+      setBusinessSize(user.businessSize || "");
+      setOnboarded(user.onboarded || false);
     }
   }, [user]);
-
-  const handleSocialChange = (
-    index: number,
-    field: keyof SocialMediaLink,
-    value: string
-  ) => {
-    const newSocials = [...socialMedia];
-    newSocials[index] = { ...newSocials[index], [field]: value };
-    setSocialMedia(newSocials);
-  };
-
-  const addSocial = () => {
-    setSocialMedia([
-      ...socialMedia,
-      { platform: "instagram", username: "", followers: "" },
-    ]);
-  };
-
-  const removeSocial = (index: number) => {
-    const newSocials = socialMedia.filter((_, i) => i !== index);
-    setSocialMedia(newSocials);
-  };
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -75,10 +60,13 @@ export default function EditProfile({ user }: { user: any }) {
         name,
         bio,
         location,
-        price,
         image,
         coverImage,
-        socialMedia: JSON.stringify(socialMedia),
+        companyName,
+        industry,
+        businessPhone,
+        businessSize,
+        onboarded,
       });
       // Optionally, refetch or show success
     } catch (error) {
@@ -96,15 +84,19 @@ export default function EditProfile({ user }: { user: any }) {
       <DialogContent className="flex flex-col gap-0 p-0 sm:max-w-lg h-[90svh] sm:h-auto sm:max-h-[90vh] overflow-hidden [&>button:last-child]:top-3.5">
         <DialogHeader className="contents space-y-0 text-left">
           <DialogTitle className="border-b px-6 py-4 text-base">
-            Edit profile
+            Edit Business Profile
           </DialogTitle>
         </DialogHeader>
         <DialogDescription className="sr-only">
-          Make changes to your profile here.
+          Make changes to your business profile here.
         </DialogDescription>
         <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
-          <ProfileBg coverImage={coverImage} setCoverImage={setCoverImage} />
-          <Avatar image={image} setImage={setImage} />
+          <ProfileBg
+            coverImage={coverImage}
+            setCoverImage={setCoverImage}
+            disabled={isSaving}
+          />
+          <Avatar image={image} setImage={setImage} disabled={isSaving} />
           <div className="px-6 pt-4 pb-6">
             <div className="space-y-4">
               <div className="space-y-2">
@@ -114,6 +106,17 @@ export default function EditProfile({ user }: { user: any }) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
+                  disabled={isSaving}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="companyName">Company Name</Label>
+                <Input
+                  id="companyName"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  placeholder="Your company name"
+                  disabled={isSaving}
                 />
               </div>
               <div className="space-y-2">
@@ -122,7 +125,8 @@ export default function EditProfile({ user }: { user: any }) {
                   id="bio"
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us about yourself"
+                  placeholder="Tell us about your business"
+                  disabled={isSaving}
                 />
               </div>
               <div className="space-y-2">
@@ -132,62 +136,62 @@ export default function EditProfile({ user }: { user: any }) {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="Your location"
+                  disabled={isSaving}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="price">Average Price (Birr)</Label>
+                <Label htmlFor="industry">Industry</Label>
                 <Input
-                  id="price"
-                  type="number"
-                  value={price}
-                  onChange={(e) => setPrice(Number(e.target.value))}
-                  placeholder="0"
+                  id="industry"
+                  value={industry}
+                  onChange={(e) => setIndustry(e.target.value)}
+                  placeholder="Your industry"
+                  disabled={isSaving}
                 />
               </div>
-              <div className="space-y-4">
-                <Label>Social Media</Label>
-                {socialMedia.map((social, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 p-2 border rounded-md"
-                  >
-                    <select
-                      value={social.platform}
-                      onChange={(e) =>
-                        handleSocialChange(index, "platform", e.target.value)
-                      }
-                      className="p-2 border rounded-md bg-background"
-                    >
-                      <option value="instagram">Instagram</option>
-                      <option value="tiktok">TikTok</option>
-                      <option value="telegram">Telegram</option>
-                    </select>
-                    <Input
-                      placeholder="Username"
-                      value={social.username}
-                      onChange={(e) =>
-                        handleSocialChange(index, "username", e.target.value)
-                      }
-                    />
-                    <Input
-                      placeholder="Followers"
-                      value={social.followers}
-                      onChange={(e) =>
-                        handleSocialChange(index, "followers", e.target.value)
-                      }
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeSocial(index)}
-                    >
-                      <XIcon className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-                <Button variant="outline" onClick={addSocial}>
-                  Add Social Media
-                </Button>
+              <div className="space-y-2">
+                <Label htmlFor="businessPhone">Business Phone</Label>
+                <Input
+                  id="businessPhone"
+                  value={businessPhone}
+                  onChange={(e) => setBusinessPhone(e.target.value)}
+                  placeholder="Your business phone"
+                  disabled={isSaving}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="businessSize">Business Size</Label>
+                <Select
+                  value={businessSize}
+                  onValueChange={setBusinessSize}
+                  disabled={isSaving}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select business size" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="startup">Startup</SelectItem>
+                    <SelectItem value="small">Small</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="large">Large</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="onboarded">Onboarded</Label>
+                <Select
+                  value={onboarded.toString()}
+                  onValueChange={(value) => setOnboarded(value === "true")}
+                  disabled={isSaving}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">Yes</SelectItem>
+                    <SelectItem value="false">No</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
@@ -212,9 +216,11 @@ export default function EditProfile({ user }: { user: any }) {
 function ProfileBg({
   coverImage,
   setCoverImage,
+  disabled,
 }: {
   coverImage: string;
   setCoverImage: (url: string) => void;
+  disabled?: boolean;
 }) {
   const [uploading, setUploading] = useState(false);
 
@@ -252,29 +258,43 @@ function ProfileBg({
         )}
         <div className="absolute inset-0 flex items-center justify-center gap-2">
           <label
-            className="z-50 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className={`z-50 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
+              uploading || disabled ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             aria-label="Change cover image"
           >
-            <ImagePlusIcon size={16} aria-hidden="true" />
+            {uploading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ImagePlusIcon size={16} aria-hidden="true" />
+            )}
             <input
               type="file"
               accept="image/*"
               onChange={handleFileChange}
               className="sr-only"
-              disabled={uploading}
+              disabled={uploading || disabled}
             />
           </label>
           {coverImage && (
             <button
               type="button"
-              className="z-50 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className={`z-50 flex size-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
+                uploading || disabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={() => setCoverImage("")}
               aria-label="Remove cover image"
+              disabled={uploading || disabled}
             >
               <XIcon size={16} aria-hidden="true" />
             </button>
           )}
         </div>
+        {uploading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <Loader2 className="h-8 w-8 animate-spin text-white" />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -283,9 +303,11 @@ function ProfileBg({
 function Avatar({
   image,
   setImage,
+  disabled,
 }: {
   image: string;
   setImage: (url: string) => void;
+  disabled?: boolean;
 }) {
   const [uploading, setUploading] = useState(false);
 
@@ -322,18 +344,29 @@ function Avatar({
           />
         )}
         <label
-          className="absolute flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className={`absolute flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
+            uploading || disabled ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           aria-label="Change profile picture"
         >
-          <ImagePlusIcon size={16} aria-hidden="true" />
+          {uploading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ImagePlusIcon size={16} aria-hidden="true" />
+          )}
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
             className="sr-only"
-            disabled={uploading}
+            disabled={uploading || disabled}
           />
         </label>
+        {uploading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
+            <Loader2 className="h-6 w-6 animate-spin text-white" />
+          </div>
+        )}
       </div>
     </div>
   );

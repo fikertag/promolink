@@ -78,10 +78,10 @@ export const auth = betterAuth({
         type: "string",
         required: false, // Not strictly required since we can't do conditional logic
       },
-      goal: {
-        type: "number",
+      goals: {
+        type: "string[]",
         required: false,
-        defaultValue: 0,
+        defaultValue: [],
       },
       industry: {
         type: "string",
