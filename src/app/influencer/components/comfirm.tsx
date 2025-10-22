@@ -51,7 +51,7 @@ export default function Comfirm({
       <DialogTrigger asChild>
         <Button
           variant="default"
-          className="cursor-pointer"
+          className="cursor-pointer w-full"
           disabled={isLoading}
         >
           {buttonText}

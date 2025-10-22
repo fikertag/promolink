@@ -7,6 +7,7 @@ import { formatDistanceToNow } from "date-fns";
 import Comfirm from "@/app/influencer/components/comfirm";
 import { useApplyToJob, useSaveJob } from "@/hooks/useJobs";
 import { BookmarkButton } from "./bookmark";
+import { Button } from "./ui/button";
 
 interface JobPreviewProps {
   job: Job;
@@ -23,55 +24,44 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job, isApplyed, isSaved }) => {
 
   return (
     <>
-      <div className="rounded-lg border border-gray-300 text-card-foreground card-hover p-5 transition-all bg-card">
+      <div className="rounded-lg border border-gray-300 text-card-foreground card-hover p-4 sm:p-5 transition-all bg-card">
         <div>
-          <p className="text-sm text-[#676767] font-light text-start mb-3">
+          <p className="text-sm text-[#676767] font-light text-start sm:mb-3">
             {formatDistanceToNow(new Date(job.createdAt), { addSuffix: true })}
           </p>
           <div className="flex">
             <div className="flex flex-col w-full gap-1 ">
-              <p className="text-xl leading-6 text-start ">{job.title}</p>
-              <p className="text-gray-500 font-light">{job.description}</p>
-              <p className=" text-start">
+              <p className="sm:text-xl leading-6 text-start ">{job.title}</p>
+              <p className="text-gray-500 text-sm sm:text-base font-light">
+                {job.description}
+              </p>
+              <p className=" text-start text-sm sm:text-base mt-3 sm:mt-0">
                 Price: <span className="">${job.price}</span>
               </p>
 
-              <div className="flex gap-3 container1 ">
+              <div className="flex flex-wrap gap-3 ">
                 {job.socialMedia.map((media, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-0 text-xs flex items-center py-1 rounded-md text-gray-700 gap-1"
-                  >
+                  <Button variant="outline" size={"sm"} key={index}>
                     <SocialIcon platform={media.platform} />
                     <span className="capitalize">{media.platform}</span>
-                  </div>
+                  </Button>
                 ))}
               </div>
 
-              <div className="text-sm text-[#676767] flex justify-between items-center">
-                <div className="flex gap-3 items-center justify-between">
-                  <div>
-                    Location:{" "}
-                    <span className="text-black font-semibold ml-1">
-                      {job.location || "Remote"}
-                    </span>
-                  </div>
-
-                  <div className="flex gap-1 items-center">
-                    Verified
-                    {Array(4)
-                      .fill(0)
-                      .map((_, idx) => (
-                        <Star
-                          key={idx}
-                          size={10}
-                          color="orange"
-                          fill="orange"
-                        />
-                      ))}
-                  </div>
+              <div
+                className={`text-sm text-[#676767] flex  justify-between items-center  sm:flex-row ${
+                  !isApplyed && "flex-col "
+                } items-start  sm:items-center gap-1  `}
+              >
+                <div className="flex gap-3 h-full items-center">
+                  Location:
+                  <span className=" ml-1">{job.location || "Remote"}</span>
                 </div>
-                <div className="flex items-end  gap-2">
+                <div
+                  className={`flex items-end ${
+                    !isApplyed && "w-full"
+                  } sm:w-auto gap-2 flex-row-reverse`}
+                >
                   <BookmarkButton
                     isSaved={!!isSaved}
                     onChange={() => {
@@ -79,20 +69,23 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job, isApplyed, isSaved }) => {
                     }}
                   />
                   {!isApplyed && (
-                    <Comfirm
-                      buttonText="Apply"
-                      dialogTitle="Attach your proposal"
-                      dialogDescription="Please provide any additional information to support your application."
-                      placeholder="your proposal message"
-                      finalButtonText="Submit Application"
-                      functionToRun={handleSubmit}
-                      isLoading={isPending}
-                    />
+                    <div className="flex-1">
+                      {" "}
+                      <Comfirm
+                        buttonText="Apply"
+                        dialogTitle="Attach your proposal"
+                        dialogDescription="Please provide any additional information to support your application."
+                        placeholder="your proposal message"
+                        finalButtonText="Submit Application"
+                        functionToRun={handleSubmit}
+                        isLoading={isPending}
+                      />
+                    </div>
                   )}
                 </div>
               </div>
 
-              <div className="flex sm:hidden justify-between items-center flex-shrink-0">
+              {/* <div className="flex sm:hidden justify-between items-center flex-shrink-0">
                 {isApplyed && (
                   <Comfirm
                     buttonText="Apply"
@@ -104,7 +97,7 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job, isApplyed, isSaved }) => {
                     isLoading={isPending}
                   />
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -26,15 +26,15 @@ export default function JobLists() {
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
         <div className=" mb-4">
-          <h1 className="text-xl md:text-3xl text-gray-900">Available jobs</h1>
-          <p className=" text-gray-600 max-w-2xl">
-            Find the perfect collaborative opportunities to grow.
+          <h1 className="text-xl md:text-2xl text-gray-900">Available jobs</h1>
+          <p className=" text-gray-600 max-w-2xl text-sm md:text-base">
+            Find the perfect collaborative opportunities.
           </p>
         </div>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-120 grid-cols-3 mb-2 ">
+          <TabsList className="grid w-auto sm:w-120 grid-cols-3 mb-2 ">
             <TabsTrigger value="match" className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4" />
               Matchs
@@ -51,9 +51,8 @@ export default function JobLists() {
 
           <TabsContent value="match">
             <div className="grid gap-5 ">
-              {isLoadingApplied ? (
-                // Loading skeletons
-                Array.from({ length: 6 }).map((_, i) => (
+              {isLoading ? (
+                Array.from({ length: 3 }).map((_, i) => (
                   <div
                     key={i}
                     className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
@@ -104,7 +103,7 @@ export default function JobLists() {
             <div className="grid gap-5 ">
               {isLoadingApplied ? (
                 // Loading skeletons
-                Array.from({ length: 6 }).map((_, i) => (
+                Array.from({ length: 3 }).map((_, i) => (
                   <div
                     key={i}
                     className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
@@ -159,7 +158,7 @@ export default function JobLists() {
             <div className="grid gap-5 ">
               {isLoadingSaved ? (
                 // Loading skeletons
-                Array.from({ length: 6 }).map((_, i) => (
+                Array.from({ length: 3 }).map((_, i) => (
                   <div
                     key={i}
                     className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"

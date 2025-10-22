@@ -43,7 +43,7 @@ export default function Nav({ path }: { path: string }) {
       <div className="grid grid-cols-3 items-center px-4 xl:px-[70px] sticky top-0 z-20 border-b h-16 shadow-xs backdrop-blur-lg bg-gray-100/60 ">
         <div className="flex items-center">
           <Link href={`/${path}/`} className="flex items-center">
-            <span className="text-lg font-semibold text-black">Mykalat</span>
+            <span className="text-xl  text-primary">Mykalat</span>
           </Link>
         </div>
 
