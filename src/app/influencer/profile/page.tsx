@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import ConfirmLogoutModal from "@/components/ConfirmLogoutModal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 function ProfilePage() {
   const { data: session, isPending, error, refetch } = authClient.useSession();
@@ -34,10 +35,7 @@ function ProfilePage() {
     setIsLoggingOut(true);
     try {
       await authClient.signOut();
-      // Redirect to home page or login page after logout
       window.location.href = "/";
-    } catch (error) {
-      console.error("Logout failed:", error);
     } finally {
       setIsLoggingOut(false);
       setLogoutModalOpen(false);
@@ -120,9 +118,14 @@ function ProfilePage() {
               This page is restricted to influencer accounts only. Please ensure
               you're logged in with the correct account type.
             </p>
-            <Button onClick={() => refetch()} className="w-full">
-              Try Again
-            </Button>
+            <div className="flex gap-2 justify-center">
+              <Button onClick={() => refetch()} className="cursor-pointer">
+                Try Again
+              </Button>
+              <Button asChild className="w-25">
+                <Link href="/auth?mode=login">login</Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
