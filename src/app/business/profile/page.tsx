@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import EditBuissnesProfile from "@/components/editBuissnesProfile";
-import { MapPin, BadgeCheck, Star } from "lucide-react";
+import { MapPin, BadgeCheck, Star, LogOut, ShieldX } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth-client";
@@ -11,9 +11,28 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import GoalDisplay from "@/components/GoalDisplay";
+import ConfirmLogoutModal from "@/components/ConfirmLogoutModal";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
 
 function ProfilePage() {
   const { data: session, isPending, error, refetch } = authClient.useSession();
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await authClient.signOut();
+      // Redirect to home page or login page after logout
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+      setLogoutModalOpen(false);
+    }
+  };
 
   if (isPending) {
     return (
@@ -50,26 +69,60 @@ function ProfilePage() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-64">
-        <p className="text-red-500 mb-4">Failed to load profile data.</p>
-        <Button onClick={() => refetch()}>Try again</Button>
+      <div className="mx-auto mt-5 sm:mt-0 p-4 sm:px-6 max-w-5xl mb-20">
+        <Card className="max-w-md mx-auto">
+          <CardHeader className="text-center pb-4">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-100">
+              <ShieldX className="h-6 w-6 text-orange-600" />
+            </div>
+            <CardTitle className="text-xl font-semibold text-gray-900">
+              Connection Error
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-4">
+            <p className="text-gray-600 leading-relaxed">
+              Failed to load profile data. Please check your connection and try again.
+            </p>
+            <Button
+              onClick={() => refetch()}
+              className="w-full"
+            >
+              Try Again
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   if (session?.user?.role !== "business") {
     return (
-      <div className="flex flex-col items-center justify-center h-64">
-        <p className="text-red-500 mb-4">
-          Access denied. This page is for business accounts only.
-        </p>
-        <Button onClick={() => refetch()}>Try again</Button>
+      <div className="mx-auto mt-5 sm:mt-0 p-4 sm:px-6 max-w-5xl mb-20">
+        <Card className="max-w-md mx-auto">
+          <CardHeader className="text-center pb-4">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+              <ShieldX className="h-6 w-6 text-red-600" />
+            </div>
+            <CardTitle className="text-xl font-semibold text-gray-900">
+              Access Denied
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-4">
+            <p className="text-gray-600 leading-relaxed">
+              This page is restricted to business accounts only. Please ensure
+              you're logged in with the correct account type.
+            </p>
+            <Button onClick={() => refetch()} className="w-full">
+              Try Again
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto mt-5 sm:mt-0 p-4 sm:px-6 max-w-5xl mb-20">
+    <div className="mx-auto sm:mt-0 p-4 sm:px-6 max-w-5xl mb-20">
       {/* Header */}
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div>
@@ -83,8 +136,17 @@ function ProfilePage() {
               fill
               className="rounded-md object-cover"
             />
-            <div className="z-10 absolute top-3 right-3">
+            <div className="z-10 absolute top-3 right-3 flex gap-2">
               <EditBuissnesProfile user={session?.user} />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLogoutModalOpen(true)}
+                className="bg-white/90 hover:bg-white border-red-200 hover:border-red-300 text-red-600 hover:text-red-700"
+              >
+                <LogOut size={16} className="mr-1" />
+                Logout
+              </Button>
             </div>
           </AspectRatio>
         </div>
@@ -174,6 +236,12 @@ function ProfilePage() {
           </div>
         </div>
       </div>
+      <ConfirmLogoutModal
+        open={logoutModalOpen}
+        onCancel={() => setLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+        isLoading={isLoggingOut}
+      />
     </div>
   );
 }

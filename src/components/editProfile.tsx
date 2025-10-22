@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ImagePlusIcon, XIcon } from "lucide-react";
+import { ImagePlusIcon, XIcon, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -91,7 +91,10 @@ export default function EditProfile({ user }: { user: any }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit profile</Button>
+        <Button variant="outline">
+          <Edit />
+          <span className="hidden sm:flex">Edit profile</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="flex flex-col gap-0 p-0 sm:max-w-lg h-[90svh] sm:h-auto sm:max-h-[90vh] overflow-hidden [&>button:last-child]:top-3.5">
         <DialogHeader className="contents space-y-0 text-left">
