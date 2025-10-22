@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
-import { Lexend, Inter } from "next/font/google";
+import { Lexend } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import "../app/globals.css";
 
 const lexend = Lexend({ subsets: ["latin"] });
@@ -25,6 +26,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

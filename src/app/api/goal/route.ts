@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import dbConnect from "@/lib/mongoose";
 import mongoose from "mongoose";
 import BusinessGoal from "@/models/Goal";
+import { auth } from "@/lib/auth";
 
 // POST /api/goal - create a new business goal
 export async function POST(request: NextRequest) {

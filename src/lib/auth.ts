@@ -20,6 +20,7 @@ export const auth = betterAuth({
     "https://promolink-git-feature-chat-fikiryilkal-tages-projects.vercel.app",
     "https://promolink-git-feature-business-fikiryilkal-tages-projects.vercel.app",
     "https://promolink-kgdf93dee-fikiryilkal-tages-projects.vercel.app",
+    "https://promolink-git-feature-branch-fikiryilkal-tages-projects.vercel.app",
   ],
   database: mongodbAdapter(db),
   emailAndPassword: {
@@ -33,7 +34,12 @@ export const auth = betterAuth({
         required: false,
         defaultValue: "influencer",
       },
-
+      coverImage: {
+        type: "string",
+        required: false,
+        defaultValue:
+          "https://res.cloudinary.com/dzcmadjl1/image/upload/v1696224863/default-cover-image_oqv6u9.jpg",
+      },
       location: {
         type: "string",
         required: false,
@@ -73,10 +79,10 @@ export const auth = betterAuth({
         type: "string",
         required: false, // Not strictly required since we can't do conditional logic
       },
-      goal: {
-        type: "number",
+      goals: {
+        type: "string[]",
         required: false,
-        defaultValue: 0,
+        defaultValue: [],
       },
       industry: {
         type: "string",
@@ -102,6 +108,7 @@ export const auth = betterAuth({
         required: false,
         defaultValue: false,
       },
+      savedJobs: { type: "string[]", required: false, defaultValue: [] },
     },
   },
 

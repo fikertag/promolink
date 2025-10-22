@@ -15,7 +15,10 @@ export interface IJob extends Document {
   goalId: mongoose.Types.ObjectId; // Reference to associated goal
   goalContributionPercent?: number; // Percentage contribution to the goal
   hiredInfluencers: mongoose.Types.ObjectId[]; // Array of hired influencers
-  proposalsSubmitted: mongoose.Types.ObjectId[]; // Array of hired influencers
+  proposalsSubmitted: {
+    proposal: mongoose.Types.ObjectId;
+    influencer: mongoose.Types.ObjectId;
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -65,8 +68,17 @@ const JobSchema = new Schema<IJob>(
     ],
     proposalsSubmitted: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Proposal", // Reference to the User model
+        _id: false,
+        proposal: {
+          type: Schema.Types.ObjectId,
+          ref: "Proposal",
+          required: true,
+        },
+        influencer: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
       },
     ],
   },

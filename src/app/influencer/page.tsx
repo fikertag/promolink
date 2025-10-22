@@ -2,7 +2,7 @@ import JobLists from "@/components/JobLists";
 
 export default function Home() {
   return (
-    <div className="flex gap-10 mx-3 lg:mx-20">
+    <div className="w-full gap-10 mx-auto pb-30 ">
       <JobLists />
     </div>
   );
