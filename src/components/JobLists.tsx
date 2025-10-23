@@ -139,15 +139,11 @@ export default function JobLists() {
               ) : (
                 // Empty state
                 <div className="col-span-full text-center py-16">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-                    <Briefcase className="w-8 h-8 text-gray-400" />
-                  </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    No opportunities available
+                    You haven't applied yet
                   </h3>
                   <p className="text-gray-600 max-w-md mx-auto">
-                    There are currently no open opportunities that match your
-                    criteria. Check back later for new collaborations.
+                    Browse available jobs and start applying.
                   </p>
                 </div>
               )}
@@ -191,15 +187,12 @@ export default function JobLists() {
               ) : (
                 // Empty state
                 <div className="col-span-full text-center py-16">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-                    <Briefcase className="w-8 h-8 text-gray-400" />
-                  </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    No opportunities available
+                    You haven't saved any jobs yet
                   </h3>
                   <p className="text-gray-600 max-w-md mx-auto">
-                    There are currently no open opportunities that match your
-                    criteria. Check back later for new collaborations.
+                    Select the <Bookmark className="inline-block" /> icon on job
+                    listings to save them.
                   </p>
                 </div>
               )}

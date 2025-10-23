@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function Comfirm({
   buttonText,
@@ -55,6 +56,7 @@ export default function Comfirm({
           disabled={isLoading}
         >
           {buttonText}
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -73,6 +75,7 @@ export default function Comfirm({
           />
           <div className="flex flex-col sm:flex-row sm:justify-end">
             <Button type="submit" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading ? "Submitting..." : finalButtonText}
             </Button>
           </div>

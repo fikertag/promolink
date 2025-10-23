@@ -150,10 +150,9 @@ function ProfilePage() {
             <div className="z-10 absolute top-3 right-3 flex gap-2">
               <EditProfile user={session?.user} />
               <Button
-                variant="outline"
+                variant="destructive"
                 size="sm"
                 onClick={() => setLogoutModalOpen(true)}
-                className="bg-white/90 hover:bg-white border-red-200 hover:border-red-300 text-red-600 hover:text-red-700"
               >
                 <LogOut size={16} />
                 <span className="hidden sm:block">Logout</span>
@@ -165,7 +164,7 @@ function ProfilePage() {
         {/* Profile Info Section */}
         <div className="px-4 sm:px-6 pb-5">
           <div className="relative flex gap-3 sm:gap-4">
-            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 ring-2 ring-white shadow-md -mt-2 sm:-mt-8">
+            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 ring-2 ring-white shadow-md -mt-5 sm:-mt-8">
               <AvatarImage
                 src={session?.user?.image || "https://github.com/shadcn.png"}
                 alt={"name"}
@@ -199,7 +198,7 @@ function ProfilePage() {
             </div>
           </div>
           <div className="mt-3">
-            <p className="text-[15px] text-gray-700 leading-relaxed">
+            <p className="text-[15px] text-gray-700 leading-relaxed whitespace-pre-line">
               {session?.user?.bio || "No bio yet."}
             </p>
             <div className="flex flex-wrap items-center gap-2 mt-3">

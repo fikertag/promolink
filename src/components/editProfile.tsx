@@ -91,9 +91,9 @@ export default function EditProfile({ user }: { user: any }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <Edit />
-          <span className="hidden sm:flex">Edit profile</span>
+        <Button variant="outline" size="sm">
+          <Edit size={16} />
+          <span className="hidden sm:block">Edit profile</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="flex flex-col gap-0 p-0 sm:max-w-lg h-[90svh] sm:h-auto sm:max-h-[90vh] overflow-hidden [&>button:last-child]:top-3.5">

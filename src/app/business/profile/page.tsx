@@ -81,12 +81,10 @@ function ProfilePage() {
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-gray-600 leading-relaxed">
-              Failed to load profile data. Please check your connection and try again.
+              Failed to load profile data. Please check your connection and try
+              again.
             </p>
-            <Button
-              onClick={() => refetch()}
-              className="w-full"
-            >
+            <Button onClick={() => refetch()} className="w-full">
               Try Again
             </Button>
           </CardContent>
@@ -187,7 +185,7 @@ function ProfilePage() {
             </div>
           </div>
           <div className="mt-3">
-            <p className="text-[15px] text-gray-700 leading-relaxed">
+            <p className="text-[15px] text-gray-700 leading-relaxed whitespace-pre-line">
               {session?.user?.bio || "No bio yet."}
             </p>
             <div className="mt-3 text-sm">
