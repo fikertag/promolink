@@ -11,14 +11,12 @@ import {
   Meh,
   Building2,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { useSearchParams } from "next/navigation";
 
 type AuthMode = "signin" | "signup";
 type UserType = "influencer" | "business";
 const AuthForm = () => {
-  const router = useRouter(); // Initialize router
   const [mode, setMode] = useState<AuthMode>("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -72,7 +70,7 @@ const AuthForm = () => {
       {
         email: email,
         password: password,
-        callbackURL: `/${userType}`,
+        callbackURL: "/api/auth/callback",
       },
       {
         onRequest: () => {
@@ -98,7 +96,7 @@ const AuthForm = () => {
         password: password,
         name: name,
         role: userType,
-        callbackURL: `/${userType}`,
+        callbackURL: "/api/auth/callback",
       },
       {
         onRequest: () => {
@@ -110,7 +108,7 @@ const AuthForm = () => {
           setPassword("");
           setName("");
           setConfirmPassword("");
-          router.push(`/${userType}`);
+          // Let the callback URL handle the redirection based on role
         },
         onError: (ctx) => {
           setError(ctx.error.message || "sign-up failed");
