@@ -19,7 +19,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="https://t.me/fkrtag"
+                  href="https://t.me/N_96_uman"
                   target="_blank"
                   className="text-gray-600 hover:text-brand-blue underline"
                 >
