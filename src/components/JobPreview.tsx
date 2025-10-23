@@ -31,11 +31,11 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job, isApplyed, isSaved }) => {
           </p>
           <div className="flex">
             <div className="flex flex-col w-full gap-1 ">
-              <p className="sm:text-xl leading-6 text-start ">{job.title}</p>
-              <p className="text-gray-500 text-sm sm:text-base font-light">
-                {job.description}
+              <p className="text-lg sm:text-xl leading-6 text-start ">
+                {job.title}
               </p>
-              <p className=" text-start text-sm sm:text-base mt-3 sm:mt-0">
+              <p className="text-gray-500 font-light">{job.description}</p>
+              <p className=" text-start  mt-3 sm:mt-0">
                 Price: <span className="">${job.price}</span>
               </p>
 
@@ -53,7 +53,7 @@ const JobPreview: React.FC<JobPreviewProps> = ({ job, isApplyed, isSaved }) => {
                   !isApplyed && "flex-col "
                 } items-start  sm:items-center gap-1  `}
               >
-                <div className="flex gap-3 h-full items-center">
+                <div className="flex gap-3  items-center h-8">
                   Location:
                   <span className=" ml-1">{job.location || "Remote"}</span>
                 </div>

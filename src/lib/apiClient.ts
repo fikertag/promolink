@@ -11,7 +11,7 @@ export const apiClient = async <T>(
   const json: ApiResponse<T> = await response.json();
 
   if (!response.ok) {
-    throw new Error(json.message || `API Error: ${response.status}`);
+    throw new Error(response.statusText || "request failed");
   }
 
   return json.data;
