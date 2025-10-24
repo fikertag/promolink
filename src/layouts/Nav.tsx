@@ -63,17 +63,20 @@ export default function Nav({ path }: { path: string }) {
                 Influencers
               </Link>
             )}
-            {/* <Link
-              href={`/${path}/${path === "business" ? "myjobs" : "dashboard"}`}
-              className={`hover:text-primary transition px-5 py-2  ${
-                isActive(`/${path === "business" ? "myjobs" : "dashboard"}`)
-                  ? "text-primary underline-offset-8 underline"
-                  : ""
-              }`}
-              onClick={closeMobileMenu}
-            >
-              {path === "business" ? "My jobs" : "Dashboard"}
-            </Link> */}
+
+            {path === "business" && (
+              <Link
+                href={"/business/proposals"}
+                className={`hover:text-primary transition px-5 py-2  ${
+                  isActive("/proposals")
+                    ? "text-primary underline-offset-8 underline"
+                    : ""
+                }`}
+                onClick={closeMobileMenu}
+              >
+                Proposals
+              </Link>
+            )}
 
             <Link
               href={`/${path}/message`}
@@ -140,6 +143,20 @@ export default function Nav({ path }: { path: string }) {
                 onClick={closeMobileMenu}
               >
                 Influencers
+              </Link>
+            )}
+
+            {path === "business" && (
+              <Link
+                href={"/business/proposals"}
+                className={`text-lg px-4 py-3 rounded-lg ${
+                  isActive("/proposals")
+                    ? "bg-blue-50 text-primary font-medium"
+                    : "text-gray-700 hover:bg-gray-50"
+                }`}
+                onClick={closeMobileMenu}
+              >
+                Proposals
               </Link>
             )}
 

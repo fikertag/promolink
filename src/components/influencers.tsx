@@ -160,7 +160,7 @@ const InfluencerSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {loading
             ? Array(8)
                 .fill(0)
@@ -178,7 +178,7 @@ const InfluencerSection = () => {
         <div className="text-center mt-10">
           <Link
             href="/business/influencers"
-            className="bg-accent px-5 py-3 rounded-md text-white font-semibold hover:bg-accent/80 transition-colors"
+            className="bg-primary px-5 py-3 rounded-md text-white font-semibold hover:bg-primary/80 transition-colors"
           >
             View All Influencers
           </Link>
