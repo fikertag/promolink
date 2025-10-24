@@ -6,6 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // import { useToast } from "@/components/ui/use-toast";
 import { useJobs } from "@/context/Job";
@@ -15,12 +22,38 @@ const JobPostingForm = () => {
   const { addJob } = useJobs();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Hardcoded goals for now - replace with actual goal fetching later
+  const hardcodedGoals = [
+    {
+      id: "64f1a2b3c4d5e6f7g8h9i0j",
+      name: "Increase Instagram Followers by 10,000",
+      unit: "audience",
+    },
+    {
+      id: "64f1a2b3c4d5e6f7g8h9i0k",
+      name: "Generate 50,000 Birr in Sales",
+      unit: "birr",
+    },
+    {
+      id: "64f1a2b3c4d5e6f7g8h9i0l",
+      name: "Acquire 500 New Customers",
+      unit: "customers",
+    },
+    {
+      id: "64f1a2b3c4d5e6f7g8h9i0m",
+      name: "Sell 200 Event Tickets",
+      unit: "tickets",
+    },
+  ];
+
   // Form state
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     price: "",
     location: "Tecno",
+    goalId: "",
+    goalContributionPercent: "100",
     socialMedia: [] as Array<{
       platform: "instagram" | "tiktok" | "telegram";
     }>,
@@ -57,6 +90,10 @@ const JobPostingForm = () => {
         description: formData.description,
         price: formData.price.toString(), // Convert to string if needed
         location: formData.location,
+        goalId: formData.goalId || undefined, // Only include if selected
+        goalContributionPercent: formData.goalId
+          ? parseInt(formData.goalContributionPercent)
+          : undefined,
         socialMedia: selectedPlatforms.map((platform) => ({ platform })), // Array of {platform: string}
       };
 
@@ -127,6 +164,48 @@ const JobPostingForm = () => {
                       placeholder="Addis Ababa, Ethiopia"
                       value={formData.location}
                       onChange={handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="goalId">
+                      Associate with Goal (Optional)
+                    </Label>
+                    <Select
+                      value={formData.goalId}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({ ...prev, goalId: value }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a goal to contribute to" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {hardcodedGoals.map((goal) => (
+                          <SelectItem key={goal.id} value={goal.id}>
+                            {goal.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="goalContributionPercent">
+                      Goal Contribution (%)
+                    </Label>
+                    <Input
+                      id="goalContributionPercent"
+                      name="goalContributionPercent"
+                      type="number"
+                      min="1"
+                      max="100"
+                      placeholder="100"
+                      value={formData.goalContributionPercent}
+                      onChange={handleChange}
+                      disabled={!formData.goalId}
                     />
                   </div>
                 </div>

@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { useMessages } from "@/context/Message";
 import { useUser } from "@/context/User";
+import { useRouter } from "next/navigation";
 import { MessageSquare, Send, User, ChevronLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Link from "next/link";
 
 function MessagesPage() {
   const [messageInput, setMessageInput] = useState("");
@@ -23,8 +24,9 @@ function MessagesPage() {
     sendMessage,
     fetchConversations,
   } = useMessages();
-  const router = useRouter();
+
   const { user } = useUser();
+  const router = useRouter();
 
   const handleSendMessage = async () => {
     if (messageInput.trim() && selectedConversation) {
@@ -85,10 +87,10 @@ function MessagesPage() {
           <div className="p-4 h-full flex flex-col">
             <h2 className="flex items-center font-semibold mb-4 text-gray-800 flex-shrink-0">
               <Link
-                href="#"
+                href="/business"
                 onClick={(e) => {
                   e.preventDefault();
-                  router.back();
+                  router.push("/business");
                 }}
               >
                 <ChevronLeft size={20} className="inline-block mr-2" />
@@ -148,14 +150,15 @@ function MessagesPage() {
           </div>
         </div>
 
+        {/* Chat Window - Conditionally shown on mobile */}
         <div
-          className={`flex-1 flex flex-col bg-white h-screen ${
+          className={`flex-1 flex flex-col bg-white ${
             showConversationList ? "hidden lg:flex" : "flex"
           }`}
         >
           {selectedConversation ? (
-            <div className="flex flex-col h-screen">
-              {/* Header */}
+            <>
+              {/* Chat Header with back button on mobile */}
               <div className="border-b border-gray-200 px-4 py-3 flex items-center flex-shrink-0">
                 <Button
                   variant="ghost"
@@ -190,50 +193,52 @@ function MessagesPage() {
                 </div>
               </div>
 
-              {/* Scrollable Messages */}
-              <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
-                {currentMessages.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                    <MessageSquare size={48} className="mb-4 opacity-50" />
-                    <p>No messages yet</p>
-                    <p className="text-sm">Start the conversation</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3 pb-4">
-                    {[...currentMessages].reverse().map((message) => (
-                      <div
-                        key={message._id}
-                        className={`flex ${
-                          message.senderId === user?.id
-                            ? "justify-end"
-                            : "justify-start"
-                        }`}
-                      >
+              {/* Scrollable Messages Area */}
+              <div className="flex-1 overflow-hidden">
+                <ScrollArea className="h-full p-4 bg-gray-50">
+                  {currentMessages.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                      <MessageSquare size={48} className="mb-4 opacity-50" />
+                      <p>No messages yet</p>
+                      <p className="text-sm">Start the conversation</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {[...currentMessages].reverse().map((message) => (
                         <div
-                          className={`max-w-xs lg:max-w-md min-w-30 rounded-md px-4 py-2 ${
+                          key={message._id}
+                          className={`flex ${
                             message.senderId === user?.id
-                              ? "bg-primary text-white border-primary"
-                              : "bg-white border-gray-200"
-                          } shadow-sm`}
+                              ? "justify-end"
+                              : "justify-start"
+                          }`}
                         >
-                          <p className="text-sm">{message.content}</p>
-                          <p
-                            className={`text-xs mt-1 text-right ${
+                          <Card
+                            className={`max-w-xs lg:max-w-md min-w-30 px-4 py-2 ${
                               message.senderId === user?.id
-                                ? "text-primary-100"
-                                : "text-gray-500"
-                            }`}
+                                ? "bg-primary text-white border-primary"
+                                : "bg-white border-gray-200"
+                            } shadow-sm`}
                           >
-                            {formatTime(message.createdAt)}
-                          </p>
+                            <p className="text-sm">{message.content}</p>
+                            <p
+                              className={`text-xs mt-1 text-right ${
+                                message.senderId === user?.id
+                                  ? "text-primary-100"
+                                  : "text-gray-500"
+                              }`}
+                            >
+                              {formatTime(message.createdAt)}
+                            </p>
+                          </Card>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
+                </ScrollArea>
               </div>
 
-              {/* Input */}
+              {/* Message Input */}
               <div className="border-t border-gray-200 p-4 bg-white flex-shrink-0">
                 <div className="flex items-center gap-2">
                   <Input
@@ -260,7 +265,7 @@ function MessagesPage() {
                   </Button>
                 </div>
               </div>
-            </div>
+            </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500 bg-gray-50">
               <div className="text-center">
